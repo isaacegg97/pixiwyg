@@ -1,0 +1,84 @@
+/* SECTION: PIXIWYG interface theme
+   Change the values, save it as a .css file, and load it from More ▾ → Settings… → Load theme file.
+   Delete any line you do not want to change: the built-in palette named by color-scheme fills it in.
+   Only data: URLs work in url() and @font-face; anything that would reach the network is removed on load.
+   Everything is scoped to :root[data-apptheme], which is only set while this theme is chosen. */
+:root[data-apptheme]{
+  color-scheme: light;                   /* light or dark: native controls, and the palette that fills the gaps */
+
+  /* SECTION: Desk and panels */
+  --desk: #a6a2d2;                       /* the patterned background behind the page */
+  --desk2: #938ec6;                      /* the second colour of that pattern */
+  --chrome: #eceaf6;                     /* panels, toolbar and menus */
+  --chrome2: #d4d0ea;                    /* panel headers, borders between rows, inset areas */
+  --paper: #ffffff;                      /* fields, cards and dialogs */
+  --ink: #16121f;                        /* text, borders and icons */
+  --muted: #57526f;                      /* secondary text and hints */
+  --line: #999999;                       /* faint dividers in lists */
+  --shadow: #16121f;                     /* the hard drop shadow under buttons and panels */
+  --scrim: rgba(22,18,31,.45);           /* the dimming behind dialogs and the tour */
+
+  /* SECTION: Accents */
+  --hot: #ff2e88;                        /* the main accent: warnings, active tabs, highlights */
+  --hot2: #ff5aa0;                       /* the accent when hovered */
+  --onhot: #16121f;                      /* text on the accent */
+  --hot-ink: #ad0f55;                    /* the accent as text (darker, for contrast) */
+  --sel: #2e5bff;                        /* selection, focus rings, links */
+  --onsel: #ffffff;                      /* text on the selection colour */
+  --sun: #ffd23f;                        /* the second accent: badges and primary buttons */
+  --onsun: #16121f;                      /* text on the second accent */
+  --act: #16121f;                        /* pressed and primary buttons */
+  --actfg: #ffd23f;                      /* text on pressed and primary buttons */
+
+  /* SECTION: Status */
+  --bad: #c62828;                        /* errors and recording */
+  --onbad: #ffffff;                      /* text on the error colour */
+  --warn: #f4a261;                       /* warnings */
+  --ok: #2a8a5b;                         /* success and playing */
+  --lib: #c8f2d4;                        /* the "library" tag */
+
+  /* SECTION: Canvas helpers */
+  --page: #ffffff;                       /* the page when it has no background of its own */
+  --check-a: #ffffff;                    /* transparency checkerboard, first square */
+  --check-b: #e4e1ee;                    /* transparency checkerboard, second square */
+  --grid-minor: color-mix(in srgb,var(--sel) 10%,transparent); /* minor grid lines */
+  --grid-major: color-mix(in srgb,var(--sel) 22%,transparent); /* major grid lines */
+
+  /* SECTION: Node editors */
+  --n-head: #16121f;                     /* node header, default */
+  --n-headfg: #ffffff;                   /* node header text */
+  --n-events: #d81b72;                   /* events, colour nodes */
+  --n-actions: #2e5bff;                  /* actions, shape nodes */
+  --n-values: #1d7a4a;                   /* values, motion nodes */
+  --n-math: #6a32d8;                     /* maths and text, type nodes */
+  --n-anim: #a85a00;                     /* animation, light nodes */
+  --n-misc: #555555;                     /* combine nodes */
+  --n-imported: #008080;                 /* imported nodes */
+
+  /* SECTION: Manuscript page view */
+  --doc-paper: #fffdf8;                  /* the page */
+  --doc-ink: #1d1a16;                    /* its text */
+  --doc-desk: #e9e4d8;                   /* behind the page in Focus mode */
+  --doc-code: #f2eee6;                   /* inline code */
+  --doc-raw: #f4f1ea;                    /* Markdown-only blocks */
+  --doc-rawline: #c9c2b0;                /* the edge of those blocks */
+
+  /* SECTION: Logo (letters cycle hot, sun, then these) */
+  --logo3: #34c759;                      /* third letter */
+  --logo4: #2ec5ff;                      /* fourth letter */
+  --logo5: #7a3cff;                      /* fifth letter */
+  --logo6: #ff9500;                      /* sixth letter */
+
+  /* SECTION: Shape */
+  --ctl-h: 26px;                         /* height of buttons and compact controls */
+  --radius: 0px;                         /* corner rounding of controls (0px is square) */
+
+  /* SECTION: Type */
+  --f-ui: "Pixelify Sans","Geneva",system-ui,sans-serif; /* interface font (only fonts already installed, or a data: @font-face in this file) */
+  --f-mono: "DM Mono",ui-monospace,"SFMono-Regular",monospace; /* monospaced font */
+}
+
+/* SECTION: beyond the tokens (optional)
+   Any CSS works here. Keep it under :root[data-apptheme] so it only applies while the theme is chosen, e.g.
+   :root[data-apptheme] .btn{border-radius:6px;box-shadow:none}
+   :root[data-apptheme] .phead{letter-spacing:.2em} */

@@ -1,0 +1,17 @@
+<!-- SECTION: node editor (logic and animation) -->
+<div class="modal" id="nodeModal" hidden>
+  <div class="win nodewin" role="dialog" aria-modal="true" aria-labelledby="nodeTitle">
+    <div class="tb"><span id="nodeTitle">Logic</span><button class="wclose" id="nodeClose" aria-label="Close" title="Close (Esc)">×</button></div>
+    <div class="nodebody">
+      <div class="npal" id="nodePal" aria-label="Add a node"></div>
+      <div class="nview" id="nodeView" tabindex="0" aria-label="Node graph"><div class="nlayer" id="nodeLayer"><svg class="nwires" id="nodeWires"></svg></div></div>
+      <div class="nprev"><b>Preview</b><div class="nprevbox" id="nodePrevBox"></div><small class="credit" id="nodePrevNote"></small></div>
+    </div>
+    <div class="row nodebar"><span class="shelp">Drag from dot to dot to connect; click a wire to remove it. Drag empty space to move around; scroll to zoom.</span>
+      <span class="nstyle" id="nodeStyleBar" hidden><select id="nodeStyleSel" aria-label="Style"></select><button class="btn" id="nodeStyleNew" title="Start another style">+ Style</button><button class="btn" id="nodeStyleApply" title="Add this style to the selected element">Put on the selection</button><button class="btn" id="nodeStyleDel" title="Remove this style">×</button></span>
+      <button class="btn" id="nodeProblems" type="button" hidden title="Walk through the problems">✓ No problems</button>
+      <select id="nodeExamples" aria-label="Add an example"><option value="">Examples…</option><option value="calc">Calculator</option></select>
+      <button class="btn" id="nodeFit">Fit</button><button class="btn" id="nodePreview">▶ Preview</button><button class="btn primary" id="nodeDone">Done</button></div>
+  </div>
+</div>
+

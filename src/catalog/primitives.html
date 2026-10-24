@@ -1,0 +1,18 @@
+<!-- SECTION: primitives dialog -->
+<div class="modal" id="primModal" hidden>
+  <div class="win" role="dialog" aria-modal="true" aria-labelledby="primTitle">
+    <div class="tb"><span id="primTitle">Primitives</span></div>
+    <div class="wb">
+      <p id="primNote"></p>
+      <textarea id="primText" aria-label="Primitives JSON"></textarea>
+      <div class="row">
+        <button class="btn" id="primCopy">Copy</button>
+        <label class="btn" for="primFile" id="primFileLbl">Open file…</label><input class="sr" type="file" id="primFile" accept=".json,application/json">
+        <button class="btn" id="primDoImport">Import</button>
+        <button class="btn" id="primClose">Close</button>
+        <span class="shelp" id="primSize"></span>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,116 @@
+/* SECTION: Windows 7: Aero glass panes that blur the desk behind them, soft blue hovers, Segoe UI. Built with 7.css.
+   The look follows 7.css by Khang Nguyen Duy (MIT, lib/NOTICES.txt); its scrollbars and select arrow are pulled in
+   at build time. Windows and menus are real glass: whatever is behind them shows through, blurred. */
+/* INCLUDE: lib/7.css scrollbars */
+/* ASSET: --w7-select lib/7.css select:not([multiple]) */
+:root[data-apptheme]{
+  color-scheme: light;
+
+  /* SECTION: Desk and panels */
+  --desk: #0b5aa5;
+  --desk2: #0b5aa5;
+  --chrome: #f0f0f0;
+  --chrome2: #e3ecf7;
+  --paper: #ffffff;
+  --ink: #1e1e1e;
+  --muted: #5b6b7f;
+  --line: #d5dfea;
+  --shadow: transparent;
+  --scrim: rgba(0,20,50,.18);
+
+  /* SECTION: Accents */
+  --hot: #33709d;
+  --hot2: #5a9bd0;
+  --onhot: #ffffff;
+  --sel: #3399ff;
+  --onsel: #ffffff;
+  --sun: #cce8ff;
+  --onsun: #000000;
+  --act: #c4e5f6;
+  --actfg: #000000;
+
+  /* SECTION: Status */
+  --bad: #c42b1c;
+  --warn: #e6a117;
+  --ok: #0bd82c;
+  --lib: #e3ecf7;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #ffffff;
+  --check-b: #e6eef8;
+
+  /* SECTION: Node editors */
+  --n-head: #4580c4;
+  --n-headfg: #ffffff;
+  --n-events: #b5389a;
+  --n-actions: #2a6fc9;
+  --n-values: #2f8f46;
+  --n-math: #6a4fc0;
+  --n-anim: #d07a12;
+  --n-misc: #6b7785;
+  --n-imported: #148a92;
+
+  /* SECTION: Manuscript page view */
+  --doc-desk: #4f7fb8;
+
+  /* SECTION: Logo */
+  --logo3: #7fba00;
+  --logo4: #00a4ef;
+  --logo5: #f25022;
+  --logo6: #ffb900;
+
+  /* SECTION: Type */
+  --f-ui: "Segoe UI", "Noto Sans", "Helvetica Neue", sans-serif;
+
+  /* SECTION: 7.css gradients */
+  --w7-btn: linear-gradient(#f2f2f2 45%,#ebebeb 45%,#cfcfcf);
+  --w7-btn-h: linear-gradient(#eaf6fd 45%,#bee6fd 45%,#a7d9f5);
+  --w7-btn-a: linear-gradient(#e5f4fc,#c4e5f6 30% 50%,#98d1ef 50%,#68b3db);
+  --w7-glass: linear-gradient(135deg,#ffffff55 70px,transparent 100px),linear-gradient(225deg,#ffffff55 70px,transparent 100px),linear-gradient(to right,#ffffff66,#0000001a,#ffffff33);
+}
+
+/* SECTION: the desk: Windows 7's blue light */
+:root[data-apptheme] body{background:radial-gradient(60% 50% at 72% 28%,#7fd0ff 0,#2d8fe0 30%,transparent 60%),radial-gradient(90% 80% at 20% 90%,#0a4f9a,transparent 70%),linear-gradient(160deg,#1667b8,#06305f);background-attachment:fixed;font-size:12px}
+
+/* SECTION: buttons, with 7's slow blue fade on hover */
+:root[data-apptheme] :is(.btn,.cmdbtn){background:var(--w7-btn);color:#222;border:1px solid #8e8f8f;border-radius:3px;box-shadow:inset 0 0 0 1px #fffc;padding:3px 11px;font-weight:400;transition:border-color .3s,background .3s}
+:root[data-apptheme] :is(.btn,.cmdbtn):hover{background:var(--w7-btn-h);color:#000;border-color:#3c7fb1}
+:root[data-apptheme] :is(.btn,.cmdbtn):active,:root[data-apptheme] .btn[aria-pressed="true"].tog-btn,:root[data-apptheme] .dd[open]>summary.btn{transform:none;background:var(--w7-btn-a);color:#000;border-color:#6d91ab;box-shadow:inset 1px 1px 0 #0003,inset -1px 1px 0 #0001}
+:root[data-apptheme] .btn.primary{background:var(--w7-btn);color:#000;border-color:#3c7fb1;box-shadow:inset 0 0 0 1px #9cd5f6;font-weight:600}
+:root[data-apptheme] .btn.dyna{color:#2a6fc9}
+:root[data-apptheme] :is(.btn,.cmdbtn,.ptab):focus-visible{outline:1px dotted #000;outline-offset:-4px}
+:root[data-apptheme] :is(.cmdbtn,.cmditem) kbd{background:#ffffff;border:1px solid #abadb3;border-radius:2px}
+:root[data-apptheme] :is(.cmditem.on,.cmditem:hover) kbd{background:transparent;border-color:currentColor}
+
+/* SECTION: glass windows and menus */
+:root[data-apptheme] :is(.win,.tourcard){background:var(--w7-glass),rgba(69,128,196,.5);-webkit-backdrop-filter:blur(10px) saturate(1.4);backdrop-filter:blur(10px) saturate(1.4);border:1px solid #000000b3;border-radius:6px;box-shadow:2px 2px 14px 2px #000000a0,inset 0 0 0 1px #fffa;padding:0 6px 6px}
+:root[data-apptheme] .win>.wb,:root[data-apptheme] .win>.cmdbody{background:#f0f0f0;border:1px solid #000000b3;box-shadow:0 0 0 1px #fff9}
+:root[data-apptheme] :is(.ddbody,.ctxmenu){background:#f0f0f0f2;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid #979797;border-radius:0;box-shadow:3px 3px 6px #0006;padding:2px}
+:root[data-apptheme] .tb{height:24px;margin:0;border:0;background:none;padding:2px 52px 2px 4px;justify-content:flex-start}
+:root[data-apptheme] .tb span{background:none;color:#000;font:400 12px var(--f-ui);letter-spacing:0;padding:0;text-shadow:0 0 10px #fff,0 0 10px #fff,0 0 8px #fff,0 0 6px #fff}
+:root[data-apptheme] .wclose{top:0;transform:none;right:0;width:43px;height:18px;border:1px solid #000000b3;border-top:0;border-radius:0 0 5px 5px;box-shadow:inset 0 0 0 1px #fff6;background:linear-gradient(#e8a493,#d55a43 45%,#c0392b 45%,#e0826f);color:#fff;font:700 12px/16px var(--f-ui);text-shadow:0 0 3px #000}
+:root[data-apptheme] .wclose:hover{background:linear-gradient(#f7b8a8,#e8705a 45%,#d4402c 45%,#f0a090);color:#fff}
+:root[data-apptheme] .status{background:linear-gradient(#ffffff,#e4e5f0);color:#3b3b3b;border:1px solid #767676;border-radius:3px;box-shadow:2px 2px 4px #0005}
+
+/* SECTION: the toolbar and Explorer-style panes */
+:root[data-apptheme] .topbar{background:linear-gradient(#f5faff,#dbe6f4);border-bottom:1px solid #a0afc3}
+:root[data-apptheme] .side,:root[data-apptheme] .tree{background:#ffffffeb}
+:root[data-apptheme] .dockhead{background:linear-gradient(#fdfeff,#dfe9f5);border-bottom:1px solid #c5d3e4}
+:root[data-apptheme] .dockhead b{color:#1e3287;font-weight:400;letter-spacing:.02em;text-transform:none;font-size:12px}
+:root[data-apptheme] .dockhead button:hover{background:var(--w7-btn-h);color:#000}
+:root[data-apptheme] .treehead,:root[data-apptheme] .sect{border-bottom:1px solid #e3ecf7}
+:root[data-apptheme] .trow2.on>.tlabel{background:linear-gradient(#f2f9fe,#d6f0fd);color:#000;box-shadow:inset 0 0 0 1px #99defd;border-radius:3px}
+:root[data-apptheme] .tlabel:hover{background:linear-gradient(#fafdff,#e8f5fd);box-shadow:inset 0 0 0 1px #b8e3fb;border-radius:3px}
+:root[data-apptheme] :is(.cmditem.on,.cmditem:hover,.cmitem:hover,.cmitem:focus){background:linear-gradient(#f2f9fe,#d6f0fd);border-color:#99defd;color:#000}
+
+/* SECTION: tabs */
+:root[data-apptheme] .ptab{background:linear-gradient(#f2f2f2,#ebebeb 45%,#dddddd 45%,#cfcfcf);border:1px solid #898c95;border-bottom:0;border-radius:3px 3px 0 0;margin:2px 1px 0;font-weight:400;transition:background .3s}
+:root[data-apptheme] .ptab:hover{background:var(--w7-btn-h);color:#000}
+:root[data-apptheme] .ptab[aria-selected="true"]{background:#ffffff;margin-top:0;box-shadow:none}
+
+/* SECTION: fields */
+:root[data-apptheme] :is(input:not([type]),input[type=text],input[type=search],input[type=number],input[type=url],input[type=email],textarea){border:1px solid!important;border-color:#abadb3 #dbdfe6 #e3e9ef #e2e3ea!important;border-radius:2px!important;background-color:#ffffff!important;color:#000!important;box-shadow:none!important;transition:border-color .5s}
+:root[data-apptheme] :is(input:not([type]),input[type=text],input[type=search],input[type=number],textarea):is(:hover,:focus){border-color:#3d7bad #a4c9e3 #b7d9ed #b5cfe7!important}
+:root[data-apptheme] select{appearance:none;border:1px solid #8e8f8f!important;border-radius:3px!important;background:var(--w7-select) right/auto no-repeat,var(--w7-btn)!important;box-shadow:inset 0 0 0 1px #fffc!important;color:#222!important;padding:2px 26px 2px 4px!important}
+:root[data-apptheme] select:hover{border-color:#3c7fb1!important;background:var(--w7-select) right/auto no-repeat,var(--w7-btn-h)!important}
+:root[data-apptheme] input[type=checkbox]{accent-color:#3c7fb1}

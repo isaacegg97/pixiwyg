@@ -1,0 +1,13 @@
+/* SECTION: guided tour: dimmer, spotlights, card */
+.tour{position:fixed;inset:0;z-index:95000;pointer-events:none}
+.tour.over{z-index:100500}
+.tourdim{position:fixed;inset:0;width:100%;height:100%}
+.tourdim path{fill:var(--scrim)}
+.tourspot{position:fixed;border:3px solid var(--hot);box-sizing:border-box}
+.tourcard{position:fixed;width:min(360px,calc(100vw - 32px));pointer-events:auto;box-sizing:border-box}
+.tourcard h2{margin:0 0 6px;font-size:18px}
+.tourcard p{margin:0 0 10px;font-size:13px;line-height:1.45}
+.tourkeys{margin:0 0 10px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;align-items:baseline;font-size:12px}
+.tourkeys dt{display:flex;flex-wrap:wrap;gap:3px}
+.tourkeys dd{margin:0}
+.tourcard .row{display:flex;gap:8px;justify-content:flex-end}

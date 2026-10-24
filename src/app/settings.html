@@ -1,0 +1,43 @@
+<!-- SECTION: settings page -->
+<div class="modal" id="setModal" hidden>
+  <div class="win setwin" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <div class="tb"><span id="setTitle">Settings</span></div>
+    <div class="wb">
+      <section aria-labelledby="setH-look">
+        <h4 id="setH-look">Theme</h4>
+        <div id="setThemes" class="thgrid" role="radiogroup" aria-labelledby="setH-look"></div>
+        <label class="field2" for="setUi">Interface <select id="setUi"><option value="auto">Automatic: XMB on touch screens</option><option value="desktop">Desktop: toolbar and panels</option><option value="xmb">XMB: categories across, tools down</option></select></label>
+        <div class="row">
+          <label class="btn" for="appThemeFile" title="A .css file that recolours PIXIWYG itself (start from the theme template)">Load theme file…</label><input class="sr" type="file" id="appThemeFile" accept=".css,text/css">
+          <button class="btn" id="appThemeTpl" type="button" title="Download a stylesheet listing every interface colour, as it looks now, to make a theme from">Theme template</button>
+          <button class="btn" id="appThemeForget" type="button" hidden title="Remove the theme loaded from a file">Forget your theme file</button>
+        </div>
+      </section>
+      <section aria-labelledby="setH-ed">
+        <h4 id="setH-ed">Editor</h4>
+        <label class="tog" for="setSnap"><input type="checkbox" id="setSnap"><b>Snap to grid</b><small>Things line up with the grid as you drag and resize them.</small></label>
+        <label class="field2" for="setGrid">Grid size <select id="setGrid"><option value="0">off</option><option>4</option><option>5</option><option>8</option><option>10</option><option>12</option><option>16</option><option>20</option><option>24</option><option>32</option><option>50</option></select></label>
+        <label class="tog" for="setShowGrid"><input type="checkbox" id="setShowGrid"><b>Show grid lines</b><small>Draw the grid over the page while you work. Never exported.</small></label>
+        <label class="tog" for="setSound"><input type="checkbox" id="setSound"><b>Sound effects</b><small>The little blips and boings.</small></label>
+        <label class="tog" for="setCatPrims"><input type="checkbox" id="setCatPrims"><b>Show your primitives in the Catalog</b><small>Open the “Your primitives” strip above the styles.</small></label>
+        <label class="field2" for="setDocView">Manuscripts open in <select id="setDocView"><option value="page">Page view</option><option value="md">Markdown</option></select></label>
+      </section>
+      <section aria-labelledby="setH-exp">
+        <h4 id="setH-exp">Exports start with</h4>
+        <label class="tog" for="setExp-nojs"><input type="checkbox" id="setExp-nojs"><b>No JavaScript</b><small>Plain HTML and CSS. Works with scripts turned off.</small></label>
+        <label class="tog" for="setExp-fonts"><input type="checkbox" id="setExp-fonts"><b>Embed fonts</b><small>Web fonts travel inside the file, so it works offline.</small></label>
+        <label class="tog" for="setExp-prune"><input type="checkbox" id="setExp-prune"><b>Only the CSS the page uses</b><small>Drops every rule that styles nothing on the page.</small></label>
+        <label class="tog" for="setExp-playerCdn"><input type="checkbox" id="setExp-playerCdn"><b>Music player from the web</b><small>Loads Webamp from unpkg instead of putting its 900 KB in the file.</small></label>
+      </section>
+      <section aria-labelledby="setH-reset">
+        <h4 id="setH-reset">Start over</h4>
+        <div class="row">
+          <button class="btn" id="setResetPanels" type="button" title="Project and Add on the left, Properties on the right, default widths">Reset panel layout</button>
+          <button class="btn" id="setWelcome" type="button">Show the welcome again</button>
+          <button class="btn" id="setClearErr" type="button" title="Errors kept for problem reports">Clear error log (<span id="setErrN"></span>)</button>
+        </div>
+      </section>
+      <div class="row end"><button class="btn primary" id="setClose" type="button">Done</button></div>
+    </div>
+  </div>
+</div>

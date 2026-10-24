@@ -1,0 +1,3 @@
+/* SECTION: text effects drilldown */
+.tfxtext{border:2px solid var(--ink);background:var(--paper);padding:12px;font:20px/1.4 Georgia,serif;color:var(--ink);min-height:80px;max-height:40vh;overflow:auto;user-select:text;cursor:text}
+.tfxname{all:unset;cursor:pointer;font-weight:700;text-decoration:underline dotted}.tfxname:focus-visible{outline:2px solid currentColor}

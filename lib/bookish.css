@@ -1,0 +1,61 @@
+/* FORMAT: bookish.css, PIXIWYG house style, MIT License. Quiet book typography for printed zines and chapbooks:
+   small caps, indented paragraphs, epigraphs, chapter openers, footnotes, running heads. */
+:root{--ink:#222;--soft:#77736b;--accent:#8a3324}
+body{font-family:Fraunces,Georgia,"Times New Roman",serif;color:var(--ink)}
+
+h1{font:400 34px/1.15 Fraunces,Georgia,serif;margin:0;letter-spacing:.5px}
+h1.chapter{font:400 30px/1.2 Fraunces,Georgia,serif;text-align:center;font-variant:small-caps;letter-spacing:3px}
+h1.title{font:800 42px/1.05 Fraunces,Georgia,serif;text-align:center}
+h2{font:400 21px/1.2 Fraunces,Georgia,serif;margin:0;font-variant:small-caps;letter-spacing:2px}
+h2.number{font:italic 400 18px Fraunces,Georgia,serif;text-align:center;color:var(--soft);font-variant:normal;letter-spacing:0}
+h3{font:italic 400 16px Fraunces,Georgia,serif;margin:0}
+h3.runninghead{font:400 10px Georgia,serif;font-style:normal;text-transform:uppercase;letter-spacing:3px;color:var(--soft);text-align:center}
+
+p{font:15px/1.55 Fraunces,Georgia,serif;margin:0;text-align:justify;hyphens:auto}
+p.indent{text-indent:1.5em}
+p.opener::first-line{font-variant:small-caps;letter-spacing:1px}
+p.opener::first-letter{font-size:3.2em;float:left;line-height:.85;padding:4px 6px 0 0;color:var(--accent)}
+p.epigraph{font-style:italic;text-align:right;font-size:14px;margin-left:30%}
+p.footnote{font-size:11px;line-height:1.4;border-top:1px solid var(--soft);padding-top:4px;text-align:left}
+p.center{text-align:center}
+p.colophon{font-size:11px;text-align:center;color:var(--soft);font-variant:small-caps;letter-spacing:1px}
+
+blockquote{margin:0;font:italic 15px/1.5 Fraunces,Georgia,serif;padding:0 2em}
+blockquote.verse{font-style:normal;white-space:pre-line;padding-left:3em;border-left:1px solid var(--soft)}
+
+button{font:400 13px Fraunces,Georgia,serif;font-variant:small-caps;letter-spacing:2px;background:none;border:1px solid var(--ink);color:var(--ink);padding:6px 16px;cursor:pointer}
+a{color:var(--accent);font:15px Fraunces,Georgia,serif;text-decoration:none;border-bottom:1px solid currentColor}
+input,textarea,select{font:15px Fraunces,Georgia,serif;border:0;border-bottom:1px solid var(--ink);background:transparent;padding:4px 0;width:100%;box-sizing:border-box;color:var(--ink)}
+label{font:12px Georgia,serif;font-variant:small-caps;letter-spacing:2px}
+
+ul,ol{font:15px/1.55 Fraunces,Georgia,serif;margin:0;padding-left:1.6em}
+ol.contents{list-style:none;padding:0}
+ol.contents li{display:flex;gap:6px}
+ol.contents li::after{content:"";flex:1;border-bottom:1px dotted var(--soft);order:1;margin-bottom:5px}
+ul.dash{list-style:"— "}
+
+hr{border:0;border-top:1px solid var(--ink);margin:0;width:40%;margin-inline:auto}
+hr.asterism{border:0;width:auto;height:22px;text-align:center}
+hr.asterism::before{content:"\2042";font-size:20px}
+hr.fleuron{border:0;width:auto;height:24px;text-align:center}
+hr.fleuron::before{content:"\2766";font-size:20px;color:var(--accent)}
+
+table{border-collapse:collapse;font:13px Fraunces,Georgia,serif;margin:0 auto}
+th,td{padding:4px 12px;text-align:left}
+th{font-variant:small-caps;letter-spacing:1px;border-bottom:1px solid var(--ink);font-weight:400}
+td{border-bottom:1px solid #ddd}
+
+img{display:block;filter:grayscale(.2)}
+img.plate{border:1px solid var(--ink);padding:6px;background:#fff}
+
+div{font:15px/1.55 Fraunces,Georgia,serif}
+.titlepage{text-align:center;padding:24px 12px;border:1px solid var(--ink);outline:1px solid var(--ink);outline-offset:4px}
+.sidenote{font-size:12px;line-height:1.4;color:var(--soft);border-left:2px solid var(--accent);padding-left:8px}
+.colophon{font-size:11px;text-align:center;color:var(--soft)}
+
+code{font:13px "DM Mono",monospace}
+pre{font:12px/1.5 "DM Mono",monospace;margin:0;padding:0 1.5em;white-space:pre-wrap}
+nav{font:12px Georgia,serif;font-variant:small-caps;letter-spacing:2px;text-align:center}
+nav a{border:0}
+span{font:13px Fraunces,Georgia,serif}
+.smallcaps{font-variant:small-caps;letter-spacing:1px}

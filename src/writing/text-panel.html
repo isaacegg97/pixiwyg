@@ -1,0 +1,25 @@
+<!-- SECTION: Add panel: Text pane (manuscripts) -->
+  <section class="pane textpane" id="w-text" role="tabpanel" aria-labelledby="t-text" hidden>
+    <div class="docempty" id="docEmpty">
+      <p><b>Write it in Markdown; it flows onto the page.</b> A manuscript is plain text, kept with the project as a .md file, laid out as you type. Each block shows on the page as a manuscript block; convert any of them into a component of your own to move, restyle or animate it.</p>
+      <div class="row"><button class="btn primary" id="docStart">Start a manuscript</button><button class="btn" id="docStartImport">Open a .md file…</button></div>
+    </div>
+    <div class="docbody" id="docBody" hidden>
+      <div class="row docbar"><select id="docSel" aria-label="Manuscript"></select><button class="btn sqm" id="docNew" title="Start another manuscript">+ New</button><button class="btn sqm" id="docImport" title="Open a .md file as a manuscript (or drop one on the page)">Open .md…</button><button class="btn sqm" id="docSave" title="Download this manuscript as a .md file">Save .md</button><button class="btn sqm" id="docDel" title="Remove this manuscript">×</button></div>
+      <div class="docopts"><label class="field2">Name <input id="docName" type="text" maxlength="80"></label>
+        <label class="field2">Style <select id="docSheet" title="The stylesheet its blocks wear; style a block on the page to style every block of that kind"></select></label>
+        <label class="field2" id="docFromRow">Starts on <select id="docFrom"></select></label>
+        <label class="field2" id="docWidthRow">Column width <input type="number" id="docWidth" min="160" step="8"></label></div>
+      <div class="mdtools" id="mdTools" role="toolbar" aria-label="Formatting">
+        <button class="btn sqm" data-md="h1" title="Heading">H1</button><button class="btn sqm" data-md="h2" title="Subheading">H2</button><button class="btn sqm" data-md="h3" title="Small heading">H3</button>
+        <button class="btn sqm" data-md="b" title="Bold (Ctrl/⌘+B)"><b>B</b></button><button class="btn sqm" data-md="i" title="Italic (Ctrl/⌘+I)"><i>I</i></button><button class="btn sqm" data-md="code" title="Code">`c`</button>
+        <button class="btn sqm" data-md="quote" title="Quote">❝</button><button class="btn sqm" data-md="ul" title="List">•</button><button class="btn sqm" data-md="ol" title="Numbered list">1.</button>
+        <button class="btn sqm" data-md="link" title="Link (Ctrl/⌘+K)">Link</button><button class="btn sqm" data-md="hr" title="A rule between sections">—</button></div>
+      <div class="row docview"><button class="btn sqm" id="docViewPage" aria-pressed="true" title="Write on a page, as in a word processor">Page</button><button class="btn sqm" id="docViewMd" aria-pressed="false" title="The Markdown as it is stored">Markdown</button><button class="btn sqm" id="docFocus" aria-pressed="false" title="Full-screen page, typewriter scrolling (Esc returns)">Focus</button></div>
+      <div class="docpage" id="docPage" contenteditable="true" spellcheck="true" role="textbox" aria-multiline="true" aria-label="Manuscript page"></div>
+      <input class="doclink" id="docLink" type="url" hidden aria-label="Link address">
+      <textarea id="docText" spellcheck="true" aria-label="Manuscript text" placeholder="# A title&#10;&#10;Start writing. Blank lines separate paragraphs."></textarea>
+      <div class="row docfoot"><small id="docStats"></small><button class="btn sqm" id="docConvertAll" title="Turn every block into a component of its own">Convert all</button></div>
+      <input type="file" id="docFile" accept=".md,.markdown,.mdown,.mkd,.txt,text/markdown,text/plain" hidden>
+    </div>
+  </section>

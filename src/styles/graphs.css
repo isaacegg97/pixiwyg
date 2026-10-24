@@ -1,0 +1,16 @@
+/* SECTION: style graphs (node kinds and effect buttons) */
+.port.css{background:var(--sun);border-radius:3px}
+.wire.css{stroke:color-mix(in srgb,var(--sun) 80%,#000);stroke-width:3.5}
+.k-color .nhead{background:var(--n-events)}.k-edges .nhead{background:var(--n-head)}.k-light .nhead{background:var(--n-anim)}.k-shape .nhead{background:var(--n-actions)}.k-type .nhead{background:var(--n-math)}.k-motion .nhead{background:var(--n-values)}.k-combine .nhead{background:var(--n-misc)}.k-imported .nhead{background:var(--n-imported)}.k-style .nhead{background:var(--hot)}
+.nrow textarea{font:11px/1.35 var(--f-mono);border:1px solid var(--ink);background:var(--paper);color:var(--ink);width:180px;height:56px;resize:vertical;box-sizing:border-box}
+.nstyle{display:inline-flex;gap:6px;align-items:center}
+.nstyle[hidden]{display:none}
+.nstyle select{border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:3px 6px;font:12px var(--f-mono);max-width:160px}
+.npal .fxgroup{display:flex;flex-wrap:wrap;gap:4px}
+.npal .fxbtn{display:flex;align-items:center;gap:6px;width:100%;text-align:left;padding:3px 6px;font-size:11px;box-shadow:none;overflow:hidden}
+.npal .fxbtn span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fxsw{flex:none;width:30px;height:22px;display:grid;place-items:center;font:700 13px Georgia,serif;font-style:normal;background:#fff;color:#16121f;border:1px solid #bbb;border-radius:2px}
+.npal details{margin-top:4px}.npal summary{cursor:pointer;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:6px 0 2px}
+.stylehost{width:100%}
+.fxlist{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+.fxlist label{display:flex;align-items:center;gap:6px;font-size:12px}.fxlist label b{flex:1;font-weight:600}

@@ -1,0 +1,57 @@
+/* SECTION: the app grid and side panels: docking, resizing, folding, swapping sides */
+body{display:grid;grid-template-columns:var(--tw,220px) var(--lw,340px) minmax(0,1fr) var(--rw,320px);grid-template-rows:auto minmax(0,1fr) auto}
+/* RULE: a folded panel is a rail labeled with its name, whatever width it was dragged to */
+body.noL{--lw:30px!important}body.noR{--rw:30px!important}body.noT{--tw:30px!important}
+.dock{position:relative}
+.rsz{position:absolute;z-index:58;top:0;bottom:0;width:9px;cursor:col-resize;touch-action:none}
+.at-before>.rsz{right:0}.at-after>.rsz{left:0}
+.rsz::after{content:"";position:absolute;inset:0 3px;background:transparent;transition:background .1s}
+.rsz:hover::after,.rsz:focus-visible::after,.rsz.drag::after{background:var(--hot)}
+body.noL .rsz.l,body.noR .rsz.r,body.noT .rsz.t{display:none}
+body.resizing,body.resizing *{cursor:col-resize!important;user-select:none}
+body.noL #sideL>:not(.drail),body.noR #sideR>:not(.drail),body.noT #tree>:not(.drail){display:none!important}
+.drail{display:none;flex:1;align-items:flex-start;justify-content:center;border:0;background:var(--chrome);color:var(--ink);cursor:pointer;padding:10px 0;font:600 12px var(--f-ui);letter-spacing:.08em;text-transform:uppercase}
+.drail span{writing-mode:vertical-rl}.drail:hover{background:var(--sun);color:var(--onsun)}
+body.noL #sideL>.drail,body.noR #sideR>.drail,body.noT #tree>.drail{display:flex}
+.dockhead{display:flex;align-items:center;gap:4px;padding:3px 4px 3px 6px;background:var(--chrome2);border-bottom:2px solid var(--ink);flex:none}
+.dockhead .dgrip{cursor:grab;font-size:13px;line-height:1;padding:0 2px;user-select:none}
+.dockhead b{flex:1;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:grab;user-select:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dockhead button{border:0;background:none;color:var(--ink);cursor:pointer;font-size:13px;padding:0 4px;line-height:1.2}
+.dockhead button:hover{background:var(--sun);color:var(--onsun)}
+.dock.droptarget{outline:3px dashed var(--hot);outline-offset:-3px}
+.ptab[draggable=true],#sideR>.sect>summary{cursor:grab}
+.ptab.dragover{box-shadow:inset 3px 0 0 var(--hot)}
+#sideR>.sect.dragover{box-shadow:inset 0 3px 0 var(--hot)}
+/* RULE: in a docked context (Music, Paint, node editor) only the tree stays beside it */
+body.dockctx{--lw:0px!important;--rw:0px!important}
+body.dockctx .side{display:none!important}
+body.noR .stagehud{right:calc(var(--rw,30px) + 14px)}
+#sideR{display:flex;flex-direction:column}
+
+.side{grid-row:2/4;min-height:0;min-width:0;background:var(--chrome);display:flex;flex-direction:column;overflow:hidden}
+.side.left{grid-column:2}
+.side.right{grid-column:4;overflow:auto}
+.at-before{border-right:2px solid var(--ink)}.at-after{border-left:2px solid var(--ink)}
+.ptabs{display:flex;border-bottom:2px solid var(--ink);flex:none}
+.ptab{flex:1;background:var(--chrome2);border:0;border-right:2px solid var(--ink);padding:7px 4px;font-weight:600;cursor:pointer}
+.ptab:last-child{border-right:0}
+.ptab:hover{background:var(--sun);color:var(--onsun)}
+.ptab[aria-selected="true"]{background:var(--chrome);box-shadow:inset 0 -3px 0 var(--hot)}
+.pane{flex:1;min-height:0;overflow:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.pane[hidden]{display:none}
+.ph{margin:0;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sect{border-bottom:2px solid var(--ink);flex:none}
+.sect>.ph{padding:8px 10px;display:block}
+.sect>summary.ph{cursor:pointer;list-style:none}
+.sect>summary.ph::-webkit-details-marker{display:none}
+.sect>summary.ph::before{content:'▸ '}
+.sect[open]>summary.ph::before{content:'▾ '}
+.sect>.wb{padding:0 10px 10px}
+@media (max-width:900px){
+  body,body.noL,body.noR,body.noT{--lw:0px!important;--rw:0px!important;--tw:0px!important}
+  body.noL .side.left,body.noR .side.right{display:none!important}
+  .rsz{display:none}
+  .side{position:fixed;top:var(--tbh,48px);bottom:0;z-index:55;width:min(360px,calc(100vw - 32px));box-shadow:4px 0 0 var(--shadow)}
+  .side.left{left:0}.side.right{right:0;box-shadow:-4px 0 0 var(--shadow)}
+}
+body.dockctx .status{bottom:calc(64px + env(safe-area-inset-bottom,0px))}

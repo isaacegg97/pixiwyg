@@ -1,0 +1,34 @@
+/* SECTION: the toolbar: groups, what each workspace shows, overflow into More */
+.projname{width:10em;min-width:0;border:2px solid var(--ink);background:var(--paper);padding:3px 6px;font:600 13px var(--f-mono)}
+
+.topbar{grid-column:1/-1;grid-row:1;display:flex;align-items:center;gap:6px 8px;flex-wrap:nowrap;padding:2px 8px;background:var(--chrome);border-bottom:2px solid var(--ink);position:relative;z-index:60;min-height:42px;height:42px;box-sizing:border-box}
+.tgroup{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.tgroup+.tgroup{padding-left:6px;border-left:2px dotted var(--ink)}
+.tools-group{display:flex;align-items:center;gap:4px}
+.tools-group .btn{font-size:12px;padding:3px 7px}
+.spacer{flex:1;min-width:4px}
+.dd{position:relative}
+.dd>summary{list-style:none}
+.dd>summary::-webkit-details-marker{display:none}
+.ddbody{position:absolute;right:0;top:calc(100% + 6px);z-index:70;display:flex;flex-direction:column;gap:6px;padding:8px;min-width:180px;background:var(--chrome);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shadow)}
+.ddbody .btn{text-align:left}
+@media (max-width:900px){  .topbar{gap:5px;padding:5px 8px}.topbar .btn{padding:3px 7px}.tgroup+.tgroup{padding-left:0;border-left:0}.spacer,.topbar .logo{display:none}
+}
+/* RULE: a workspace shows the tools for its job; page-only tools leave Paint and Music, text tools leave Animate.
+   ▶ Play stays everywhere: it is how you try the page from any workspace (it switches to Page). */
+body[data-ws=paint] :is(#mdBtn,#afBtn,#stylesBtn,#logicBtn,#liveBtn,#snapBtn,#gridSize,#snapGridGroup,label:has(>#gridSize)),
+body[data-ws=music] :is(#mdBtn,#afBtn,#stylesBtn,#logicBtn,#liveBtn,#snapBtn,#gridSize,#snapGridGroup,label:has(>#gridSize)),
+body[data-ws=model] :is(#mdBtn,#afBtn,#stylesBtn,#logicBtn,#liveBtn,#snapBtn,#gridSize,#snapGridGroup,label:has(>#gridSize)),
+body[data-ws=animate] :is(#mdBtn,#afBtn),body[data-ws=write] #logicBtn{display:none!important}
+body[data-ws=paint] :is(#sUndo,#sRedo){display:none}
+/* RULE: the toolbar never runs off the screen. Tools for other workspaces aren't shown; what still doesn't fit moves,
+   least important first, into More ▾ (fitTopbar in dock.js). Projects, the workspace, Play, Export and More stay. */
+body:not([data-ws=page]) #toolsGroup{display:none}
+body[data-ws=paint] #liveBtn,body[data-ws=music] #liveBtn,body[data-ws=model] #liveBtn{display:none}
+.tboverflow{display:flex;flex-direction:column;gap:6px;padding-bottom:6px;margin-bottom:2px;border-bottom:1px dashed var(--line)}
+.tboverflow[hidden]{display:none}
+.tboverflow .tgroup,.tboverflow .wsfiles{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+.tboverflow .btn{text-align:left}
+#cmdBtn.tbcompact .cmd-text,#cmdBtn.tbcompact kbd{display:none}
+.tbicon{display:none}.tbcompact .tbicon{display:inline}.tbcompact .tblabel{display:none}.tboverflow .projname{width:auto}
+.tbhide{display:none!important}

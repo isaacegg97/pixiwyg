@@ -1,0 +1,6 @@
+/* SECTION: keyboard shortcuts window */
+.help{max-height:62vh;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.help h3{margin:0 0 4px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.help dl{margin:0;display:grid;grid-template-columns:10.5em minmax(0,1fr);gap:5px 12px;align-items:baseline}
+.help dt{display:flex;flex-wrap:wrap;gap:3px}
+.help dd{margin:0;font-size:13px}

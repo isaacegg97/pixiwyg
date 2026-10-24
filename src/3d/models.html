@@ -1,0 +1,52 @@
+<!-- SECTION: 3D workspace panel -->
+<div class="modal" id="m3dModal" hidden>
+  <div class="win m3dwin" role="dialog" aria-modal="false" aria-labelledby="m3dTitle">
+    <div class="tb"><span id="m3dTitle">3D model</span><button class="wclose" id="m3dClose" aria-label="Close" title="Close (Esc)">×</button></div>
+    <div class="m3dbody">
+      <!-- INCLUDE: 3d/build.html -->
+      <div><canvas class="m3dview" id="m3dView" width="320" height="320" aria-label="Model preview: drag to turn it"></canvas><p class="shelp" id="m3dFrame"></p></div>
+      <div class="m3dside">
+        <h3 id="m3dName">No model yet</h3>
+        <p class="shelp">A low-poly model (.obj with its .mtl and textures, .glb, .gltf or .stl) becomes one image holding every angle. The page shows one angle, spins through them, or lets visitors drag it round. Up to 20,000 triangles.</p>
+        <div class="row opts2">
+          <label class="btn" for="m3dFile" title="A model, or a model with its .mtl, .bin and texture images selected together">Open model…</label><input class="sr" type="file" id="m3dFile" accept=".obj,.stl,.glb,.gltf,.bin,.mtl,.png,.jpg,.jpeg,.webp,model/obj,model/stl,model/gltf-binary,model/gltf+json" multiple>
+          <button class="btn" id="m3dSampleBtn" type="button">Try the sample</button>
+          <button class="btn" id="m3dNewScene" type="button" title="Build a model from boxes, spheres, cylinders and more">Start from shapes</button>
+          <button class="btn" id="m3dBuildOn" type="button" hidden title="Turn this model into a part, then add shapes to it or cut them from it">Build on this model</button>
+        </div>
+        <div class="row opts2">
+          <label class="field2" for="m3dAz">Angles <select id="m3dAz"><option>8</option><option>16</option><option>24</option><option>32</option></select></label>
+          <label class="field2" for="m3dRows">Heights <select id="m3dRows"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></label>
+          <label class="field2" for="m3dCell">Cell <select id="m3dCell"><option value="64">64px</option><option value="96">96px</option><option value="128">128px</option><option value="192">192px</option></select></label>
+        </div>
+        <div class="row opts2">
+          <label class="field2" for="m3dColor">Colour <input type="color" id="m3dColor"></label>
+          <label class="field2" for="m3dUp">Up <select id="m3dUp"><option value="y">Y up (OBJ, glTF)</option><option value="z">Z up (STL, Blender)</option></select></label>
+          <label class="tog2" for="m3dFlat"><input type="checkbox" id="m3dFlat"> Flat shading</label>
+        </div>
+        <div class="row opts2">
+          <button class="btn" id="m3dPaint" disabled title="Open the texture in the Paint Studio with the UV layout drawn over it">Paint texture…</button>
+          <span class="shelp" id="m3dTexNote"></span>
+        </div>
+        <div class="row opts2">
+          <label class="tog2" for="m3dSpin"><input type="checkbox" id="m3dSpin"> Spin on the page</label>
+          <label class="tog2" for="m3dDrag" title="Visitors turn it by dragging (needs the page script; script-free exports keep the spin only)"><input type="checkbox" id="m3dDrag"> Drag to turn</label>
+          <label class="field2" for="m3dDur">Turn in <input type="number" id="m3dDur" min=".5" max="60" step=".5"> s</label>
+        </div>
+        <div class="row">
+          <button class="btn primary" id="m3dPlace" disabled>Place on page</button>
+          <button class="btn" id="m3dUpdate" hidden disabled>Update selected</button>
+          <button class="btn" id="m3dDlAtlas" disabled title="The sprite sheet, every angle in one PNG">Atlas PNG</button>
+          <button class="btn" id="m3dDlNormals" disabled title="Same layout, view-space normals, for relighting elsewhere">Normals PNG</button>
+        </div>
+        <div class="row">
+          <button class="btn" id="m3dPrimBaked" disabled title="Just the sprite sheet: small, places instantly, can't be re-baked">Save sprite to Primitives</button>
+          <button class="btn" id="m3dPrimModel" disabled title="The model, its texture and settings: baked fresh wherever it's placed, and editable">Save model to Primitives</button>
+        </div>
+        <p class="shelp" id="m3dInfo"></p>
+        <img class="m3datlas" id="m3dAtlas" alt="The baked sprite sheet">
+      </div>
+    </div>
+  </div>
+</div>
+

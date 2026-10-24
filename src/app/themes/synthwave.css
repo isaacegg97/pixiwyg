@@ -1,0 +1,61 @@
+/* SECTION: Synthwave: midnight purple, hot magenta, laser cyan.
+   Load it from Settings, or More ▾ → Settings… → Load theme file. See template.css for every token. */
+:root[data-apptheme]{
+  color-scheme: dark;
+
+  /* SECTION: Desk and panels */
+  --desk: #1a0f2e;
+  --desk2: #21143a;
+  --chrome: #251640;
+  --chrome2: #1a0f2e;
+  --paper: #140b24;
+  --ink: #f4e9ff;
+  --muted: #b39ad6;
+  --line: #4a3170;
+  --shadow: #ff2a6d;
+  --scrim: rgba(10,4,20,.7);
+
+  /* SECTION: Accents */
+  --hot: #ff2a6d;
+  --hot2: #ff5a8e;
+  --onhot: #140b24;
+  --sel: #05d9e8;
+  --onsel: #140b24;
+  --sun: #ffd319;
+  --onsun: #140b24;
+  --act: #05d9e8;
+  --actfg: #140b24;
+
+  /* SECTION: Status */
+  --bad: #ff3864;
+  --warn: #ff9e2c;
+  --ok: #3cf2a5;
+  --lib: #4a3170;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #251640;
+  --check-b: #2e1c4f;
+
+  /* SECTION: Node editors */
+  --n-head: #4a3170;
+  --n-headfg: #140b24;
+  --n-events: #ff2a6d;
+  --n-actions: #05d9e8;
+  --n-values: #3cf2a5;
+  --n-math: #c77dff;
+  --n-anim: #ff9e2c;
+  --n-misc: #b39ad6;
+  --n-imported: #ffd319;
+
+  /* SECTION: Manuscript page view */
+  --doc-desk: #1a0f2e;
+
+  /* SECTION: Logo */
+  --logo3: #05d9e8;
+  --logo4: #c77dff;
+  --logo5: #3cf2a5;
+  --logo6: #ff9e2c;
+}
+
+/* SECTION: beyond the tokens: a horizon glow under the desk pattern */
+:root[data-apptheme] body{background-image:linear-gradient(180deg,transparent 60%,rgba(255,42,109,.12)),repeating-conic-gradient(var(--desk2) 0 25%,transparent 0 50%);background-size:100% 100%,4px 4px}

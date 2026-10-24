@@ -1,0 +1,11 @@
+/* SECTION: export dialog */
+.expopts{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.warnp{color:var(--hot-ink)}
+.opts2{align-items:center}
+.tog2{display:inline-flex;align-items:center;gap:6px;font-size:13px}
+.tog2 input{accent-color:var(--hot);margin:0}
+.presets{display:block}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px}
+.pgrid .pal{padding:5px 4px}
+.pgrid .pal i{font-size:11px}
+.warnp:empty{display:none}

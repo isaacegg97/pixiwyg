@@ -1,0 +1,26 @@
+<!-- SECTION: autoformat dialog -->
+<div class="modal" id="afModal" hidden>
+  <div class="win" role="dialog" aria-modal="true" aria-labelledby="afTitle">
+    <div class="tb"><span id="afTitle">Autoformat</span></div>
+    <div class="wb">
+      <p>Arranges every element in reading order, top to bottom and left to right, with even spacing. Text blocks take the column width. The painting stays where it is.</p>
+      <fieldset class="seg presets"><legend>Preset</legend><div class="pgrid" id="afPresets"></div></fieldset>
+      <fieldset class="seg"><legend>Layout</legend>
+        <label><input type="radio" name="afLayout" value="column"> One column</label>
+        <label><input type="radio" name="afLayout" value="two"> Two columns</label>
+        <label><input type="radio" name="afLayout" value="tidy"> Tidy in place</label>
+      </fieldset>
+      <div class="row opts2">
+        <label class="field2" for="afWidth">Width <input type="number" id="afWidth" min="160" step="8"></label>
+        <label class="field2" for="afGap">Spacing <input type="number" id="afGap" min="0" step="4"></label>
+        <label class="field2" for="afSheet">Restyle with <select id="afSheet"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn" id="afGo">Autoformat</button>
+        <button class="btn" id="afClose">Close</button>
+        <span class="shelp">Undo puts everything back.</span>
+      </div>
+    </div>
+  </div>
+</div>
+

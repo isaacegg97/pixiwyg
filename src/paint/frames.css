@@ -1,0 +1,11 @@
+/* SECTION: animation frames strip */
+.frames{display:flex;flex-direction:column;gap:4px}
+.fbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px}
+.fbar .shelp{flex:1;min-width:160px}
+#fPos{font:12px var(--f-mono);min-width:44px;text-align:center}
+.fstrip{display:flex;gap:4px;overflow-x:auto;padding-bottom:2px}
+.frames:not(.many) .fstrip{display:none}
+.fthumb{position:relative;flex:none;width:64px;height:48px;border:2px solid var(--ink);padding:0;cursor:pointer;background-color:var(--check-a);background-image:conic-gradient(var(--check-b) 25%,var(--check-a) 0 50%,var(--check-b) 0 75%,var(--check-a) 0);background-size:8px 8px}
+.fthumb img{width:100%;height:100%;object-fit:contain}
+.fthumb span{position:absolute;right:2px;bottom:1px;font:11px var(--f-mono);background:var(--ink);color:var(--paper);padding:0 3px}
+.fthumb.on{outline:3px solid var(--hot);outline-offset:1px}

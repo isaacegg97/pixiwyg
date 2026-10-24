@@ -1,0 +1,22 @@
+<!-- SECTION: first visit: profiles and theme picker -->
+<div class="modal" id="obModal" hidden>
+  <div class="win obwin" role="dialog" aria-modal="true" aria-labelledby="obTitle">
+    <div class="tb"><span id="obTitle">Hello</span><button class="wclose" id="obClose" aria-label="Skip" title="Skip (Esc)">×</button></div>
+    <div class="wb">
+      <h4 class="obh" id="obLookH">First, pick a look</h4>
+      <div id="obThemes" class="thgrid obthemes" role="radiogroup" aria-labelledby="obLookH"></div>
+      <p class="shelp">It changes right away, behind this window. Settings (Ctrl/⌘+,) has them all, any time, and can load your own.</p>
+      <button class="obquest" id="obQuest" type="button"><span class="qpixi" aria-hidden="true">⭐</span><span><b>Creative Quest, for kids</b><span class="obqt">Seven hands-on missions with stars: draw, make music, tell a story, build in 3D and make it all move. Best on a tablet.</span></span></button>
+      <h4 class="obh">Then, who are you?</h4>
+      <p class="oblead">Roughly. We won’t check. Pick the closest and you’ll get a short tour of the parts you’ll actually use, on an example page you’re welcome to wreck.</p>
+      <div class="obgrid">
+        <button class="obcard" data-p="artist"><span class="obicon" aria-hidden="true">✎</span><b>Artist</b><span>You draw things.</span><small>Pages, plus the Paint Studio</small></button>
+        <button class="obcard" data-p="musician"><span class="obicon" aria-hidden="true">♫</span><b>Musician</b><span>You make noise on purpose.</span><small>Pages, plus the Sequencer</small></button>
+        <button class="obcard" data-p="animator"><span class="obicon" aria-hidden="true">◷</span><b>Animator</b><span>You make things move. Mostly deadlines.</span><small>Pages, plus the Animate timeline</small></button>
+        <button class="obcard" data-p="writer"><span class="obicon" aria-hidden="true">✒</span><b>Writer</b><span>You have words, and opinions about kerning.</span><small>Pages, plus typesetting and print</small></button>
+      </div>
+      <div class="row obmore"><button class="btn" id="obComp" title="Animation, logic, and keeping parts to use again">How to build components</button><button class="btn" id="obFull" title="Everything, in order, starting from the canvas picker">The full tour</button><span class="grow"></span><button class="btn" id="obSkip">Skip. I’ve used software before.</button></div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,28 @@
+/* SECTION: 3D workspace panel */
+body[data-ws=model] #m3dModal:not([hidden]){position:fixed;inset:var(--tbh,48px) var(--dockR,0px) 0 var(--dockL,220px);padding:0;background:var(--desk);z-index:55;display:flex;align-items:stretch;justify-content:stretch}
+body[data-ws=model] #m3dModal .m3dwin{flex:1;width:auto;height:auto;max-width:none;max-height:none;box-shadow:none;border:0}
+.m3dbody{display:flex;gap:16px;flex-wrap:wrap;padding:12px;overflow:auto}
+.m3dbuild{display:flex;gap:12px;flex-wrap:wrap;flex:2 1 640px;min-width:0}
+.m3dvp{display:flex;flex-direction:column;gap:6px;flex:1 1 360px;min-width:280px}
+.m3dedit{width:100%;aspect-ratio:1;max-height:70vh;border:2px solid var(--ink);background:radial-gradient(circle at 50% 35%,var(--paper),var(--chrome2));cursor:grab;touch-action:none}
+.m3dedit:focus-visible{outline:3px solid var(--sel);outline-offset:2px}
+.m3dparts{flex:1 1 260px;min-width:240px;display:flex;flex-direction:column;gap:8px}
+.m3dbuild:not(.on) .m3dpartsui{display:none}.m3dbuild.on .m3dintro{display:none}
+.m3dlist{list-style:none;margin:0;padding:2px;max-height:220px;overflow:auto;border:2px solid var(--ink);background:var(--paper)}
+/* RULE: the picked part shows by a border and bold type as well as its fill; cuts and overlaps say so in words */
+.m3drow{display:flex;align-items:center;gap:6px;padding:3px 4px;border:2px solid transparent;cursor:pointer;font-size:13px}
+.m3drow.on{border-color:var(--ink);background:var(--sun);color:var(--onsun);font-weight:700}
+.m3drow.off .m3dpn{opacity:.5}
+.m3dsw{width:14px;height:14px;border:1px solid var(--ink);flex:none}
+.m3dsw.grp{font:700 9px/12px var(--f-mono);text-align:center;font-style:normal;background:var(--paper)}
+.m3drow.on.primary{outline:2px dashed var(--ink);outline-offset:-4px}
+.m3dpn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m3dop{font:11px var(--f-mono)}
+.m3dprops{display:flex;flex-direction:column;gap:6px}
+.m3dprops[hidden],#m3dPSegRow[hidden]{display:none}
+.m3dxyz{display:grid;grid-template-columns:4.5em repeat(3,minmax(0,1fr));gap:4px;align-items:center;font-size:12px}
+.m3dxyz input{width:100%;box-sizing:border-box;min-width:0}
+.m3dxyzhead b{text-align:center;font:11px var(--f-mono);color:var(--muted)}
+.m3dview{width:320px;height:320px;background-color:var(--check-a);background-image:conic-gradient(var(--check-b) 25%,var(--check-a) 0 50%,var(--check-b) 0 75%,var(--check-a) 0);background-size:16px 16px;border:2px solid var(--ink);cursor:grab;touch-action:none}
+.m3dside{flex:1;min-width:280px;display:flex;flex-direction:column;gap:8px}
+.m3datlas{max-width:100%;max-height:160px;object-fit:contain;align-self:flex-start;border:1px dashed var(--ink);background:var(--check-a)}

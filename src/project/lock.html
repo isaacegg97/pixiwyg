@@ -1,0 +1,16 @@
+<!-- SECTION: project open in another window -->
+<div class="modal" id="lockModal" hidden>
+  <div class="win" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+    <div class="tb"><span id="lockTitle">Open in another window</span></div>
+    <div class="wb">
+      <p>“<b id="lockName"></b>” is open in another window. Two windows saving the same project would overwrite each other.</p>
+      <div class="row">
+        <button class="btn primary" id="lockTake">Take over here</button>
+        <button class="btn" id="lockRo">Open read-only</button>
+        <button class="btn" id="lockCancel">Cancel</button>
+      </div>
+      <p class="shelp">Taking over makes the other window read-only and opens the latest saved version here.</p>
+    </div>
+  </div>
+</div>
+

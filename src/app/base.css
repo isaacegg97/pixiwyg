@@ -1,0 +1,66 @@
+/* SECTION: design tokens (light, dark), base type, notices and shared bits */
+:root{
+  --desk:#a6a2d2; --desk2:#938ec6;
+  --chrome:#eceaf6; --chrome2:#d4d0ea;
+  --ink:#16121f; --muted:#57526f;
+  --paper:#ffffff; --hot:#ff2e88; --sel:#2e5bff; --sun:#ffd23f;
+  --shadow:#16121f; --act:#16121f; --actfg:#ffd23f; --onsun:#16121f; --page:#ffffff;
+  --onhot:#16121f; --onsel:#ffffff; --hot2:#ff5aa0; --hot-ink:#ad0f55; --line:#999999; --scrim:rgba(22,18,31,.45);
+  --bad:#c62828; --onbad:#ffffff; --warn:#f4a261; --ok:#2a8a5b; --lib:#c8f2d4;
+  --check-a:#ffffff; --check-b:#e4e1ee;
+  --grid-minor:color-mix(in srgb,var(--sel) 10%,transparent); --grid-major:color-mix(in srgb,var(--sel) 22%,transparent);
+  --n-head:#16121f; --n-headfg:#ffffff; --n-events:#d81b72; --n-actions:#2e5bff; --n-values:#1d7a4a; --n-math:#6a32d8; --n-anim:#a85a00; --n-misc:#555555; --n-imported:#008080;
+  --doc-paper:#fffdf8; --doc-ink:#1d1a16; --doc-desk:#e9e4d8; --doc-code:#f2eee6; --doc-raw:#f4f1ea; --doc-rawline:#c9c2b0;
+  --logo3:#34c759; --logo4:#2ec5ff; --logo5:#7a3cff; --logo6:#ff9500;
+  --f-ui:"Pixelify Sans","Geneva",system-ui,sans-serif;
+  --f-mono:"DM Mono",ui-monospace,"SFMono-Regular",monospace;
+  color-scheme:light;
+}
+/* RULE: dark interface: the Theme button (data-pix) wins; on System it follows the viewer's theme, then the OS */
+:root[data-pix="dark"],:root:not([data-pix])[data-theme="dark"]{
+  --desk:#24212f; --desk2:#2b2838;
+  --chrome:#2e2b3d; --chrome2:#201e2b;
+  --ink:#e9e5f8; --muted:#a7a2c2;
+  --paper:#1b1925; --hot:#ff5aa5; --sel:#7b93ff; --sun:#ffd23f;
+  --shadow:#07060b; --act:#ffd23f; --actfg:#16121f;
+  --onsel:#0d0b14; --onhot:#16121f; --hot-ink:#ff8cc0; --hot2:#ff7ab8; --line:#4a4660; --scrim:rgba(0,0,0,.6);
+  --bad:#ff5c5f; --onbad:#16121f; --ok:#3fbf7f; --check-a:#3a3748; --check-b:#2e2b3d; --n-head:#07060b; --doc-desk:#1b1925;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:dark){:root:not([data-pix]):not([data-theme="light"]){
+  --desk:#24212f; --desk2:#2b2838;
+  --chrome:#2e2b3d; --chrome2:#201e2b;
+  --ink:#e9e5f8; --muted:#a7a2c2;
+  --paper:#1b1925; --hot:#ff5aa5; --sel:#7b93ff; --sun:#ffd23f;
+  --shadow:#07060b; --act:#ffd23f; --actfg:#16121f;
+  --onsel:#0d0b14; --onhot:#16121f; --hot-ink:#ff8cc0; --hot2:#ff7ab8; --line:#4a4660; --scrim:rgba(0,0,0,.6);
+  --bad:#ff5c5f; --onbad:#16121f; --ok:#3fbf7f; --check-a:#3a3748; --check-b:#2e2b3d; --n-head:#07060b; --doc-desk:#1b1925;
+  color-scheme:dark;
+}}
+html,body{height:100%;overflow:hidden}
+body{background-color:var(--desk);background-image:repeating-conic-gradient(var(--desk2) 0 25%,transparent 0 50%);background-size:4px 4px;color:var(--ink);font:14px/1.3 var(--f-ui)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sel);outline-offset:2px}
+.logo.biglogo{font-size:56px;justify-content:center;margin:6px 0 0}
+.notebar{position:fixed;z-index:85;left:50%;transform:translateX(-50%);top:calc(var(--tbh,48px) + 8px);max-width:min(720px,calc(100vw - 32px));background:var(--sun);color:var(--onsun);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shadow);padding:6px 12px;font-size:13px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.notebar.warn{background:var(--hot);color:var(--onhot)}
+.notebar.play{background:var(--ok);color:var(--onhot)}
+.notebar.play .btn{background:var(--paper);color:var(--ink)}
+.notebar[hidden]{display:none}
+.notebar .btn{padding:2px 10px;font-size:12px}
+
+.logo{font:700 22px/1 var(--f-ui);letter-spacing:.02em;display:flex;margin-right:4px}
+.logo b{-webkit-text-stroke:1.5px var(--ink);paint-order:stroke fill;text-shadow:2px 2px 0 var(--shadow)}
+.logo b:nth-child(6n+1){color:var(--hot)}.logo b:nth-child(6n+2){color:var(--sun)}.logo b:nth-child(6n+3){color:var(--logo3)}
+.logo b:nth-child(6n+4){color:var(--logo4)}.logo b:nth-child(6n+5){color:var(--logo5)}.logo b:nth-child(6n+6){color:var(--logo6)}
+.menu{display:flex;gap:8px;flex-wrap:wrap}
+.status{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:100002;background:var(--ink);color:var(--paper);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shadow);padding:4px 12px;font-size:13px;max-width:min(calc(100vw - 32px),560px);pointer-events:none}
+.status:empty{display:none}
+/* RULE: the toast never takes a click, and in docked workspaces it sits above their footer bars. */
+.status{pointer-events:none}/* INVARIANT: 230px = .timeline height; the page's floating controls sit above it in Animate. */
+body[data-ws=animate] .status,body[data-ws=animate] .zoomctl{bottom:calc(230px + 14px + env(safe-area-inset-bottom,0px))}
+.credit{font-size:11px;color:var(--muted)}
+.hint{font-size:13px;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.shelp{font-size:12px;color:var(--muted)}
+.empty{font-size:13px;color:var(--muted);padding:8px}

@@ -1,0 +1,3 @@
+/* SECTION: effects and samples panel */
+.seqfx{position:fixed;right:16px;top:calc(var(--tbh,48px) + 60px);width:min(380px,calc(100vw - 32px));max-height:calc(100vh - var(--tbh,48px) - 90px);overflow:auto;z-index:70}.seqfx[hidden]{display:none}
+.sqfx{border:2px solid var(--ink);background:var(--paper);padding:6px;margin:6px 0}.sqfx.off{opacity:.55}.sqfxh{display:flex;gap:4px;align-items:center}.sqfxh b{flex:1}.sqfxs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}.sqfxs:empty{display:none}

@@ -1,0 +1,31 @@
+[package]
+name = "pixiwyg"
+version = "1.0.0-beta.1"
+description = "Paint under it. Style on top of it."
+edition = "2021"
+publish = false
+
+# FORMAT: the desktop app is the binary (src/main.rs); Android loads the library (src/lib.rs) from its APK.
+[lib]
+name = "pixiwyg_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+http = "1"
+serde_json = "1"
+
+# RULE: one instance per user is a desktop idea; Android runs one task per app by itself.
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-single-instance = "2"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true

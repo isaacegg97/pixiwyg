@@ -1,0 +1,25 @@
+<!-- SECTION: stage controls: snap, grid, responsive width, zoom -->
+<div class="stagehud" id="stageHud" role="toolbar" aria-label="Stage controls">
+  <div class="hudgroup" id="snapGridGroup">
+    <button class="btn tog-btn" id="boxesBtn" aria-pressed="false" title="Boxes: a fixed, tiling layout. Split the page into boxes, drop elements in to tile them; Alt-drop floats">Boxes off</button>
+    <button class="btn tog-btn" id="snapBtn" aria-pressed="true" title="Snap to other elements and the page (Ctrl/⌘+Shift+;)">Snap on</button>
+    <label class="gridctl" for="gridSize" title="Snap positions and widths to this increment">Grid <select id="gridSize"><option value="0">off</option><option>4</option><option>5</option><option selected>8</option><option>10</option><option>12</option><option>16</option><option>20</option><option>24</option><option>32</option><option>50</option></select></label>
+    <button class="btn tog-btn" id="showGridBtn" aria-pressed="false" title="Show or hide grid lines (Ctrl/⌘+')">Show grid</button>
+  </div>
+  <div class="hudgroup" id="respGroup" role="group" aria-label="Responsive viewport">
+    <button class="btn tog-btn" id="respBtn" aria-pressed="true" title="Show the page inside a viewport boundary so you can see how it responds to width changes (only on web-type canvases)">Resp on</button>
+    <select id="respWidthSel" aria-label="Viewport width" title="Viewport width — the stage is clamped to this width with the desk surround visible">
+      <option value="375">375 Mobile</option>
+      <option value="768">768 Tablet</option>
+      <option value="1280" selected>1280 Desktop</option>
+      <option value="1440">1440 Wide</option>
+    </select>
+  </div>
+  <div class="zoomctl" id="zoomCtl" role="group" aria-label="Zoom">
+    <button class="btn" id="zOut" title="Zoom out (Ctrl/⌘+−)" aria-label="Zoom out">−</button>
+    <button class="btn" id="zPct" title="Actual size (Ctrl/⌘+0)">100%</button>
+    <button class="btn" id="zIn" title="Zoom in (Ctrl/⌘+=)" aria-label="Zoom in">+</button>
+    <button class="btn" id="zFit" title="Fit the pages to the window">Fit</button>
+  </div>
+</div>
+

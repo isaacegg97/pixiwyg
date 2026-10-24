@@ -1,0 +1,49 @@
+<!-- SECTION: brush editor: every setting of the brush, with a live preview you can also scribble on -->
+<div class="win bredwin" id="brushEd" hidden role="dialog" aria-labelledby="brEdTitle">
+  <div class="tb"><span id="brEdTitle">Brush</span><button class="wclose" id="brEdClose" aria-label="Close the brush editor" title="Close (Esc)">×</button></div>
+  <div class="wb bred">
+    <div class="brprevwrap">
+      <canvas class="brprev" id="brPrev" aria-label="Live preview of the brush; draw on it to try it"></canvas>
+      <div class="row brprevbar"><span class="shelp" id="brPrevNote">The preview is live. Scribble on it to try the brush; every change redraws your scribbles too.</span><button class="btn sqm" id="brPrevClear" type="button">Clear scribbles</button></div>
+    </div>
+    <label class="field2 grow" for="brName">Name <input type="text" id="brName" maxlength="40"></label>
+    <fieldset class="seg" id="brTip"><legend>Tip</legend>
+      <label><input type="radio" name="brTip" value="round"> Round</label>
+      <label><input type="radio" name="brTip" value="shape"> Shape with a style</label>
+      <label><input type="radio" name="brTip" value="picture"> Picture</label>
+    </fieldset>
+    <div class="brsec" data-tip="round">
+      <label class="field" for="brHardness">Hardness <input type="range" id="brHardness" data-k="hardness" min="0" max="100"> <span class="brval"></span></label>
+    </div>
+    <div class="brsec" data-tip="shape">
+      <div class="row"><label class="field2" for="brShape">Shape <select id="brShape" data-k="shape"></select></label>
+        <label class="field2" for="brLetter" id="brLetterRow">Letter <input type="text" id="brLetter" data-k="letter" maxlength="2" size="2"></label></div>
+      <div class="row"><label class="field2 grow" for="brStyle">Style <select id="brStyle"></select></label>
+        <button class="btn sqm" id="brStyleNew" type="button" title="Make a new style for this brush in the node editor">New style…</button>
+        <button class="btn sqm" id="brStyleEdit" type="button" title="Open this style in the node editor; the brush follows every change">Edit style…</button></div>
+      <p class="shelp">The tip is a shape wearing the style, like any element on the page, filled with the foreground color.</p>
+    </div>
+    <div class="brsec" data-tip="picture">
+      <div class="row"><button class="btn sqm" id="brPicSel" type="button" title="Use the selection on this layer (or the whole layer) as the tip">Use the selection</button>
+        <label class="btn sqm" for="brPicFile">Open picture…</label><input class="sr" type="file" id="brPicFile" accept="image/*">
+        <label class="sqopt"><input type="checkbox" id="brTint" data-k="tint"> Color it with the foreground</label></div>
+    </div>
+    <div class="brgrid2">
+      <label class="field" for="brSize">Size <input type="range" id="brSize" data-k="size" min="1" max="200"> <span class="brval"></span></label>
+      <label class="field" for="brSpacing">Spacing <input type="range" id="brSpacing" data-k="spacing" min="2" max="300"> <span class="brval"></span></label>
+      <label class="field" for="brOpacity">Opacity <input type="range" id="brOpacity" data-k="opacity" min="2" max="100"> <span class="brval"></span></label>
+      <label class="field" for="brAngle">Angle <input type="range" id="brAngle" data-k="angle" min="-180" max="180"> <span class="brval"></span></label>
+      <label class="sqopt"><input type="checkbox" id="brFollow" data-k="follow"> Turn with the stroke</label>
+      <label class="field2 brwide" for="brPressure">Pen pressure sets <select id="brPressure" data-k="pressure"></select></label>
+    </div>
+    <h4>Jitter</h4>
+    <div class="brgrid2">
+      <label class="field" for="brJSize">Size <input type="range" id="brJSize" data-j="size" min="0" max="100"> <span class="brval"></span></label>
+      <label class="field" for="brJAngle">Angle <input type="range" id="brJAngle" data-j="angle" min="0" max="100"> <span class="brval"></span></label>
+      <label class="field" for="brJScatter">Scatter <input type="range" id="brJScatter" data-j="scatter" min="0" max="300"> <span class="brval"></span></label>
+      <label class="field" for="brJOpacity">Opacity <input type="range" id="brJOpacity" data-j="opacity" min="0" max="100"> <span class="brval"></span></label>
+      <label class="field" for="brJHue">Hue <input type="range" id="brJHue" data-j="hue" min="0" max="100"> <span class="brval"></span></label>
+    </div>
+    <div class="row brfoot"><span class="shelp" id="brEdNote"></span><button class="btn primary" id="brEdDone" type="button">Done</button></div>
+  </div>
+</div>

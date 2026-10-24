@@ -1,0 +1,98 @@
+<!-- SECTION: Write workspace (ribbon, ruler, sheets, status bar) and its Back to writing button -->
+
+<section class="writer" id="writer" hidden aria-label="Writer">
+  <style id="wrType"></style>
+  <div class="wrtop" id="wrTop">
+    <div class="wrtabs" id="wrTabs" role="tablist" aria-label="Ribbon">
+      <button type="button" role="tab" aria-selected="true" aria-controls="wrHome">Home</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="wrInsert">Insert</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="wrLayout">Layout</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="wrView">View</button>
+      <span class="spacer"></span>
+      <label class="wrdoc" for="wrDoc">✒ <select id="wrDoc" aria-label="Manuscript"></select></label>
+    </div>
+    <div class="wrribbon" role="tabpanel" id="wrHome">
+      <div class="wrgroup"><div class="wrrow">
+        <button type="button" class="wrb" id="wrB" data-cmd="b" aria-pressed="false" title="Bold (Ctrl/⌘+B)"><b>B</b></button>
+        <button type="button" class="wrb" id="wrI" data-cmd="i" aria-pressed="false" title="Italic (Ctrl/⌘+I)"><i>I</i></button>
+        <button type="button" class="wrb" id="wrS" data-cmd="strike" aria-pressed="false" title="Strikethrough"><s>S</s></button>
+        <button type="button" class="wrb" data-cmd="code" title="Code"><code>&lt;/&gt;</code></button>
+        <button type="button" class="wrb" data-cmd="link" title="Link (Ctrl/⌘+K)">↗</button>
+        <button type="button" class="wrb" data-cmd="clear" title="Clear formatting">⌫</button>
+      </div><small>Font</small></div>
+      <div class="wrgroup"><div class="wrrow">
+        <button type="button" class="wrb" id="wrUl" data-cmd="ul" aria-pressed="false" title="Bullets (Ctrl/⌘+Shift+L)">• ≡</button>
+        <button type="button" class="wrb" id="wrOl" data-cmd="ol" aria-pressed="false" title="Numbering (Ctrl/⌘+Shift+7)">1. ≡</button>
+        <button type="button" class="wrb" data-cmd="quote" title="Quote (Ctrl/⌘+Shift+.)">❝</button>
+        <button type="button" class="wrb" data-cmd="hr" title="Horizontal line">―</button>
+      </div><small>Paragraph</small></div>
+      <div class="wrgroup grow"><div class="wrstyles" id="wrStyles"></div><small>Styles</small></div>
+      <div class="wrgroup"><div class="wrcol">
+        <button type="button" class="wrb wide" data-cmd="find" title="Find (Ctrl/⌘+F)">⌕ Find</button>
+        <button type="button" class="wrb wide" data-cmd="replace" title="Replace (Ctrl/⌘+H)">⇄ Replace</button>
+      </div><small>Editing</small></div>
+    </div>
+    <div class="wrribbon" role="tabpanel" id="wrInsert" hidden>
+      <div class="wrgroup"><div class="wrrow">
+        <button type="button" class="wrbig" data-cmd="picture" title="A picture from a file, kept in the manuscript"><i>▨</i>Picture</button>
+        <button type="button" class="wrbig" data-cmd="table" title="A Markdown table"><i>▦</i>Table</button>
+      </div><small>Illustrations</small></div>
+      <div class="wrgroup"><div class="wrrow">
+        <button type="button" class="wrbig" data-cmd="link" title="Link (Ctrl/⌘+K)"><i>↗</i>Link</button>
+        <button type="button" class="wrbig" data-cmd="hr" title="A rule between sections"><i>―</i>Line</button>
+        <button type="button" class="wrbig" data-cmd="quote" title="A quotation"><i>❝</i>Quote</button>
+        <button type="button" class="wrbig" data-cmd="codeblock" title="A block of code"><i>{ }</i>Code</button>
+      </div><small>Text</small></div>
+      <input type="file" id="wrPicFile" accept="image/*" hidden>
+    </div>
+    <div class="wrribbon" role="tabpanel" id="wrLayout" hidden>
+      <div class="wrgroup"><div class="wrcol"><span id="wrPageInfo" class="wrinfo"></span><button type="button" class="wrb wide" id="wrSetup">Page setup…</button></div><small>Page</small></div>
+      <div class="wrgroup"><div class="wrcol">
+        <label class="field2" for="wrSheet">Stylesheet <select id="wrSheet"></select></label>
+        <label class="field2" id="wrFromRow" for="wrFrom">Starts on <select id="wrFrom"></select></label>
+      </div><small>Manuscript</small></div>
+      <div class="wrgroup"><div class="wrrow"><button type="button" class="wrbig" id="wrConvertAll" title="Turn every block into a component of its own, free to move and restyle on the page"><i>◆</i>Convert all</button></div><small>Components</small></div>
+    </div>
+    <div class="wrribbon" role="tabpanel" id="wrView" hidden>
+      <div class="wrgroup"><div class="wrrow">
+        <button type="button" class="wrbig" data-wrview="edit" title="Write on the page"><i>▤</i>Print layout</button>
+        <button type="button" class="wrbig" data-wrview="md" title="The Markdown it's stored as"><i>#</i>Markdown</button>
+        <button type="button" class="wrbig" data-wrview="pages" title="The typeset pages, where blocks become components"><i>▦</i>Pages</button>
+        <button type="button" class="wrbig" id="wrFocus" aria-pressed="false" title="Only the page, with typewriter scrolling (Esc leaves)"><i>◎</i>Focus</button>
+      </div><small>Views</small></div>
+      <div class="wrgroup"><div class="wrcol">
+        <label class="tog2"><input type="checkbox" id="wrNavOn"> Navigation pane</label>
+        <label class="tog2"><input type="checkbox" id="wrRulerOn"> Ruler</label>
+      </div><small>Show</small></div>
+      <div class="wrgroup"><div class="wrrow"><button type="button" class="wrbig" id="wrZoomFit" title="Fit the page width to the window"><i>↔</i>Page width</button></div><small>Zoom</small></div>
+    </div>
+  </div>
+  <div class="wrfind" id="wrFind" hidden>
+    <input type="search" id="wrFindQ" placeholder="Find" aria-label="Find" autocomplete="off" spellcheck="false">
+    <span id="wrFindN" class="wrfindn"></span>
+    <button type="button" class="wrb" id="wrFindPrev" title="Previous (Shift+Enter)">↑</button><button type="button" class="wrb" id="wrFindNext" title="Next (Enter)">↓</button>
+    <label class="tog2"><input type="checkbox" id="wrFindCase"> Match case</label>
+    <span class="wrrep"><input type="text" id="wrFindR" placeholder="Replace with" aria-label="Replace with" autocomplete="off">
+    <button type="button" class="wrb wide" id="wrRep1">Replace</button><button type="button" class="wrb wide" id="wrRepAll">Replace all</button></span>
+    <button type="button" class="wrb" id="wrFindX" title="Close (Esc)">×</button>
+  </div>
+  <div class="wrempty" id="wrEmpty" hidden>
+    <div class="wremptycard"><b>Start writing</b><p>A manuscript is plain Markdown kept with the project. Write it here on the page; it's set onto the canvas as you type.</p>
+    <div class="row"><button class="btn primary" id="wrStart" type="button">New manuscript</button><button class="btn" id="wrStartImport" type="button">Open a .md file…</button></div></div>
+  </div>
+  <div class="wrmain" id="wrMain">
+    <nav class="wrnav" id="wrNav" aria-label="Navigation"><h4>Navigation</h4><div id="wrNavList"></div></nav>
+    <div class="wrscroll" id="wrScroll">
+      <div class="wrruler" id="wrRuler" aria-hidden="true"></div>
+      <div class="wrcanvas" id="wrCanvas"><div class="wrzoom" id="wrZoom"><div class="wrsheets" id="wrSheets"></div></div></div>
+      <div class="wrmd" id="wrMd"></div>
+    </div>
+  </div>
+  <footer class="wrstatus">
+    <span id="wrPageN"></span><span id="wrWords"></span><span id="wrStatusStyle"></span>
+    <span class="spacer"></span>
+    <button type="button" class="wrv" data-wrview="edit" title="Print layout">▤</button><button type="button" class="wrv" data-wrview="md" title="Markdown">#</button><button type="button" class="wrv" data-wrview="pages" title="Pages">▦</button>
+    <button type="button" class="wrv" id="wrZoomOut" title="Zoom out">−</button><input type="range" id="wrZoomR" min="30" max="300" step="5" value="100" aria-label="Zoom"><button type="button" class="wrv" id="wrZoomIn" title="Zoom in">+</button><span id="wrZoomN" class="wrzn">100%</span>
+  </footer>
+</section>
+<div class="wrback" id="wrBack" hidden><button class="btn primary" id="wrBackBtn" type="button" title="Back to the page you write on">✒ Back to writing</button></div>

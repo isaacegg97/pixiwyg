@@ -1,0 +1,52 @@
+<!-- SECTION: building with shapes: the live view and the parts -->
+      <section class="m3dbuild" id="m3dBuild" aria-label="Build with shapes">
+        <div class="m3dvp">
+          <canvas class="m3dedit" id="m3dEdit" tabindex="0" aria-label="3D view: drag to turn, click a part to pick it, Shift+click to pick more, drag the picked part to move it, wheel to zoom; arrows move it, Page Up and Down lift it, Ctrl+G groups"></canvas>
+          <div class="row"><button class="btn sqm" id="m3dViewReset" type="button">Reset view</button><label class="field2" for="m3dSnap" title="Moves, lifts and handle drags round to this step">Snap <select id="m3dSnap"></select></label><span class="shelp">Shift+click picks more · squares size, rings turn, the cone lifts</span></div>
+        </div>
+        <div class="m3dparts">
+          <p class="shelp m3dintro">Build a model from shapes, or open one and build on it: <b>Start from shapes</b> or <b>Build on this model</b>.</p>
+          <div class="m3dpartsui">
+            <div class="row"><b>Parts</b>
+              <select id="m3dAdd" aria-label="Add a shape"><option value="">＋ Add a shape…</option></select>
+              <button class="btn sqm" id="m3dDupPart" type="button" title="Copy the picked part (Ctrl/⌘+D in the view)">Duplicate</button>
+              <button class="btn sqm" id="m3dDelPart" type="button" title="Remove the picked part (Delete in the view)" aria-label="Remove part">✕</button>
+              <button class="btn sqm" id="m3dUpPart" type="button" title="Earlier in the list (cuts and overlaps act on everything above them)" aria-label="Move part up">▲</button>
+              <button class="btn sqm" id="m3dDownPart" type="button" title="Later in the list" aria-label="Move part down">▼</button>
+              <button class="btn sqm" id="m3dGroup" type="button" title="Make the picked parts one part (Ctrl/⌘+G in the view); Shift+click parts to pick several">Group</button>
+              <button class="btn sqm" id="m3dUngroup" type="button" title="Put the group's parts back in the list (Ctrl/⌘+Shift+G)" hidden>Ungroup</button>
+            </div>
+            <p class="shelp" id="m3dPickNote" aria-live="polite"></p>
+            <ol class="m3dlist" id="m3dPartList" role="listbox" aria-label="Parts, top first"></ol>
+            <div class="m3dprops" id="m3dPartProps" hidden>
+              <label class="field2" for="m3dPName">Name <input type="text" id="m3dPName" maxlength="40"></label>
+              <fieldset class="seg"><legend>Does</legend>
+                <label><input type="radio" name="m3dOp" value="add"> Add</label>
+                <label><input type="radio" name="m3dOp" value="cut"> Cut away</label>
+                <label><input type="radio" name="m3dOp" value="keep"> Keep overlap</label>
+              </fieldset>
+              <div class="m3dxyz"><span>Move mm</span><input type="number" step="1" data-v="pos.0" aria-label="Move x"><input type="number" step="1" data-v="pos.1" aria-label="Move y"><input type="number" step="1" data-v="pos.2" aria-label="Move z (up)"></div>
+              <div class="m3dxyz"><span>Turn °</span><input type="number" step="15" data-v="rot.0" aria-label="Turn about x"><input type="number" step="15" data-v="rot.1" aria-label="Turn about y"><input type="number" step="15" data-v="rot.2" aria-label="Turn about z"></div>
+              <div class="m3dxyz"><span>Size mm</span><input type="number" step="1" min="0.1" data-v="size.0" aria-label="Size x"><input type="number" step="1" min="0.1" data-v="size.1" aria-label="Size y"><input type="number" step="1" min="0.1" data-v="size.2" aria-label="Size z (height)"></div>
+              <div class="m3dxyz m3dxyzhead" aria-hidden="true"><span></span><b>x</b><b>y</b><b>z ↑</b></div>
+              <div class="row" id="m3dPTextRow" hidden>
+                <label class="field2 grow" for="m3dPText">Text <input type="text" id="m3dPText" maxlength="60"></label>
+                <label class="field2" for="m3dPFont">Font <select id="m3dPFont"></select></label>
+              </div>
+              <div class="row">
+                <label class="field2" id="m3dPColorRow" for="m3dPColor">Colour <input type="color" id="m3dPColor"></label>
+                <label class="field2" id="m3dPSegRow" for="m3dPSeg"><span id="m3dPSegLab">Smoothness</span> <input type="range" id="m3dPSeg" min="3" max="64"></label>
+                <label class="field2" id="m3dPHoleRow" for="m3dPHole" hidden>Hole <input type="range" id="m3dPHole" min="5" max="95"></label>
+                <button class="btn sqm" id="m3dFloor" type="button" title="Move it down (or up) until it stands on the floor">Stand on floor</button>
+              </div>
+            </div>
+            <div class="row">
+              <button class="btn sqm" id="m3dUndo" type="button" title="Undo (Ctrl/⌘+Z)">Undo</button>
+              <button class="btn sqm" id="m3dRedo" type="button" title="Redo (Ctrl/⌘+Shift+Z)">Redo</button>
+              <button class="btn sqm" id="m3dObj" type="button" title="The built model as an .obj with its colours, for other 3D apps; it opens here again as parts">Download .obj</button>
+              <button class="btn sqm" id="m3dStl" type="button" title="The built model as an .stl in millimetres, for slicers and 3D printing">Download .stl</button>
+              <label class="field2" for="m3dMM" title="How big one unit of the grid is, for the ruler, the fields and the .stl">1 unit = <input type="number" id="m3dMM" min="1" max="1000" step="1" style="width:5em"> mm</label>
+            </div>
+          </div>
+        </div>
+      </section>

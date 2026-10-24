@@ -1,0 +1,183 @@
+# RULE: a tag like v1.0.0-beta.2 tests and builds installers on each platform with Tauri (npm run dist) and attaches
+#   them, with SHA256SUMS, to a draft GitHub release. Each platform signs when its signing secrets are set and builds
+#   unsigned when they aren't; the release notes say which builds are unsigned and how testers open them.
+# FORMAT: what each platform ships:
+#   Linux    .AppImage, .deb, .rpm   (the RPM's version is 1.0.0 with Release 0.beta.2; see tools/scripts/dist.mjs)
+#   Windows  NSIS setup .exe, .msi   (the MSI's version is 1.0.0.2)
+#   macOS    .dmg, one universal app for both chips
+#   Web      PIXIWYG_<version>_web.zip: index.html, lib/, examples/ for any static host (see pages.yml)
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-22.04]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: tools
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: tools/package-lock.json
+      - run: npm ci
+      - name: The tag matches the app version
+        shell: bash
+        run: |
+          node scripts/version.mjs
+          v="$(node -p "require('./package.json').version")"
+          test "v$v" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME but the app says $v"; exit 1; }
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+
+      - name: Build libraries (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libsoup-3.0-dev libgtk-3-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev rpm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ runner.os == 'macOS' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: tauri
+      - run: cargo test --locked
+        working-directory: tauri
+
+      # RULE: macOS signs and notarizes only with the certificate and the Apple ID secrets together; Windows with its
+      #   certificate. AppImages, .deb and .rpm are never signed.
+      - name: Is signing available?
+        id: sign
+        shell: bash
+        env:
+          MAC_CERT: ${{ secrets.MAC_CERT_P12_BASE64 }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          WIN_CERT: ${{ secrets.WIN_CERT_PFX_BASE64 }}
+        run: |
+          case "$RUNNER_OS" in
+            macOS)   if [ -n "$MAC_CERT" ] && [ -n "$APPLE_ID" ]; then s=true; else s=false; fi ;;
+            Windows) if [ -n "$WIN_CERT" ]; then s=true; else s=false; fi ;;
+            *)       s=false ;;
+          esac
+          echo "signed=$s" >> "$GITHUB_OUTPUT"
+          if [ "$s" = false ] && [ "$RUNNER_OS" != Linux ]; then echo "::warning::No signing secrets for $RUNNER_OS, so this build is unsigned."; fi
+
+      # FORMAT: the Windows certificate goes into the user's store; dist.mjs signs by its thumbprint.
+      - name: Import the Windows certificate
+        if: runner.os == 'Windows' && steps.sign.outputs.signed == 'true'
+        shell: pwsh
+        env:
+          WIN_CERT: ${{ secrets.WIN_CERT_PFX_BASE64 }}
+          WIN_PASS: ${{ secrets.WIN_CERT_PASSWORD }}
+        run: |
+          $pfx = Join-Path $env:RUNNER_TEMP 'cert.pfx'
+          [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WIN_CERT))
+          $c = Import-PfxCertificate -FilePath $pfx -CertStoreLocation Cert:\CurrentUser\My -Password (ConvertTo-SecureString $env:WIN_PASS -AsPlainText -Force)
+          Remove-Item $pfx
+          "PIXIWYG_WIN_THUMBPRINT=$($c.Thumbprint)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Build, signed (macOS)
+        if: runner.os == 'macOS' && steps.sign.outputs.signed == 'true'
+        run: npm run dist
+        env:
+          PIXIWYG_MAC_UNIVERSAL: '1'
+          APPLE_CERTIFICATE: ${{ secrets.MAC_CERT_P12_BASE64 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.MAC_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      # HACK: unsigned macOS gets an ad-hoc signature, which Apple Silicon needs to run it at all
+      - name: Build, unsigned (macOS)
+        if: runner.os == 'macOS' && steps.sign.outputs.signed != 'true'
+        run: npm run dist
+        env:
+          PIXIWYG_MAC_UNIVERSAL: '1'
+          APPLE_SIGNING_IDENTITY: '-'
+      - name: Build
+        if: runner.os != 'macOS'
+        run: npm run dist
+
+      - name: Record whether this build is signed
+        shell: bash
+        run: echo "${{ steps.sign.outputs.signed }}" > "dist/signed-$RUNNER_OS.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ runner.os }}
+          path: |
+            tools/dist/*.dmg
+            tools/dist/*.exe
+            tools/dist/*.msi
+            tools/dist/*.AppImage
+            tools/dist/*.deb
+            tools/dist/*.rpm
+            tools/dist/signed-*.txt
+
+  # RULE: the web zip is the same files the desktop app serves; publishing the release deploys it to Pages.
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: tools/package-lock.json
+      - run: npm ci
+      - run: npm run web
+      - name: Zip the web app
+        run: cd dist/web && zip -qr "../PIXIWYG_$(node -p "require('../../package.json').version")_web.zip" .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-web
+          path: tools/dist/*_web.zip
+
+  publish:
+    needs: [build, web]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: tools/dist
+          merge-multiple: true
+      - run: node scripts/checksums.mjs
+      - name: Release notes
+        shell: bash
+        run: |
+          signed() { [ "$(cat "dist/signed-$1.txt" 2>/dev/null)" = true ]; }
+          {
+            echo "Private beta build of PIXIWYG $GITHUB_REF_NAME. Check each download against SHA256SUMS.txt."
+            echo
+            if signed macOS; then echo "**macOS:** signed and notarized."
+            else echo "**macOS:** not signed or notarized. macOS blocks the first launch: open System Settings → Privacy & Security and click **Open Anyway** next to PIXIWYG. (Or, in Terminal: \`xattr -dr com.apple.quarantine /Applications/PIXIWYG.app\`.)"; fi
+            echo
+            if signed Windows; then echo "**Windows:** signed (the setup .exe and the .msi). SmartScreen may still warn until the certificate builds up reputation: click **More info**, then **Run anyway**."
+            else echo "**Windows:** not signed. If the browser flags the download, choose **Keep**. When Windows says “Windows protected your PC”, click **More info**, then **Run anyway**. Windows 11 with Smart App Control turned on can't run unsigned apps; use a machine without it for this build. Use the setup .exe, or the .msi for managed installs; the app needs WebView2, which Windows 10 and 11 already have (the setup installs it if missing)."; fi
+            echo
+            echo "**Linux:** the AppImage, .deb and .rpm aren't signed. AppImage: make it executable (\`chmod +x\`), then run it. Debian/Ubuntu: \`sudo apt install ./PIXIWYG_*.deb\`. Fedora: \`sudo dnf install ./PIXIWYG-*.rpm\`."
+            echo
+            echo "**Web:** unzip \`PIXIWYG_*_web.zip\` onto any static web server, at any path; nothing else is needed. Publishing this release also deploys it to GitHub Pages."
+          } > notes.md
+          cat notes.md
+      - name: Draft release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          files=(dist/*.dmg dist/*.exe dist/*.msi dist/*.AppImage dist/*.deb dist/*.rpm dist/*_web.zip dist/SHA256SUMS.txt)
+          gh release create "$GITHUB_REF_NAME" --draft --prerelease --title "PIXIWYG $GITHUB_REF_NAME" --notes-file notes.md "${files[@]}"

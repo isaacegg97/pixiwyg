@@ -1,0 +1,4 @@
+/* SECTION: accessibility checks list */
+.chklist{list-style:none;margin:8px 0 0;padding:0}.chklist li{display:flex;gap:6px;align-items:flex-start;padding:5px 0;border-bottom:1px dashed var(--line)}
+.chklist li button.go{flex:1;text-align:left;background:none;border:0;color:inherit;font:inherit;padding:0;cursor:pointer}.chklist li button.go:hover b{text-decoration:underline}
+.chklist li i{font-style:normal;width:1.2em}.chklist small{display:block;opacity:.75}.chklist .ok{opacity:.75}

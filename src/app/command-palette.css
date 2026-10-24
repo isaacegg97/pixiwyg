@@ -1,0 +1,18 @@
+/* SECTION: command palette */
+.cmdbody{display:flex;flex-direction:column;gap:8px;padding:10px;flex:1;min-height:0}
+.cmdinput{width:100%;box-sizing:border-box;border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:7px 10px;font:14px var(--f-ui);outline:none}
+.cmdinput:focus{outline:2px solid var(--hot);outline-offset:1px}
+/* FIX: the list takes what the window leaves it; with a fixed 44vh a taller title bar (Dredful) pushed it out the bottom */
+.cmdlist{overflow-y:auto;flex:1;min-height:0;max-height:44vh;display:flex;flex-direction:column;gap:2px}
+.cmditem{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;border:1px solid transparent;background:none;color:var(--ink);cursor:pointer;font:13px var(--f-ui);text-align:left}
+.cmditem span{display:flex;flex-direction:column}
+.cmditem b{font-weight:600;font-size:13px}
+.cmditem small{color:var(--muted);font-size:11px}
+.cmditem kbd{font:11px var(--f-mono);background:var(--chrome2);border:1px solid var(--ink);padding:1px 5px;border-radius:2px;margin-left:auto}
+.cmditem:hover,.cmditem.on{background:var(--sun);color:var(--onsun);border-color:var(--ink)}
+.cmditem:hover small,.cmditem.on small{color:inherit}
+/* FIX: the shortcut on the lit row took the row's text colour over --chrome2, invisible in dark themes. */
+.cmditem:hover kbd,.cmditem.on kbd{background:transparent;color:inherit;border-color:currentColor}
+.cmdcat{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 6px 2px;border-bottom:1px dotted var(--ink);margin-top:2px}
+/* RULE: a toggle shows its state as a word in a shape, as the XMB does: On filled, Off outlined */
+.cmdon{flex:none;margin-left:auto;padding:1px 8px;border:2px solid currentColor;border-radius:999px;font:700 11px var(--f-mono);font-style:normal;text-transform:uppercase}.cmdon.lit{background:var(--ink);color:var(--paper);border-color:var(--ink)}

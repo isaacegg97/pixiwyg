@@ -1,0 +1,25 @@
+/* SECTION: Animate timeline */
+.timeline{grid-column:3;grid-row:3;height:230px;display:flex;flex-direction:column;border-top:2px solid var(--ink);background:var(--chrome);min-width:0}
+.timeline[hidden]{display:none}
+.tltop{display:flex;align-items:center;gap:8px;padding:5px 8px;border-bottom:2px solid var(--ink)}
+.tltop .shelp{flex:1;min-width:0;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tltime{font:12px var(--f-mono);min-width:64px}
+.tlscroll{flex:1;overflow:auto;position:relative;padding-left:220px}
+.tlruler{position:sticky;top:0;height:22px;background:var(--chrome2);border-bottom:2px solid var(--ink);cursor:ew-resize;z-index:2}
+.tltick{position:absolute;top:12px;width:1px;height:10px;background:var(--ink);font:11px var(--f-mono);font-style:normal;padding-left:3px;line-height:0;color:var(--ink)}
+.tltick.major{top:0;height:22px;line-height:12px}
+.tlrows{position:relative}
+.tlrow{position:relative;height:30px;border-bottom:1px solid var(--chrome2)}
+.tlrow.on{background:var(--sun)}
+.tlkey{position:absolute;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;background:var(--paper);border:1.5px solid var(--ink);transform:rotate(45deg);pointer-events:none}
+.tlhead{position:absolute;left:-220px;top:0;width:214px;height:30px;display:flex;align-items:center;gap:4px;padding-left:6px;background:inherit}
+.tllab{flex:1;min-width:0;text-align:left;border:0;background:none;color:var(--ink);font:12px var(--f-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;padding:0}
+.tlchip{font-size:11px;border:1px solid var(--ink);padding:0 4px;background:var(--paper);white-space:nowrap}
+.tllane{position:absolute;inset:0}
+.tlbar{position:absolute;top:5px;height:20px;background:var(--hot);border:2px solid var(--ink);box-sizing:border-box;color:var(--onhot);font:11px/16px var(--f-mono);padding:0 4px;overflow:hidden;white-space:nowrap;cursor:grab;touch-action:none}
+.tlbar.ghost{opacity:.35;cursor:default;pointer-events:none}
+.tlbar.back{background:repeating-linear-gradient(-45deg,var(--hot) 0 6px,var(--sel) 6px 12px)}
+.tlgrip{position:absolute;right:0;top:0;bottom:0;width:8px;cursor:ew-resize;background:rgba(0,0,0,.25)}
+.tlplayhead{position:absolute;top:0;bottom:0;width:2px;background:var(--sel);margin-left:220px;pointer-events:none;z-index:3}
+.tlempty{position:absolute;left:236px;top:40px;margin:0;color:var(--muted)}
+.tlempty[hidden]{display:none}

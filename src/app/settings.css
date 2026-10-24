@@ -1,0 +1,4 @@
+/* SECTION: settings page */
+.setwin .wb{max-height:min(80vh,820px);overflow:auto;display:grid;gap:14px}
+.setwin section{display:grid;gap:8px}.setwin h4{margin:0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.setwin .row.end{justify-content:flex-end}

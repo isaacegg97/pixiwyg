@@ -1,0 +1,49 @@
+<!-- SECTION: the toolbar -->
+<header class="topbar" id="topbar">
+  <div class="logo" id="logo" aria-label="PIXIWYG"><b>P</b><b>I</b><b>X</b><b>I</b><b>W</b><b>Y</b><b>G</b></div>
+  <div class="tgroup">
+    <button class="btn" id="projBtn" title="All projects, new project, open a file" aria-label="Projects"><span class="tbicon" aria-hidden="true">☰</span><span class="tblabel">Projects</span></button>
+    <input class="projname" id="projName" type="text" aria-label="Project name" spellcheck="false" maxlength="80">
+  </div>
+  <div class="wsbar" id="wsbar">
+    <div class="wsdrop" id="wsDrop">
+      <button class="btn wsbtn" id="wsBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="wsTabs" title="Switch workspace (Alt+1…9)"><i id="wsIcon" aria-hidden="true">▦</i> <b id="wsName">Page</b> <span aria-hidden="true">▾</span></button>
+      <div class="wsmenu win" id="wsTabs" role="menu" aria-label="Workspace" hidden></div>
+    </div>
+    <span class="wshint" id="wsHint"></span>
+    <button class="btn wsfiles" id="filesBtn" aria-haspopup="dialog" aria-expanded="false" title="Every file in this project (Ctrl/⌘+P)"><span id="wsProj"></span><span aria-hidden="true"> › </span><b id="wsFile">Page</b> ▾</button>
+    <div class="filespop win" id="filesPop" hidden role="dialog" aria-label="Project files"><input id="filesFilter" type="text" placeholder="Find a file…" aria-label="Find a file" autocomplete="off"><div id="filesList" role="listbox" aria-label="Project files"></div></div>
+  </div>
+  <button class="btn cmdbtn" id="cmdBtn" title="Commands &amp; Search (/ or Ctrl/⌘+K)" aria-haspopup="dialog" aria-expanded="false"><span class="cmd-icon" aria-hidden="true">⌘</span> <span class="cmd-text">Commands</span> <kbd>/</kbd></button>
+  <div class="tgroup">
+    <button class="btn ico" id="undoBtn" title="Undo (Ctrl/⌘+Z)" aria-label="Undo">↶</button>
+    <button class="btn ico" id="redoBtn" title="Redo (Ctrl/⌘+Shift+Z)" aria-label="Redo">↷</button>
+  </div>
+  <div class="tgroup tools-group" id="toolsGroup">
+    <button class="btn" id="afBtn" title="Lay out the page and optionally restyle it (Ctrl/⌘+Shift+L repeats the last settings)">Autoformat…</button>
+    <button class="btn" id="mdBtn" title="Import Markdown: turn it into page elements. You can also paste or drop it.">Markdown…</button>
+    <button class="btn" id="stylesBtn" title="Styles made of nodes: fills, outlines, shapes, shadows, filters, type, motion, and effects lifted from your stylesheets">Styles…</button>
+    <button class="btn" id="logicBtn" title="Page logic: make elements answer clicks and typing">Logic…</button>
+  </div>
+  <div class="tgroup">
+    <button class="btn tog-btn" id="playBtn" aria-pressed="false" title="Try the page: animations and logic run (Ctrl/⌘+Enter; Esc stops)" aria-label="Play">▶<span class="tblabel"> Play</span></button>
+    <button class="btn tog-btn" id="liveBtn" aria-pressed="false" title="Open the page in its own window, as it will be exported, updating as you edit">Live preview</button>
+  </div>
+  <span class="spacer"></span>
+  <div class="tgroup">
+    <button class="btn" id="saveFileBtn" title="Download this project as a .pixiwyg file (Ctrl/⌘+Alt+S)">Save file</button>
+    <button class="btn primary" id="exportBtn" title="Export HTML (Ctrl/⌘+Shift+S)" aria-label="Export HTML"><span class="tbicon" aria-hidden="true">⤓</span><span class="tblabel">Export HTML</span></button>
+    <details class="dd" id="moreMenu"><summary class="btn" aria-label="More"><span class="tbicon" aria-hidden="true">⋯</span><span class="tblabel">More ▾</span></summary><div class="ddbody">
+      <button class="btn" id="settingsBtn" title="Themes, grid and snap, sound, export defaults (Ctrl/⌘+,)">Settings…</button>
+      <div class="tboverflow" id="tbOverflow" hidden></div>
+      <button class="btn" id="keysBtn" title="Keyboard shortcuts (F1 or ?)">Keyboard shortcuts</button>
+      <button class="btn" id="versionsBtn" title="Named checkpoints of this project: save one, go back to one (Ctrl/⌘+Alt+V)">Versions…</button>
+      <button class="btn" id="backupBtn" title="Download every project and the primitives library as one zip">Back up everything</button>
+      <button class="btn" id="reportBtn" title="Put together a report for the beta team">Report a problem…</button>
+      <button class="btn" id="aboutBtn">About PIXIWYG</button>
+      <button class="btn dyna" id="dynaBtn" title="Clears the whole page. Undo brings it back.">Dynamite (clear page)</button>
+    </div></details>
+    <button class="btn tog-btn ico" id="sideLBtn" aria-pressed="true" aria-controls="sideL" aria-label="Add panel" title="Show or hide the Add panel: catalog, primitives, stylesheets (Tab hides both panels)">◧</button>
+    <button class="btn tog-btn ico" id="sideRBtn" aria-pressed="true" aria-controls="sideR" aria-label="Properties panel" title="Show or hide the Properties panel: inspector, background, palette (Tab hides both panels)">◨</button>
+  </div>
+</header>

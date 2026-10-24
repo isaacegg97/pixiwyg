@@ -1,0 +1,4 @@
+/* SECTION: Play mode */
+body.playing #selbox{display:none}
+body.playing .stage .el{cursor:auto}
+body.playing .side{opacity:.55;pointer-events:none}

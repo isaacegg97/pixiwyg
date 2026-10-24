@@ -1,0 +1,53 @@
+/* SECTION: Paint Studio window: the bars, the canvas view and the grid its palettes dock into */
+/* RULE: as a window it is a fixed size; in the Paint workspace it fills the area beside the Project panel */
+.studiowin{position:fixed;z-index:80;left:50%;top:calc(var(--tbh,48px) + 12px);transform:translateX(-50%);width:min(1100px,calc(100vw - 24px));height:min(780px,calc(100vh - var(--tbh,48px) - 24px));display:flex;flex-direction:column;box-sizing:border-box}
+.studiowin[hidden]{display:none}
+.studiowin>.wb{flex:1;min-height:0}
+body[data-ws=paint] #w-studio:not([hidden]){inset:var(--tbh,48px) var(--dockR,0px) 0 var(--dockL,220px);transform:none;width:auto;height:auto;max-height:none;border:0;box-shadow:none;z-index:55}
+body[data-ws=paint] #w-studio>.tb{display:none}
+.studio{display:flex;flex-direction:column;gap:6px;min-height:0}
+.studio-top,.sopts{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ssep{width:2px;align-self:stretch;background:var(--chrome2);margin:0 2px}
+.szoom{display:inline-flex;gap:2px}
+#sZoomFit{min-width:84px}
+#sDims{margin-left:auto}
+.sopts{min-height:34px;padding:2px 8px;border:2px solid var(--ink);background:var(--paper)}
+.sopts .field{flex-direction:row;align-items:center;gap:6px;color:var(--ink)}
+.sopts .field[hidden]{display:none}
+.sopts .field input[type=range]{width:110px}
+.soptname{font-size:12px;min-width:7.5em}
+.sopts .hint{font-size:12px;color:var(--muted);flex:1 1 220px}
+.sopts .stamps button{width:26px;height:26px;font-size:16px}
+.studio-main{position:relative;flex:1;min-height:240px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:minmax(0,1fr) auto;gap:6px}
+/* INVARIANT: margin:auto in a flex box centres a small drawing and still lets a big one scroll to every edge */
+.sview{grid-column:2;grid-row:1;min-width:0;min-height:0;overflow:auto;display:flex;border:2px solid var(--ink);background:var(--desk2)}
+.sview.panning,.sview.panning .sstack{cursor:grabbing!important}
+.sstack{position:relative;flex:none;margin:auto;line-height:0;background-color:var(--check-a);background-image:conic-gradient(var(--check-b) 25%,var(--check-a) 0 50%,var(--check-b) 0 75%,var(--check-a) 0);background-size:16px 16px;box-shadow:0 0 0 2px var(--ink);touch-action:none;cursor:crosshair}
+.sstack canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.sstack.pix canvas{image-rendering:pixelated}
+/* INVARIANT: layers blend only with each other, never with the onion skin under them */
+.slayers{position:absolute;inset:0;isolation:isolate}
+.slayer,#sguide,#ssel{pointer-events:none}
+#onion{pointer-events:none;opacity:.32}
+.selbar{display:flex;gap:4px;align-items:center;flex-wrap:wrap}.selbar[hidden]{display:none}
+.studio-out{justify-content:flex-end}
+.studio-out .shelp{margin-right:auto}
+@media (max-width:760px){.studio-main{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(240px,1fr) auto auto auto}.sview{grid-column:1;grid-row:1}}
+.swatches{display:grid;grid-template-columns:repeat(8,20px);gap:3px}
+.sw{width:20px;height:20px;border:2px solid var(--ink);padding:0;cursor:pointer}
+.sw[aria-pressed="true"]{outline:2px solid var(--ink);outline-offset:1px;box-shadow:inset 0 0 0 2px var(--paper)}
+.fgbg{position:relative;width:58px;height:58px;flex:none}
+.cur{position:absolute;width:34px;height:34px;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shadow);overflow:hidden;cursor:pointer;box-sizing:border-box}
+.cur.fg{left:0;top:0;z-index:1}
+.cur.bg{right:0;bottom:0}
+.cur input{position:absolute;inset:-8px;width:60px;height:60px;opacity:0;cursor:pointer}
+.swap{position:absolute;right:0;top:0;width:20px;height:20px;padding:0;border:0;background:none;cursor:pointer;font-size:14px;line-height:1}
+.swap:hover{color:var(--hot-ink)}
+.mini{position:absolute;left:0;bottom:0;width:20px;height:20px;padding:0;border:0;background:none;cursor:pointer}
+.mini i{position:absolute;width:9px;height:9px;border:1px solid var(--ink)}
+.mini i:first-child{left:2px;top:4px;background:#000;z-index:1}.mini i:last-child{left:7px;top:9px;background:#fff}
+.field{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted)}
+.field input[type=range]{accent-color:var(--hot);width:126px}
+.stamps{display:flex;gap:2px;flex-wrap:wrap}
+.stamps button{width:30px;height:30px;font-size:18px;line-height:1;padding:0;background:var(--paper);border:2px solid transparent;cursor:pointer}
+.stamps button[aria-pressed="true"]{border-color:var(--ink);background:var(--sun);color:var(--onsun)}

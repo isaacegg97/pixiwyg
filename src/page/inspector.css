@@ -1,0 +1,20 @@
+/* SECTION: Inspector (the selected element's properties) */
+.ins{display:flex;flex-direction:column;gap:8px}
+.insform{display:flex;flex-direction:column;gap:10px}
+.insform h4{margin:4px 0 -4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:2px dotted var(--ink);padding-bottom:2px}
+.ff{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ff>label{font-size:12px;font-weight:600}
+.ff input,.ff textarea,.ff select{color:var(--ink);background:var(--paper);border:2px solid var(--ink);padding:4px 6px;font:13px/1.35 var(--f-mono);width:100%;box-sizing:border-box;min-width:0}
+.ff textarea{resize:vertical}
+.ff small{font-size:11px;color:var(--muted)}
+.ff textarea.mono{font-family:var(--f-mono);white-space:pre;tab-size:2}
+.frow3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.stylerow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px}
+.stylerow .btn{padding:2px 8px}
+.insform details summary{cursor:pointer;font-size:12px;color:var(--muted)}
+.insform details[open] summary{margin-bottom:4px}
+.insform .row{display:flex;gap:6px;flex-wrap:wrap}
+.ins p{margin:0;font-size:13px}
+.ins code{font:12px var(--f-mono);background:var(--paper);border:1px solid var(--ink);padding:1px 5px;word-break:break-all}
+.ins .row{display:flex;gap:6px;flex-wrap:wrap}
+.ins .btn{font-size:13px;padding:3px 8px}

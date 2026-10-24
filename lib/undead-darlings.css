@@ -1,0 +1,82 @@
+/* FORMAT: undead-darlings.css, PIXIWYG house style, MIT License. Black and toxic green, sweet and a bit rotten: round
+   little zombies with stitches and X-eyes, tombstones, bones, brains, toe tags and green slime, in soft stitched
+   shapes. Plain text stays dark for light pages; panels carry the midnight graveyard with them. Textures are inline
+   SVG, so the sheet works offline and exports whole. Fonts are the app's own (Patrick Hand SC, Neucha). */
+:root{--ud-night:#0b0f0b;--ud-soil:#172117;--ud-moss:#1d361a;--ud-stitch:#0f220d;--ud-zombie:#5aa34a;--ud-toxic:#7bff5a;--ud-lime:#c6ff3d;
+  --ud-bone:#e9f0d0;--ud-brain:#ff8fb1;--ud-gum:#8f3550;--ud-stone:#4a5a4a;--ud-tag:#e8d8a8;
+  --ud-slimefill:linear-gradient(180deg,#8dff6e,#4fcf3c 55%,#2f9a2a);
+  --ud-tile:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='260' height='260' viewBox='0 0 260 260'%3E%3Cdefs%3E%3Cg id='z'%3E %3Ccircle cx='25' cy='26' r='18' fill='%235aa34a' stroke='%230f220d' stroke-width='2'/%3E %3Cpath d='M17 10q4-7 8 0q3-7 7 0' fill='none' stroke='%230f220d' stroke-width='2' stroke-linecap='round'/%3E %3Cpath d='M12 18L24 13' stroke='%230f220d' stroke-width='1.6'/%3E%3Cpath d='M14 15l1.6 4M18 13.6l1.6 4M22 12.2l1.6 4' stroke='%230f220d' stroke-width='1.3'/%3E %3Cpath d='M14 23l6 6M20 23l-6 6' stroke='%230f220d' stroke-width='2.4' stroke-linecap='round'/%3E %3Ccircle cx='32' cy='25' r='5.2' fill='%23eaf5d8' stroke='%230f220d' stroke-width='1.6'/%3E%3Ccircle cx='33' cy='26' r='2.2' fill='%230f220d'/%3E %3Cpath d='M16 35q9 7 18 0' fill='none' stroke='%230f220d' stroke-width='2' stroke-linecap='round'/%3E%3Crect x='23' y='35.6' width='3.4' height='3.4' rx='.6' fill='%23eaf5d8'/%3E %3Ccircle cx='37' cy='33' r='2.6' fill='%23ff8fb1' opacity='.6'/%3E %3C/g%3E%3C/defs%3E%3Cg opacity='.42'%3E %3Cuse xlink:href='%23z' transform='translate(18 18) scale(.9)'/%3E %3Cg transform='translate(158 138) scale(.78)'%3E%3Cuse xlink:href='%23z'/%3E%3Cg transform='translate(34 8)'%3E%3Cg fill='%23ff8fb1' stroke='%238f3550' stroke-width='.8'%3E%3Cpath d='M0 0L-8-5L-8 5Z'/%3E%3Cpath d='M0 0L8-5L8 5Z'/%3E%3Ccircle r='2.2'/%3E%3C/g%3E%3C/g%3E%3C/g%3E %3Cg transform='translate(176 22)'%3E%3Cg%3E%3Cpath d='M0 30V10a12 12 0 0 1 24 0V30Z' fill='%231b2a1b' stroke='%2335532f' stroke-width='1.6'/%3E%3Cpath d='M12 8v14M7 13h10' stroke='%2335532f' stroke-width='2'/%3E%3Cpath d='M-4 30h32' stroke='%232c4a26' stroke-width='2'/%3E%3Cpath d='M-2 30l2-4l2 4M22 30l2-5l2 5' stroke='%234b7a3f' stroke-width='1.4' fill='none'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(44 182) scale(.9)'%3E%3Cg%3E%3Cpath d='M0 30V10a12 12 0 0 1 24 0V30Z' fill='%231b2a1b' stroke='%2335532f' stroke-width='1.6'/%3E%3Cpath d='M12 8v14M7 13h10' stroke='%2335532f' stroke-width='2'/%3E%3Cpath d='M-4 30h32' stroke='%232c4a26' stroke-width='2'/%3E%3Cpath d='M-2 30l2-4l2 4M22 30l2-5l2 5' stroke='%234b7a3f' stroke-width='1.4' fill='none'/%3E%3C/g%3E%3C/g%3E %3Cg transform='translate(112 92) rotate(-30)'%3E%3Cg fill='%23c9d6b0'%3E%3Crect x='-9' y='-2' width='18' height='4' rx='2'/%3E%3Ccircle cx='-9' cy='-2.4' r='3'/%3E%3Ccircle cx='-9' cy='2.4' r='3'/%3E%3Ccircle cx='9' cy='-2.4' r='3'/%3E%3Ccircle cx='9' cy='2.4' r='3'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(226 226) rotate(20) scale(.8)'%3E%3Cg fill='%23c9d6b0'%3E%3Crect x='-9' y='-2' width='18' height='4' rx='2'/%3E%3Ccircle cx='-9' cy='-2.4' r='3'/%3E%3Ccircle cx='-9' cy='2.4' r='3'/%3E%3Ccircle cx='9' cy='-2.4' r='3'/%3E%3Ccircle cx='9' cy='2.4' r='3'/%3E%3C/g%3E%3C/g%3E %3Cg transform='translate(104 206) scale(.9)'%3E%3Cg%3E%3Cpath d='M-10 2c-3-6 2-11 7-9c2-4 9-3 10 1c5 0 7 6 3 9c1 4-4 7-8 5c-3 3-9 2-10-2c-3 0-4-3-2-4Z' fill='%23e6799a' stroke='%238f3550' stroke-width='1.2'/%3E%3Cpath d='M-4-3q3 2 1 5M3-5q-1 4 3 5M-6 4q4-1 6 2' fill='none' stroke='%238f3550' stroke-width='1.1'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(232 104) scale(.7)'%3E%3Cg%3E%3Cpath d='M-10 2c-3-6 2-11 7-9c2-4 9-3 10 1c5 0 7 6 3 9c1 4-4 7-8 5c-3 3-9 2-10-2c-3 0-4-3-2-4Z' fill='%23e6799a' stroke='%238f3550' stroke-width='1.2'/%3E%3Cpath d='M-4-3q3 2 1 5M3-5q-1 4 3 5M-6 4q4-1 6 2' fill='none' stroke='%238f3550' stroke-width='1.1'/%3E%3C/g%3E%3C/g%3E %3Cg fill='%237bff5a' opacity='.6'%3E%3Ccircle cx='130' cy='30' r='1.6'/%3E%3Ccircle cx='90' cy='150' r='1.2'/%3E%3Ccircle cx='200' cy='80' r='1.4'/%3E%3Ccircle cx='20' cy='120' r='1.2'/%3E%3Ccircle cx='150' cy='240' r='1.6'/%3E%3C/g%3E %3C/g%3E%3C/svg%3E");
+  --ud-slime:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='18'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%237bff5a'/%3E%3Cstop offset='1' stop-color='%233a9a2a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23g)'%3E%3Crect width='140' height='3'/%3E%3Crect x='8.0' y='0' width='4' height='8' rx='2.0'/%3E%3Ccircle cx='10' cy='8' r='3.40'/%3E%3Crect x='32.5' y='0' width='3' height='4' rx='1.5'/%3E%3Ccircle cx='34' cy='4' r='2.55'/%3E%3Crect x='52.5' y='0' width='5' height='12' rx='2.5'/%3E%3Ccircle cx='55' cy='12' r='4.25'/%3E%3Crect x='78.3' y='0' width='3.4' height='6' rx='1.7'/%3E%3Ccircle cx='80' cy='6' r='2.89'/%3E%3Crect x='101.8' y='0' width='4.4' height='10' rx='2.2'/%3E%3Ccircle cx='104' cy='10' r='3.74'/%3E%3Crect x='124.6' y='0' width='2.8' height='4' rx='1.4'/%3E%3Ccircle cx='126' cy='4' r='2.38'/%3E%3C/g%3E%3C/svg%3E")}
+body{font-family:"Neucha","Patrick Hand SC","Comic Sans MS",cursive;color:var(--ud-stitch)}
+
+/* SECTION: texture swatches (also what the interface theme and the page-background primitive borrow)
+   RULE: the graveyard tile is 260px and seamless; the slime is a 140 x 18 strip of drips that repeats across. */
+.ud-tex-tile{background-image:var(--ud-tile)}
+.ud-tex-slime{background-image:var(--ud-slime)}
+
+/* SECTION: headings: hand-lettered, wobbly, a little bit dead */
+h1{font:400 56px/1 "Patrick Hand SC","Neucha",cursive;margin:0;color:var(--ud-toxic);-webkit-text-stroke:2px var(--ud-stitch);text-shadow:4px 4px 0 var(--ud-night);transform:rotate(-1.5deg);letter-spacing:.02em}
+h1.slime{padding-bottom:16px;background:var(--ud-slime) repeat-x left bottom/140px 18px}
+h1.grave{display:inline-block;color:var(--ud-bone);-webkit-text-stroke:0;text-shadow:0 2px 0 #000;background:linear-gradient(180deg,#5d6d5d,var(--ud-stone));border:3px solid var(--ud-night);border-radius:50% 50% 6px 6px/40% 40% 6px 6px;padding:26px 30px 14px;transform:none;box-shadow:0 6px 0 var(--ud-moss)}
+h1.stitched{display:inline-block;color:var(--ud-toxic);background:var(--ud-night);padding:12px 20px;border-radius:14px;outline:2px dashed var(--ud-toxic);outline-offset:-8px;text-shadow:0 0 14px rgba(123,255,90,.5)}
+h2{font:400 30px/1.1 "Patrick Hand SC",cursive;margin:0;color:var(--ud-night);display:inline-block;padding:0 8px;background:linear-gradient(176deg,transparent 22%,var(--ud-toxic) 24% 76%,transparent 78%);transform:rotate(-1deg)}
+h2.tag{background:var(--ud-tag);color:var(--ud-stitch);padding:6px 16px 6px 34px;border-radius:4px 14px 14px 4px;position:relative;transform:rotate(2deg);box-shadow:0 4px 0 #b8a878}
+h2.tag::before{content:"";position:absolute;left:12px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--ud-night);box-shadow:0 0 0 3px #c8b888}
+h2.brains{background:none;color:var(--ud-brain);-webkit-text-stroke:1px var(--ud-gum)}h2.brains::before{content:"🧠 "}
+h3{font:400 19px/1.2 "Neucha",cursive;margin:0;text-transform:uppercase;letter-spacing:.16em;color:var(--ud-moss)}
+h3.stitch{padding-bottom:6px;background:repeating-linear-gradient(90deg,var(--ud-stitch) 0 8px,transparent 8px 12px) left bottom/100% 2px no-repeat}
+
+/* SECTION: text */
+p{font:18px/1.6 "Neucha","Comic Sans MS",cursive;margin:0;color:var(--ud-stitch)}
+p.epitaph{text-align:center;font-style:italic;color:var(--ud-bone);background:linear-gradient(180deg,#56665a,var(--ud-stone));border:3px solid var(--ud-night);border-radius:46% 46% 8px 8px/30% 30% 8px 8px;padding:30px 24px 18px}
+p.groan{font:400 30px/1.1 "Patrick Hand SC",cursive;color:var(--ud-zombie);transform:rotate(-3deg);-webkit-text-stroke:1px var(--ud-stitch)}
+p.whisper{font-size:15px;font-style:italic;color:#3e5a36;letter-spacing:.05em}
+blockquote{margin:0;font:italic 20px/1.5 "Neucha",cursive;color:var(--ud-stitch);border-left:6px dashed var(--ud-zombie);padding:4px 0 4px 18px}
+blockquote.crypt{color:var(--ud-bone);background:linear-gradient(rgba(11,15,11,.82),rgba(11,15,11,.82)),var(--ud-tile) 0 0/220px;border:0;border-radius:18px;padding:20px 22px;outline:2px dashed var(--ud-zombie);outline-offset:-9px}
+code{font:14px "DM Mono",monospace;background:var(--ud-night);color:var(--ud-toxic);padding:2px 7px;border-radius:6px}
+pre{font:14px/1.5 "DM Mono",monospace;background:repeating-linear-gradient(var(--ud-night) 0 3px,#0e140e 3px 4px);color:var(--ud-toxic);border-radius:12px;padding:12px 14px;margin:0;white-space:pre-wrap;box-shadow:inset 0 0 20px rgba(123,255,90,.12)}
+a{color:#2f8a28;text-decoration:underline dashed var(--ud-zombie);text-underline-offset:4px;text-decoration-thickness:2px}
+a:hover{color:var(--ud-gum);text-decoration-color:var(--ud-brain)}
+label{font:700 16px "Neucha",cursive;color:var(--ud-moss)}
+
+/* SECTION: buttons and fields: soft, round and sewn on */
+button{font:400 18px "Patrick Hand SC",cursive;color:var(--ud-night);background:var(--ud-slimefill);border:2px solid var(--ud-stitch);border-radius:14px;padding:7px 20px;box-shadow:0 4px 0 var(--ud-stitch);outline:2px dashed rgba(15,34,13,.5);outline-offset:-6px;cursor:pointer}
+button:hover{transform:translateY(-1px);box-shadow:0 5px 0 var(--ud-stitch),0 0 14px rgba(123,255,90,.5)}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ud-stitch)}
+button.brains{background:linear-gradient(180deg,#ffb3c8,var(--ud-brain));border-color:var(--ud-gum);box-shadow:0 4px 0 var(--ud-gum);outline-color:rgba(143,53,80,.5)}
+button.night{background:var(--ud-night);color:var(--ud-toxic);outline-color:rgba(123,255,90,.45)}
+input,textarea,select{font:16px "Neucha",cursive;background:var(--ud-bone);color:var(--ud-stitch);border:2px solid var(--ud-moss);border-radius:10px;padding:7px 12px;outline:1px dashed rgba(29,54,26,.45);outline-offset:-5px}
+input:focus,textarea:focus,select:focus{border-color:var(--ud-zombie);box-shadow:0 0 0 4px rgba(123,255,90,.35)}
+
+/* SECTION: lists and tables */
+ul,ol{margin:0;padding-left:1.7em;font:18px/1.6 "Neucha",cursive;color:var(--ud-stitch)}
+ul li::marker{content:"✚  ";color:var(--ud-zombie)}
+ul.bones li::marker{content:"🦴  "}
+ol li::marker{color:#2f8a28;font-weight:700}
+table{border-collapse:separate;border-spacing:0;font:16px "Neucha",cursive;color:var(--ud-bone);background:var(--ud-soil);border-radius:14px;overflow:hidden;border:2px solid var(--ud-night)}
+th{background:var(--ud-slimefill);color:var(--ud-night);padding:7px 12px;text-align:left;font-family:"Patrick Hand SC",cursive;letter-spacing:.06em}
+td{padding:7px 12px;border-top:1px dashed #2f4d2b}
+
+/* SECTION: pictures and rules */
+img{border-radius:12px;border:3px solid var(--ud-night);outline:2px dashed var(--ud-zombie);outline-offset:3px;transform:rotate(-1deg)}
+img.mugshot{border-width:10px;border-color:var(--ud-night);background:var(--ud-night);outline:0;transform:none;box-shadow:inset 0 0 0 2px var(--ud-toxic),0 6px 0 var(--ud-moss)}
+hr{border:0;height:10px;margin:10px 0;background:repeating-linear-gradient(90deg,var(--ud-stitch) 0 2px,transparent 2px 14px) center/100% 10px no-repeat,linear-gradient(var(--ud-stitch),var(--ud-stitch)) center/100% 2px no-repeat}
+hr.slime{height:18px;background:var(--ud-slime) repeat-x left top/140px 18px}
+
+/* SECTION: panels: the crypt, toe tags, slime and patches
+   RULE: text on the graveyard always has the night under it, so it reads. */
+div{font:18px/1.55 "Neucha",cursive;color:var(--ud-stitch)}
+.crypt{background:linear-gradient(rgba(11,15,11,.7),rgba(11,15,11,.7)),var(--ud-tile) 0 0/260px,var(--ud-night);color:var(--ud-bone);padding:20px;border-radius:20px;box-shadow:inset 0 0 50px #000}
+.toe-tag{background:var(--ud-tag);color:var(--ud-stitch);padding:16px 18px 16px 44px;border-radius:6px 28px 28px 6px;position:relative;transform:rotate(-2deg);box-shadow:0 5px 0 #b8a878}
+.toe-tag::before{content:"";position:absolute;left:14px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px #c8b888}
+.slimed{background:var(--ud-slime) repeat-x left top/140px 18px,var(--ud-night);color:var(--ud-bone);padding:30px 18px 18px;border-radius:0 0 18px 18px}
+.patch{background:var(--ud-bone);color:var(--ud-stitch);padding:18px;border-radius:16px;outline:3px dashed var(--ud-zombie);outline-offset:-10px;box-shadow:0 6px 0 var(--ud-moss);transform:rotate(1.5deg)}
+
+/* SECTION: little things */
+span.badge{display:inline-block;background:var(--ud-toxic);color:var(--ud-night);border-radius:999px;padding:2px 12px;font-weight:700;box-shadow:0 2px 0 var(--ud-stitch)}
+span.brain{display:inline-block;background:var(--ud-brain);color:#4a1424;border-radius:40% 60% 50% 50%;padding:2px 12px}
+span.rip{display:inline-block;background:var(--ud-stone);color:var(--ud-bone);border-radius:50% 50% 3px 3px/60% 60% 3px 3px;padding:6px 10px 2px;font-family:"Patrick Hand SC",cursive}
+span.stitch{background:repeating-linear-gradient(90deg,var(--ud-stitch) 0 6px,transparent 6px 10px) left bottom/100% 2px no-repeat;padding-bottom:2px}
+nav{font:18px "Patrick Hand SC",cursive;display:flex;gap:8px;flex-wrap:wrap}
+nav a{text-decoration:none;color:var(--ud-toxic);background:var(--ud-night);border-radius:10px 10px 4px 4px;padding:4px 14px;outline:1px dashed rgba(123,255,90,.45);outline-offset:-4px}
+nav a:hover{color:var(--ud-night);background:var(--ud-toxic)}

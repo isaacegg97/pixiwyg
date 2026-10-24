@@ -1,0 +1,18 @@
+/* SECTION: first visit: profiles and the theme picker */
+.obh{margin:4px 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.obthemes{grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:6px}.obthemes .thcard small{display:none}.obthemes .thsw{height:40px}.obthemes .thsw b{font-size:14px;top:4px}
+.obwin .wb{max-height:min(86vh,900px);overflow:auto}.thgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.thcard{display:grid;gap:3px;text-align:left;padding:6px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;font:inherit}
+.thcard[aria-checked="true"]{outline:3px solid var(--hot);outline-offset:1px}.thcard[aria-checked="true"] strong::after{content:' ✓'}.thcard strong{font-size:13px}.thcard small{font-size:11px;color:var(--muted);line-height:1.25}
+.thsw{position:relative;display:block;height:56px;background:var(--d);border:1px solid var(--i);overflow:hidden}
+.thsw i{position:absolute;left:0;top:0;bottom:0;width:38%;background:var(--c);border-right:1px solid var(--i)}
+.thsw b{position:absolute;left:44%;top:6px;color:var(--i);font:700 18px/1 var(--f-ui);background:var(--p);padding:2px 5px;border:1px solid var(--i)}
+.thsw em{position:absolute;left:6px;top:8px;width:28%;height:8px;background:var(--h)}
+.thsw u{position:absolute;right:8px;bottom:8px;width:18px;height:18px;background:var(--u);border:2px solid var(--s)}
+.oblead{margin:0 0 14px;font-size:14px}
+.obgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.obcard{display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;padding:14px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);box-shadow:4px 4px 0 var(--shadow);cursor:pointer;font:inherit}
+.obcard:hover,.obcard:focus-visible{background:var(--sun);color:var(--onsun);transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--shadow);outline:none}
+.obcard small{color:inherit;opacity:.75;font-size:12px}
+.obmore{margin-top:16px;gap:8px;flex-wrap:wrap}
+.obmore .grow{flex:1}

@@ -1,0 +1,30 @@
+/* SECTION: Paint Studio palettes: docked around the canvas or floating over it, folding, dragging */
+.sdock{display:flex;flex-direction:column;gap:6px;min-height:0;min-width:0;overflow:auto}
+.sdock[hidden]{display:none}
+.sdock.l{grid-column:1;grid-row:1/3}
+.sdock.r{grid-column:3;grid-row:1/3}
+.sdock.b{grid-column:2;grid-row:2;flex-direction:row;align-items:flex-end;overflow:auto hidden}
+.spal{background:var(--chrome);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shadow);display:flex;flex-direction:column;min-width:0;flex:none;box-sizing:border-box}
+.spalhead{display:flex;align-items:center;gap:4px;padding:2px 4px;background:var(--chrome2);border-bottom:2px solid var(--ink);cursor:grab;user-select:none;font-size:12px;touch-action:none}
+.spalhead b{flex:1;white-space:nowrap}
+.spalgrip,.spalfold{border:0;background:none;padding:0 4px;min-width:22px;height:22px;font:inherit;font-size:14px;color:var(--ink);cursor:inherit}
+.spalfold{cursor:pointer}
+.spalgrip:focus-visible,.spalfold:focus-visible{outline:2px solid var(--sel);outline-offset:-2px}
+.spalbody{padding:8px;display:flex;flex-direction:column;gap:8px;min-height:0;overflow:auto}
+.spal.folded>.spalbody{display:none}
+.spal.float{position:absolute;z-index:6;box-shadow:4px 4px 0 var(--shadow);max-height:calc(100% - 8px)}
+.spal.dragging{opacity:.92}
+.spal.dragging,.spal.dragging .spalhead{cursor:grabbing}
+.studio-main.nopal>.sdock,.studio-main.nopal>.spal.float{display:none}
+/* RULE: while a palette drags, the dock it would land in lights up, with a dashed edge as well as a tint */
+.studio-main[data-drop]::after{content:'';position:absolute;z-index:5;pointer-events:none;background:color-mix(in srgb,var(--sel) 22%,transparent);outline:3px dashed var(--sel);outline-offset:-3px}
+.studio-main[data-drop=l]::after{left:0;top:0;bottom:0;width:64px}
+.studio-main[data-drop=r]::after{right:0;top:0;bottom:0;width:64px}
+.studio-main[data-drop=b]::after{left:0;right:0;bottom:0;height:64px}
+.spal[data-pal=tools] .tools{padding:0}
+.sdock.b .spal[data-pal=tools] .tools{grid-auto-flow:column;grid-template-rows:repeat(2,38px);grid-template-columns:none}
+.spal[data-pal=layers]{width:260px}
+.sdock.l .spal[data-pal=frames],.sdock.r .spal[data-pal=frames]{width:260px}
+.sdock.b .spal[data-pal=frames]{flex:1 1 auto}
+.spal.float[data-pal=frames]{width:min(620px,90%)}
+@media (max-width:760px){.sdock.l,.sdock.r,.sdock.b{grid-column:1;grid-row:auto;flex-direction:row;flex-wrap:wrap;overflow:visible}}

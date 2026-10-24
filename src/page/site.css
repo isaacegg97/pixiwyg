@@ -1,0 +1,7 @@
+/* SECTION: site pages panel */
+.pgwb{display:grid;gap:8px}.pglist{display:grid;gap:2px;max-height:220px;overflow:auto;border:1px solid var(--line);background:var(--paper)}
+.pgitem{display:flex;justify-content:space-between;gap:8px;align-items:baseline;border:0;background:none;color:var(--ink);font:12px var(--f-ui);text-align:left;padding:4px 8px;cursor:pointer}
+.pgitem small{color:var(--muted);font-size:11px}.pgitem:hover{background:var(--chrome2)}
+.pgitem.on{background:var(--sun);color:var(--onsun);box-shadow:inset 3px 0 0 var(--ink);font-weight:700}.pgitem.on small{color:inherit}
+.pgh{margin:4px 0 0;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.siterow{display:grid;gap:6px;margin:6px 0}.pgchips{display:flex;flex-wrap:wrap;gap:4px 12px;padding-left:4px}

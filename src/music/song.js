@@ -1,0 +1,48 @@
+// SECTION: sequencer
+// FORMAT: songs are kept in MIDI ticks (PPQ 480) so changing the grid never moves notes; up to 16 tracks, each an
+//   instrument or the drum kit. The .mid is generated on demand, not stored.
+const PPQ=480,SEQ_MAX_TICK=64*12*PPQ;
+const GM=[[0,'Piano','piano'],[4,'Electric piano','epiano'],[11,'Vibraphone','mallet'],[13,'Xylophone','mallet'],[16,'Organ','organ'],
+  [24,'Nylon guitar','pluck'],[29,'Overdriven guitar','drive'],[33,'Electric bass','bass'],[38,'Synth bass','synbass'],[40,'Violin','strings'],
+  [48,'Strings','strings'],[56,'Trumpet','brass'],[61,'Brass section','brass'],[65,'Alto sax','reed'],[73,'Flute','flute'],
+  [80,'Square lead','square'],[81,'Saw lead','saw'],[89,'Warm pad','pad'],[98,'Crystal','mallet'],[114,'Steel drums','mallet']];
+// FORMAT: General MIDI drum notes, top to bottom as rows.
+const DRUMS=[[49,'Crash'],[51,'Ride'],[46,'Open hat'],[42,'Closed hat'],[54,'Tambourine'],[56,'Cowbell'],[50,'High tom'],[47,'Mid tom'],[45,'Low tom'],[39,'Clap'],[38,'Snare'],[36,'Kick']];
+const SEQ_COLORS=['#ff2e88','#2e5bff','#1d9a5b','#d97a00','#7a3ff0','#00a3b4','#c2185b','#5d7a00'];
+const NOTE_NAMES=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+const noteName=p=>NOTE_NAMES[p%12]+(Math.floor(p/12)-1);
+const isBlack=p=>[1,3,6,8,10].includes(p%12);
+function seqTrack(drums,i){return{id:nid('t'),name:drums?'Drums':'Piano',drums:!!drums,prog:0,vol:100,mute:false,notes:[]}}
+function defaultMusic(){return{bpm:120,beats:4,res:4,bars:4,tracks:[seqTrack(false),seqTrack(true)]}}
+// INVARIANT: songs are project files; state.music is the one open in the sequencer.
+const songById=id=>id?state.songs.find(s=>s.id===id)||null:null;
+function newSong(name,music){const s={id:nid('m'),name:name||`Song ${state.songs.length+1}`,...(music||defaultMusic())};state.songs.push(s);return s}
+function useSong(id){state.music=songById(id)||state.music&&songById(state.music.id)||state.songs[0]||null;return state.music}
+const cleanSongName=v=>String(v??'').replace(/[\u0000-\u001f]/g,'').trim().slice(0,60)||'Song';
+function cleanSong(x){const m=cleanMusic(x);return m&&{name:cleanSongName(x.name),...m}}
+// SAFETY: songs from files are rebuilt from in-range numbers; anything else is dropped.
+function cleanMusic(m){
+  if(!m||typeof m!=='object'||!Array.isArray(m.tracks))return null;
+  const int=(v,d,lo,hi)=>Math.round(numIn(v,d,lo,hi));
+  const o={bpm:int(m.bpm,120,20,300),beats:int(m.beats,4,1,12),res:[2,3,4,6,8].includes(+m.res)?+m.res:4,bars:int(m.bars,4,1,64),tracks:[]};
+  let total=0;
+  for(const t of m.tracks.slice(0,16)){
+    if(!t||typeof t!=='object')continue;
+    const notes=[];
+    for(const n of Array.isArray(t.notes)?t.notes:[]){
+      if(!n||typeof n!=='object'||++total>20000)break;
+      notes.push({t:int(n.t,0,0,SEQ_MAX_TICK),d:int(n.d,PPQ/4,1,SEQ_MAX_TICK),p:int(n.p,60,0,127),v:int(n.v,100,1,127)});
+    }
+    notes.sort((a,b)=>a.t-b.t||a.p-b.p);
+    const tr={name:String(t.name??'Track').replace(/[\u0000-\u001f]/g,'').slice(0,40),drums:!!t.drums,prog:int(t.prog,0,0,127),vol:int(t.vol,100,0,127),mute:!!t.mute,notes};
+    const fx=cleanFx(t.fx);if(fx.length)tr.fx=fx;
+    if(typeof t.smp==='string'){tr.smp=t.smp.replace(/[^\w-]/g,'').slice(0,20);tr.root=int(t.root,60,0,127);tr.pitched=t.pitched!==false;tr.gate=!!t.gate}
+    o.tracks.push(tr);
+  }
+  const smp=cleanSamples(m.samples);if(smp.length)o.samples=smp;
+  for(const tr of o.tracks)if(tr.smp!=null&&!smp.some(s=>s.id===tr.smp)){delete tr.smp;delete tr.root;delete tr.pitched;delete tr.gate}
+  const mf=cleanFx(m.fx);if(mf.length)o.fx=mf;
+  return o;
+}
+const songEnd=m=>m.bars*m.beats*PPQ;
+

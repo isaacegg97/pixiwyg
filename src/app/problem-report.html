@@ -1,0 +1,17 @@
+<!-- SECTION: problem report dialog -->
+<div class="modal" id="reportModal" hidden>
+  <div class="win" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+    <div class="tb"><span id="reportTitle">Report a problem</span><button class="wclose" id="reportClose" aria-label="Close" title="Close (Esc)">×</button></div>
+    <div class="wb">
+      <p>Describe what happened under “What happened”, then save the report and attach it to your beta feedback. Nothing is sent from here.</p>
+      <textarea id="reportText" aria-label="Problem report" spellcheck="true"></textarea>
+      <div class="row">
+        <label class="tog2" for="reportProj"><input type="checkbox" id="reportProj"> Include the open project</label>
+        <button class="btn" id="reportCopy">Copy</button>
+        <button class="btn" id="reportSave">Save report…</button>
+        <button class="btn" id="reportClear" title="Forget the errors recorded so far">Clear errors</button>
+      </div>
+    </div>
+  </div>
+</div>
+

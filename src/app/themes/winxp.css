@@ -1,0 +1,124 @@
+/* SECTION: Windows XP: Luna blue title bars, cream panels, a green Start-button Export. Built with XP.css.
+   The look follows XP.css by Adam Hammad and Jordan Scales (MIT, lib/NOTICES.txt); its font, scrollbars and icons are pulled in at
+   build time. Buttons glow orange under the pointer, as XP's did. */
+/* INCLUDE: lib/xp.css @font-face Pixelated */
+/* INCLUDE: lib/xp.css scrollbars */
+/* ASSET: --xp-check lib/xp.css input[type=checkbox]:checked+label:after */
+/* ASSET: --xp-select lib/xp.css select */
+/* ASSET: --xp-close lib/xp.css .title-bar-controls button[aria-label=Close] */
+/* ASSET: --xp-close-h lib/xp.css .title-bar-controls button[aria-label=Close]:hover */
+:root[data-apptheme]{
+  color-scheme: light;
+
+  /* SECTION: Desk and panels */
+  --desk: #3a6fd8;
+  --desk2: #3a6fd8;
+  --chrome: #ece9d8;
+  --chrome2: #e3dfcb;
+  --paper: #ffffff;
+  --ink: #000000;
+  --muted: #555555;
+  --line: #c9c4ae;
+  --shadow: transparent;
+  --scrim: rgba(0,20,80,.25);
+
+  /* SECTION: Accents */
+  --hot: #e5a01a;
+  --hot2: #f8b636;
+  --onhot: #000000;
+  --sel: #316ac5;
+  --onsel: #ffffff;
+  --sun: #316ac5;
+  --onsun: #ffffff;
+  --act: #316ac5;
+  --actfg: #ffffff;
+
+  /* SECTION: Status */
+  --bad: #d63b23;
+  --warn: #e5a01a;
+  --ok: #3c9e3c;
+  --lib: #ffffe1;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #ffffff;
+  --check-b: #ece9d8;
+
+  /* SECTION: Node editors */
+  --n-head: #0053ee;
+  --n-headfg: #ffffff;
+  --n-events: #d63b23;
+  --n-actions: #0053ee;
+  --n-values: #3c9e3c;
+  --n-math: #7b4ec2;
+  --n-anim: #e07b00;
+  --n-misc: #7a7a7a;
+  --n-imported: #12808c;
+
+  /* SECTION: Manuscript page view */
+  --doc-desk: #5a7fc0;
+
+  /* SECTION: Logo */
+  --logo3: #3c9e3c;
+  --logo4: #0053ee;
+  --logo5: #d63b23;
+  --logo6: #e5a01a;
+
+  /* SECTION: Type */
+  --f-ui: Tahoma, "Pixelated MS Sans Serif", Verdana, sans-serif;
+
+  /* SECTION: XP.css edges */
+  --xp-frame: inset -1px -1px #00138c, inset 1px 1px #0831d9, inset -2px -2px #001ea0, inset 2px 2px #166aee, inset -3px -3px #003bda, inset 3px 3px #0855dd;
+  --xp-title: linear-gradient(180deg,#0997ff,#0053ee 8%,#0050ee 40%,#06f 88%,#06f 93%,#005bff 95%,#003dd7 96%,#003dd7);
+  --xp-btn: linear-gradient(180deg,#ffffff,#ecebe5 86%,#d8d0c4);
+  --xp-btn-down: linear-gradient(180deg,#cdcac3,#e3e3db 8%,#e5e5de 94%,#f2f2f1);
+  --xp-glow: inset -1px 1px #fff0cf, inset 1px 2px #fdd889, inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
+  --xp-default: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea, inset -2px 2px #bcd4f6, inset 1px -1px #89ade4, inset 2px -2px #89ade4;
+}
+
+/* SECTION: the Bliss desktop: a blue sky over a green hill */
+:root[data-apptheme] body{background:radial-gradient(140% 55% at 30% 112%,#5fae2e 0 58%,#3d8a1c 59% 60%,transparent 61%),linear-gradient(#1d5fd6,#78b1f2 62%,#bfdcfb);background-attachment:fixed;font-size:11px}
+
+/* SECTION: buttons */
+:root[data-apptheme] :is(.btn,.cmdbtn){background:var(--xp-btn);color:#000;border:1px solid #003c74;border-radius:3px;box-shadow:none;padding:4px 10px;font-weight:400}
+:root[data-apptheme] :is(.btn,.cmdbtn):hover{background:var(--xp-btn);color:#000;box-shadow:var(--xp-glow)}
+:root[data-apptheme] :is(.btn,.cmdbtn):active,:root[data-apptheme] .btn[aria-pressed="true"].tog-btn,:root[data-apptheme] .dd[open]>summary.btn{transform:none;background:var(--xp-btn-down);color:#000;box-shadow:none}
+:root[data-apptheme] .btn.primary{background:var(--xp-btn);color:#000;box-shadow:var(--xp-default);font-weight:700}
+:root[data-apptheme] .topbar .btn.primary{background:linear-gradient(180deg,#68c160,#3c9e3c 45%,#2f8a2f 55%,#3b9b3b);color:#fff;border-color:#1e5e1e;border-radius:3px 12px 12px 3px;font-style:italic;text-shadow:1px 1px #1a4a1a;padding-right:16px}
+:root[data-apptheme] .topbar .btn.primary:hover{background:linear-gradient(180deg,#7dd174,#47b047 45%,#389a38 55%,#46ab46)}
+:root[data-apptheme] .btn.dyna{background:var(--xp-btn);color:#0053ee}
+:root[data-apptheme] :is(.btn,.cmdbtn,.ptab):focus-visible{outline:1px dotted #000;outline-offset:-4px}
+:root[data-apptheme] :is(.cmdbtn,.cmditem) kbd{background:#ffffff;border:1px solid #7f9db9;border-radius:2px}
+:root[data-apptheme] :is(.cmditem.on,.cmditem:hover) kbd{background:transparent;border-color:currentColor}
+
+/* SECTION: windows, menus and title bars */
+:root[data-apptheme] :is(.win,.tourcard){background:#ece9d8;border:0;border-radius:8px 8px 0 0;box-shadow:var(--xp-frame),3px 3px 8px rgba(0,0,0,.35);padding:0 3px 3px}
+:root[data-apptheme] :is(.ddbody,.ctxmenu){background:#ffffff;border:1px solid #7f9db9;border-radius:0;box-shadow:3px 3px 6px rgba(0,0,0,.3);padding:2px}
+:root[data-apptheme] .tb{height:21px;margin:0 -3px 3px;border:0;border-top:1px solid #0831d9;border-radius:8px 8px 0 0;background:var(--xp-title);padding:3px 30px 3px 8px;justify-content:flex-start}
+:root[data-apptheme] .tb span{background:none;color:#fff;font:700 13px "Trebuchet MS",Tahoma,sans-serif;letter-spacing:0;padding:0;text-shadow:1px 1px #0f1089}
+:root[data-apptheme] .wclose{width:21px;height:21px;border:0;border-radius:3px;box-shadow:none;background:#0050ee var(--xp-close) center/100% no-repeat;color:transparent;font-size:0;right:5px}
+:root[data-apptheme] .wclose:hover{background-image:var(--xp-close-h);background-color:#0050ee}
+:root[data-apptheme] .status{background:#ffffe1;color:#000;border:1px solid #000;border-radius:8px;box-shadow:2px 2px 4px rgba(0,0,0,.3)}
+
+/* SECTION: the toolbar and Explorer-style task panes */
+:root[data-apptheme] .topbar{background:linear-gradient(180deg,#f6f5ee,#ece9d8 60%,#ddd8c2);border-bottom:1px solid #a0a0a0;box-shadow:inset 0 1px #ffffff}
+:root[data-apptheme] .side,:root[data-apptheme] .tree{background:linear-gradient(180deg,#7ba2e7,#6375d6);padding:6px}
+:root[data-apptheme] :is(.side,.tree)>*:not(.dockhead){background:#ece9d8}
+:root[data-apptheme] .dockhead{background:linear-gradient(90deg,#ffffff,#c6d3f7);border:0;border-radius:4px 4px 0 0;margin:0}
+:root[data-apptheme] .dockhead b{color:#215dc6;font-weight:700}
+:root[data-apptheme] .dockhead button{color:#215dc6}
+:root[data-apptheme] .dockhead button:hover{background:none;color:#428eff}
+:root[data-apptheme] .treebody{background:#ffffff}
+:root[data-apptheme] .treehead,:root[data-apptheme] .sect{border-bottom:1px solid #c9c4ae}
+:root[data-apptheme] .tlabel:hover{background:none;color:#215dc6;text-decoration:underline}
+
+/* SECTION: tabs, with XP's orange line on the open one */
+:root[data-apptheme] .ptab{background:linear-gradient(180deg,#ffffff,#ecebe5 86%,#d8d0c4);border:1px solid #919b9c;border-bottom:0;border-radius:3px 3px 0 0;margin:2px 1px 0;font-weight:400}
+:root[data-apptheme] .ptab:hover{background:linear-gradient(180deg,#ffffff,#ecebe5 86%,#d8d0c4);color:#000;box-shadow:inset 0 2px #ffc83c}
+:root[data-apptheme] .ptab[aria-selected="true"]{background:#fcfcfe;margin-top:0;box-shadow:inset 0 3px #e68b2c,inset 0 4px #ffc83c;font-weight:700}
+
+/* SECTION: fields */
+:root[data-apptheme] :is(input:not([type]),input[type=text],input[type=search],input[type=number],input[type=url],input[type=email],textarea,select){border:1px solid #7f9db9!important;border-radius:0!important;background-color:#ffffff!important;color:#000!important;box-shadow:none!important;padding:3px 4px}
+:root[data-apptheme] select{appearance:none;background-image:var(--xp-select)!important;background-size:15px!important;background-position:top 2px right 2px!important;background-repeat:no-repeat!important;padding-right:22px!important}
+:root[data-apptheme] input[type=checkbox]{appearance:none;width:13px;height:13px;margin:0;border:1px solid #1d5281;background:linear-gradient(135deg,#dcdcd7,#ffffff);border-radius:0}
+:root[data-apptheme] input[type=checkbox]:checked{background:var(--xp-check) no-repeat center,linear-gradient(135deg,#dcdcd7,#ffffff)}
+:root[data-apptheme] :is(input,select,textarea):focus-visible{outline:1px dotted #000;outline-offset:1px}

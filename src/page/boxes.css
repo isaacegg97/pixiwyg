@@ -1,0 +1,9 @@
+/* SECTION: Boxes layout overlay */
+#boxLayer{position:absolute;inset:0;z-index:3;pointer-events:none}#boxLayer[hidden],body.playing #boxLayer{display:none}
+.bx{position:absolute;outline:1px dashed color-mix(in srgb,var(--sel) 60%,transparent);outline-offset:-1px}
+.bx.hot{background:color-mix(in srgb,var(--sel) 8%,transparent);outline:2px solid var(--sel)}
+.bxbar{position:absolute;right:3px;bottom:3px;display:flex;gap:2px;align-items:center;pointer-events:auto;opacity:.45;font:11px var(--f-mono)}
+.bxbar:hover{opacity:1}.bxbar button{font:11px var(--f-mono);padding:0 4px;line-height:16px;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
+.bxbar span{color:var(--sel);padding:0 3px}
+.bxdiv{position:absolute;pointer-events:auto}.bxdiv.c{cursor:col-resize;width:10px;margin-left:-5px}.bxdiv.r{cursor:row-resize;height:10px;margin-top:-5px}
+.bxdiv:hover{background:color-mix(in srgb,var(--hot) 35%,transparent)}

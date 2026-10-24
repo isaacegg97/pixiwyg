@@ -1,0 +1,5 @@
+/* SECTION: references dialog */
+.refslist{max-height:40vh;overflow:auto;margin:8px 0;border:2px solid var(--ink);background:var(--paper)}
+.refrow{display:flex;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid var(--chrome2)}
+.refrow.on{box-shadow:inset 3px 0 0 var(--hot)}.refrow code{font:12px var(--f-mono);word-break:break-all}.refrow small{flex:1;opacity:.7}
+.refslist .empty{margin:8px}

@@ -1,0 +1,5 @@
+/* SECTION: versions dialog */
+.verwin{width:min(560px,94vw)}.verwin .row{display:flex;gap:8px}.verwin .row input{flex:1;min-width:0}
+.verlist{list-style:none;margin:12px 0 0;padding:0;max-height:50vh;overflow:auto;border-top:2px solid var(--ink)}
+.verlist li{display:flex;align-items:center;gap:8px;padding:6px 2px;border-bottom:1px dashed var(--line)}.verlist li b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.verlist li small{opacity:.7;font:11px var(--f-mono)}.verlist .empty{opacity:.7;display:block}

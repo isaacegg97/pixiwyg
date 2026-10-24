@@ -1,0 +1,19 @@
+/* SECTION: page background layers */
+.bgwb{display:flex;flex-direction:column;gap:8px}
+.bglayers{display:flex;flex-direction:column;gap:6px}
+.bglayer{border:2px solid var(--ink);background:var(--paper);padding:6px;display:flex;flex-direction:column;gap:6px}
+.bglayer.off{opacity:.5}
+.blhead{display:flex;align-items:center;gap:4px}
+.blhead b{flex:1;font-size:13px}
+.blhead .btn{padding:0 7px;font-size:13px;box-shadow:none}
+.blhead input{accent-color:var(--hot);margin:0}
+.blrow{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12px}
+.blrow label{display:inline-flex;gap:4px;align-items:center}
+.blrow select,.blrow input[type=number],#bgAdd{border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:2px 4px;font:12px var(--f-mono);max-width:150px}
+.blrow input[type=number]{width:62px}
+.blcol{display:inline-flex;align-items:center;gap:4px}
+.cc{display:inline-flex;align-items:center;gap:3px}
+.cc .chip{width:22px;height:22px;border:2px solid var(--ink);position:relative;overflow:hidden;display:inline-block;cursor:pointer;flex:none}
+.cc .chip input{position:absolute;inset:-8px;width:50px;height:50px;opacity:0;cursor:pointer}
+.cc select{border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:1px 2px;font:11px var(--f-mono);max-width:96px}
+.blthumb{width:64px;height:44px;border:2px solid var(--ink);background:var(--check-a) center/contain no-repeat;flex:none}

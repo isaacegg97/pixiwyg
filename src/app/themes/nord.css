@@ -1,0 +1,62 @@
+/* SECTION: Nord: cool arctic greys and frost blue, easy on the eyes for long sessions.
+   Load it from Settings, or More ▾ → Settings… → Load theme file. See template.css for every token. */
+:root[data-apptheme]{
+  color-scheme: dark;
+
+  /* SECTION: Desk and panels */
+  --desk: #2e3440;
+  --desk2: #323947;
+  --chrome: #3b4252;
+  --chrome2: #353c4a;
+  --paper: #2e3440;
+  --ink: #eceff4;
+  --muted: #b0b9c9;
+  --line: #4c566a;
+  --shadow: #20242c;
+  --scrim: rgba(20,24,30,.65);
+
+  /* SECTION: Accents */
+  --hot: #a54c56;
+  --hot2: #cc7a82;
+  --onhot: #eceff4;
+  --sel: #88c0d0;
+  --onsel: #2e3440;
+  --sun: #ebcb8b;
+  --onsun: #2e3440;
+  --act: #88c0d0;
+  --actfg: #2e3440;
+
+  /* SECTION: Status */
+  --bad: #a54c56;
+  --onbad: #eceff4;
+  --warn: #d08770;
+  --ok: #a3be8c;
+  --lib: #4c566a;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #3b4252;
+  --check-b: #434c5e;
+
+  /* SECTION: Node editors */
+  --n-head: #4c566a;
+  --n-headfg: #eceff4;
+  --n-events: #b48ead;
+  --n-actions: #5e81ac;
+  --n-values: #6f8f5a;
+  --n-math: #81a1c1;
+  --n-anim: #b8735e;
+  --n-misc: #4c566a;
+  --n-imported: #5f9ea0;
+
+  /* SECTION: Manuscript page view */
+  --doc-desk: #2e3440;
+
+  /* SECTION: Logo */
+  --logo3: #a3be8c;
+  --logo4: #88c0d0;
+  --logo5: #b48ead;
+  --logo6: #d08770;
+}
+
+/* SECTION: beyond the tokens: softer corners */
+:root[data-apptheme] .btn{border-radius:3px}

@@ -1,0 +1,10 @@
+/* SECTION: manuscript page view */
+.docpage{background:var(--doc-paper);color:var(--doc-ink);font:17px/1.65 Georgia,"Times New Roman",serif;padding:36px 40px;margin:8px 0;border:1px solid var(--chrome2);box-shadow:0 2px 10px rgba(0,0,0,.12);min-height:320px;outline:none;overflow-wrap:break-word;caret-color:var(--hot)}
+.docpage[hidden]{display:none}.docpage h1{font-size:1.9em;line-height:1.2;margin:.2em 0 .5em}.docpage h2{font-size:1.45em;margin:1em 0 .4em}.docpage h3{font-size:1.15em;margin:1em 0 .3em}
+.docpage p{margin:0 0 .9em}.docpage blockquote{margin:0 0 .9em;padding-left:1em;border-left:3px solid var(--hot);font-style:italic}.docpage ul,.docpage ol{margin:0 0 .9em;padding-left:1.4em}
+.docpage code{font:.85em var(--f-mono);background:var(--doc-code);padding:0 .2em}.docpage a{color:var(--sel)}
+.dpraw{font:13px/1.5 var(--f-mono);white-space:pre-wrap;background:var(--doc-raw);border-left:3px solid var(--doc-rawline);padding:6px 10px;margin:0 0 .9em}.dpraw.dplock{opacity:.6;cursor:default}.dpraw.dplock::before{content:"▣ converted block · ";font-weight:700}
+.doclink{position:fixed;z-index:200;width:280px;border:2px solid var(--ink);padding:4px 6px;font:13px var(--f-mono)}
+.docview{gap:4px}.docview [aria-pressed=true]{background:var(--act);color:var(--actfg)}
+.dpimg{margin:0 0 16px;padding:0;border:0;background:none;cursor:default}.dpimg img{display:block;max-width:100%;height:auto}
+.dpimg::before{content:none!important}

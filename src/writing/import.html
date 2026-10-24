@@ -1,0 +1,23 @@
+<!-- SECTION: Markdown import dialog -->
+<div class="modal" id="mdModal" hidden>
+  <div class="win" role="dialog" aria-modal="true" aria-labelledby="mdTitle">
+    <div class="tb"><span id="mdTitle">Import Markdown</span></div>
+    <div class="wb">
+      <p>Each block becomes its own element: headings, paragraphs, lists, quotes, code, tables, rules and images. Bold, italic, links and inline code carry over. To bring images along, drop the .md together with them as a folder or .zip.</p>
+      <textarea id="mdText" aria-label="Markdown to import" placeholder="# Zine fair&#10;&#10;Tables, staplers and **one** pink photocopier.&#10;&#10;- Riso prints&#10;- Mixtapes"></textarea>
+      <div class="row opts2">
+        <label class="btn" for="mdFile">Open .md file…</label><input class="sr" type="file" id="mdFile" accept=".md,.markdown,.txt,text/markdown,text/plain">
+        <label class="field2" for="mdSheet">Style with <select id="mdSheet"></select></label>
+        <label class="field2" for="mdWidth">Column width <input type="number" id="mdWidth" min="160" step="8"></label>
+        <label class="tog2" for="mdReplace"><input type="checkbox" id="mdReplace"> Replace everything on the page</label>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="mdDocGo" title="Keep it as text: a manuscript you go on writing, flowed onto the pages">Add as a manuscript</button>
+        <button class="btn" id="mdGo" title="Make every block a component of its own">Add as components</button>
+        <button class="btn" id="mdClose">Close</button>
+        <span class="shelp" id="mdCount"></span>
+      </div>
+    </div>
+  </div>
+</div>
+

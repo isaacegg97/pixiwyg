@@ -1,0 +1,123 @@
+/* SECTION: Undead Darlings: black and green, cute zombies, tombstones, bones and the odd brain.
+   The desk is a midnight graveyard of round little zombies (one wears a bow), tombstones, bones and brains; buttons
+   are soft and stitched, title bars are toxic green with seams sewn round them, and the Project panel is a plot.
+   Something dark watches the toolbar with one green eye.
+   Built from undead-darlings.css (PIXIWYG house style, lib/undead-darlings.css): its textures are pulled in at build time. */
+/* ASSET: --ud-tile lib/undead-darlings.css .ud-tex-tile */
+:root[data-apptheme]{
+  color-scheme: dark;
+
+  /* SECTION: Desk and panels */
+  --desk: #0b0f0b;
+  --desk2: #0f150f;
+  --chrome: #111911;
+  --chrome2: #0b110b;
+  --paper: #172117;
+  --ink: #dbf5cb;
+  --muted: #98b98a;
+  --line: #2c4528;
+  --shadow: #000000;
+  --scrim: rgba(0,10,0,.72);
+
+  /* SECTION: Accents */
+  --hot: #7bff5a;
+  --hot2: #a3ff87;
+  --onhot: #0b0f0b;
+  --hot-ink: #8dff6e;
+  --sel: #4dd17a;
+  --onsel: #0b0f0b;
+  --sun: #c6ff3d;
+  --onsun: #0b0f0b;
+  --act: #3fbf3a;
+  --actfg: #0b0f0b;
+
+  /* SECTION: Status */
+  --bad: #ff6b8d;
+  --onbad: #0b0f0b;
+  --warn: #ffb84d;
+  --ok: #7bff5a;
+  --lib: #1d361a;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #172117;
+  --check-b: #1e2b1e;
+
+  /* SECTION: Node editors */
+  --n-head: #1d2e1b;
+  --n-headfg: #dbf5cb;
+  --n-events: #3fa83a;
+  --n-actions: #6a9a2e;
+  --n-values: #2f7a5a;
+  --n-math: #7a4fae;
+  --n-anim: #b0742a;
+  --n-misc: #34433a;
+  --n-imported: #8f3550;
+
+  /* SECTION: Manuscript page view */
+  --doc-desk: #0b0f0b;
+
+  /* SECTION: Logo */
+  --logo3: #ff8fb1;
+  --logo4: #c6ff3d;
+  --logo5: #e9f0d0;
+  --logo6: #4dd17a;
+
+  /* SECTION: Shape */
+  --radius: 10px;
+
+  /* SECTION: Type */
+  --f-ui: "Neucha", "Patrick Hand SC", system-ui, sans-serif;
+  --ud-display: "Patrick Hand SC", "Neucha", cursive;
+  --ud-raven: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='44' height='44' viewBox='0 0 44 44'%3E%3Cpath d='M3 29L14 25L14 31Z' fill='%230b0b0b'/%3E %3Cellipse cx='20' cy='27' rx='11.5' ry='7.2' fill='%23101010' transform='rotate(-12 20 27)'/%3E %3Cpath d='M12 24q10-7 18 1q-8 4-18 1Z' fill='%231a2620'/%3E%3Cpath d='M15 26q7-3 12 0' stroke='%2324362c' stroke-width='.8' fill='none'/%3E %3Ccircle cx='30' cy='16' r='6.4' fill='%23101010'/%3E%3Cpath d='M35.4 14.4L42 16.6L35.4 18.6Z' fill='%23262626'/%3E %3Ccircle cx='31.8' cy='15' r='1.3' fill='%237bff5a'/%3E%3Ccircle cx='31.4' cy='14.6' r='.4' fill='%23e9ffe0'/%3E %3Cg stroke='%231d1d1d' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M18 33L17 43M23 33L23 43M15 43h4M21 43h4'/%3E%3C/g%3E%3C/svg%3E");
+  --ud-slime: linear-gradient(180deg,#8dff6e,#4fcf3c 55%,#2f9a2a);
+}
+
+/* SECTION: the desk: a cute graveyard under a green mist */
+:root[data-apptheme] body{background:radial-gradient(90% 70% at 50% 110%,rgba(123,255,90,.10),transparent 60%),radial-gradient(80% 70% at 50% 40%,transparent 40%,rgba(0,0,0,.7) 100%),var(--ud-tile) 0 0/260px,#0b0f0b;background-attachment:fixed}
+:root[data-apptheme] ::selection{background:#7bff5a;color:#0b0f0b}
+
+/* SECTION: type: hand-lettered small caps for titles */
+:root[data-apptheme] :is(.tb span,.dockhead b,.wrtabs [role=tab],.ph,.setwin h4,.thcard strong,.spalhead b){font-family:var(--ud-display);letter-spacing:.06em;font-weight:400}
+
+/* SECTION: the logo: stitched-together letters, each one a little crooked */
+:root[data-apptheme] .logo b{-webkit-text-stroke:1px #0b0f0b;text-shadow:0 2px 0 #000;display:inline-block}
+:root[data-apptheme] .logo b:nth-child(odd){transform:rotate(-5deg)}
+:root[data-apptheme] .logo b:nth-child(even){transform:rotate(4deg) translateY(1px)}
+
+/* SECTION: buttons: soft, round and stitched; they glow when the brains get close */
+:root[data-apptheme] :is(.btn,.cmdbtn){background:#172117;color:var(--ink);border:2px solid #2f4d2b;border-radius:10px;box-shadow:0 3px 0 #000;outline:1px dashed rgba(123,255,90,.35);outline-offset:-5px}
+:root[data-apptheme] :is(.btn,.cmdbtn):hover{background:#1e331b;border-color:#4fcf3c;box-shadow:0 3px 0 #000,0 0 12px rgba(123,255,90,.35)}
+:root[data-apptheme] :is(.btn,.cmdbtn):active{transform:translateY(2px);box-shadow:0 1px 0 #000}
+:root[data-apptheme] .btn.primary,:root[data-apptheme] .btn[aria-pressed="true"].tog-btn{background:var(--ud-slime);color:#0b0f0b;border-color:#1d4a17;outline-color:rgba(11,15,11,.45)}
+:root[data-apptheme] .btn.dyna{background:repeating-linear-gradient(-45deg,#3fbf3a 0 10px,#0b0f0b 10px 20px);color:#dbf5cb;text-shadow:0 0 3px #000}
+:root[data-apptheme] :is(.cmdbtn,.cmditem) kbd{background:#0b0f0b;color:#8dff6e;border:1px solid #2c4528;border-radius:6px}
+
+/* SECTION: windows: toxic-green title bars with a seam sewn round them */
+:root[data-apptheme] :is(.win,.tourcard){background:#111911;border:2px solid #000;border-radius:14px;box-shadow:0 6px 0 #000,0 0 26px rgba(123,255,90,.12);overflow:hidden}
+:root[data-apptheme] :is(.ddbody,.ctxmenu){background:#111911;border:2px solid #000;border-radius:12px;box-shadow:0 4px 0 #000}
+:root[data-apptheme] .tb{background:var(--ud-slime);border-bottom:2px solid #000;color:#0b0f0b;outline:2px dashed rgba(11,15,11,.55);outline-offset:-5px}
+:root[data-apptheme] .tb span{color:#0b0f0b}
+:root[data-apptheme] .wclose{background:#0b0f0b;color:#8dff6e;border:2px solid #000;border-radius:999px}
+:root[data-apptheme] .wclose:hover{background:#ff6b8d;color:#0b0f0b}
+:root[data-apptheme] .status{background:#172117;color:#dbf5cb;border:2px solid #4fcf3c;border-radius:12px;box-shadow:0 4px 0 #000}
+
+/* SECTION: the toolbar and the panels: night soil and stitches; the toolbar has a lodger */
+:root[data-apptheme] .topbar{background:var(--ud-raven) no-repeat right 372px bottom 0/26px,linear-gradient(180deg,#0f160f,#0b0f0b);border-bottom:2px solid #2f4d2b;box-shadow:0 3px 0 #000}
+:root[data-apptheme] :is(.side,.tree){background:linear-gradient(rgba(17,25,17,.93),rgba(17,25,17,.93)),var(--ud-tile) 0 0/260px}
+:root[data-apptheme] :is(.dockhead,.spalhead){background:#0b110b;border-bottom:2px dashed #2f4d2b}
+:root[data-apptheme] .dockhead b{color:#8dff6e}
+:root[data-apptheme] .trow2.on>.tlabel{box-shadow:inset 3px 0 0 #7bff5a}
+
+/* SECTION: tabs */
+:root[data-apptheme] .ptab{background:#0b110b;color:#98b98a;border-radius:10px 10px 0 0}
+:root[data-apptheme] .ptab[aria-selected="true"]{background:#1e331b;color:#dbf5cb;box-shadow:inset 0 -3px 0 #7bff5a}
+
+/* SECTION: fields */
+:root[data-apptheme] :is(input:not([type]),input[type=text],input[type=search],input[type=number],input[type=url],input[type=email],textarea,select){background-color:#0b110b!important;color:#dbf5cb!important;border:2px solid #2f4d2b!important;border-radius:8px!important}
+:root[data-apptheme] :is(input,textarea,select):focus-visible{outline:2px solid #7bff5a;outline-offset:1px}
+:root[data-apptheme] input[type=checkbox]{accent-color:#7bff5a}
+
+/* SECTION: scrollbars: a stitched green seam */
+:root[data-apptheme] ::-webkit-scrollbar{width:12px;height:12px;background:#0b0f0b}
+:root[data-apptheme] ::-webkit-scrollbar-thumb{background:#2f6a28;border:2px solid #0b0f0b;border-radius:999px;box-shadow:inset 0 0 0 1px #7bff5a}
+:root[data-apptheme] ::-webkit-scrollbar-corner{background:#0b0f0b}

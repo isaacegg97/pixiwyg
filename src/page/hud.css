@@ -1,0 +1,16 @@
+/* SECTION: stage controls: snap, grid, responsive width, zoom */
+.stagehud{position:fixed;z-index:50;right:calc(var(--rw,320px) + 14px);bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:6px}
+.stagehud .hudgroup{display:flex;align-items:center;background:var(--chrome);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shadow);padding:1px 6px;gap:6px}
+.stagehud .hudgroup .btn{box-shadow:none;padding:2px 7px;font-size:12px}
+.stagehud .gridctl select{box-shadow:none;border-width:1px;padding:1px 3px;font-size:12px}
+/* RULE: the resp-width selector shares the snap hudgroup padding and select styling. */
+#respWidthSel{box-shadow:none;border-width:1px;padding:1px 3px;font-size:12px;border:1px solid var(--ink);background:var(--paper);font-weight:600;cursor:pointer}
+#respGroup{display:none}
+body:not([data-ws=paint]):not([data-ws=music]) #respGroup{display:flex}
+.zoomctl{position:relative;display:flex;gap:0;box-shadow:3px 3px 0 var(--shadow)}
+.zoomctl .btn{box-shadow:none;padding:3px 9px;font-size:13px}
+.zoomctl .btn+.btn{border-left-width:0}
+#zPct{min-width:4.2em;font-variant-numeric:tabular-nums}
+body[data-ws=animate] .stagehud{bottom:calc(230px + 14px + env(safe-area-inset-bottom,0px))}
+.gridctl{display:inline-flex;align-items:center;gap:4px;font-weight:600}
+.gridctl select{border:2px solid var(--ink);background:var(--paper);box-shadow:2px 2px 0 var(--shadow);padding:3px 4px;font-weight:600;cursor:pointer}

@@ -1,0 +1,120 @@
+/* SECTION: Classic Mac: black and white, Chicago and Geneva, striped title bars on a grey dither. Built with system.css.
+   The look follows system.css by Sakun Acharige (MIT, lib/NOTICES.txt); its bitmap fonts, rounded buttons and
+   arrows are pulled in at build time. Buttons invert when pressed, as on a 1984 Macintosh. */
+/* INCLUDE: lib/system.css @font-face */
+/* INCLUDE: lib/system.css scrollbars */
+/* ASSET: --mac-btn lib/system.css .btn */
+/* ASSET: --mac-btn-default lib/system.css .btn-default */
+/* ASSET: --mac-select lib/system.css select */
+/* ASSET: --mac-check lib/system.css input[type=checkbox]:checked+label:after */
+:root[data-apptheme]{
+  color-scheme: light;
+
+  /* SECTION: Desk and panels */
+  --desk: #a8a8a8;
+  --desk2: #ffffff;
+  --chrome: #ffffff;
+  --chrome2: #ffffff;
+  --paper: #ffffff;
+  --ink: #000000;
+  --muted: #000000;
+  --line: #000000;
+  --shadow: #000000;
+  --scrim: transparent;
+
+  /* SECTION: Accents */
+  --hot: #000000;
+  --hot2: #333333;
+  --onhot: #ffffff;
+  --sel: #000000;
+  --onsel: #ffffff;
+  --sun: #000000;
+  --onsun: #ffffff;
+  --act: #000000;
+  --actfg: #ffffff;
+
+  /* SECTION: Status */
+  --bad: #000000;
+  --warn: #000000;
+  --ok: #000000;
+  --lib: #ffffff;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #ffffff;
+  --check-b: #dddddd;
+  --grid-minor: rgba(0,0,0,.08);
+  --grid-major: rgba(0,0,0,.18);
+
+  /* SECTION: Node editors */
+  --n-head: #000000;
+  --n-headfg: #ffffff;
+  --n-events: #000000;
+  --n-actions: #000000;
+  --n-values: #000000;
+  --n-math: #000000;
+  --n-anim: #000000;
+  --n-misc: #000000;
+  --n-imported: #000000;
+
+  /* SECTION: Manuscript page view */
+  --doc-paper: #ffffff;
+  --doc-ink: #000000;
+  --doc-desk: #a8a8a8;
+  --doc-code: #eeeeee;
+  --doc-raw: #f4f4f4;
+  --doc-rawline: #000000;
+
+  /* SECTION: Logo */
+  --logo3: #000000;
+  --logo4: #000000;
+  --logo5: #000000;
+  --logo6: #000000;
+
+  /* SECTION: Type */
+  --f-ui: Chicago_12, Chicago, Geneva, sans-serif;
+  --f-mono: Monaco, Geneva_9, ui-monospace, monospace;
+}
+
+/* SECTION: the 50% grey desktop dither */
+:root[data-apptheme] body{background:repeating-conic-gradient(#000 0 25%,#fff 0 50%) 0 0/2px 2px;-webkit-font-smoothing:none;font-size:13px}
+:root[data-apptheme] .logo b{color:#000!important}
+
+/* SECTION: buttons: rounded, inverting when pressed; the default one wears the thick ring */
+:root[data-apptheme] :is(.btn,.cmdbtn){background:#fff;color:#000;border-style:solid;border-width:5.5px;border-image:var(--mac-btn) 30 stretch;border-radius:0;box-shadow:none;padding:0 12px;font-weight:400;min-height:20px}
+:root[data-apptheme] :is(.btn,.cmdbtn):hover{background:#fff;color:#000}
+:root[data-apptheme] :is(.btn,.cmdbtn):active,:root[data-apptheme] .btn[aria-pressed="true"].tog-btn,:root[data-apptheme] .dd[open]>summary.btn{transform:none;background:#000;color:#fff;border-image:none;border-color:#000;border-radius:6px}
+:root[data-apptheme] .btn.primary{background:#fff;color:#000;border-width:.5em;border-image:var(--mac-btn-default) 60 stretch;font-weight:400}
+:root[data-apptheme] .btn.dyna{background:#fff;color:#000}
+:root[data-apptheme] :is(.btn,.cmdbtn,.ptab):focus-visible{outline:2px dotted #000;outline-offset:1px}
+:root[data-apptheme] :is(.cmdbtn,.cmditem) kbd{background:#fff;border:1px solid #000;border-radius:3px;font-family:var(--f-mono)}
+:root[data-apptheme] :is(.cmditem.on,.cmditem:hover) kbd{background:transparent;border-color:currentColor}
+
+/* SECTION: windows: a white box with a hard shadow, title on horizontal stripes */
+:root[data-apptheme] :is(.win,.tourcard){background:#fff;border:1px solid #000;border-radius:0;box-shadow:2px 2px 0 #000;padding:0}
+:root[data-apptheme] :is(.ddbody,.ctxmenu){background:#fff;border:1px solid #000;border-radius:0;box-shadow:2px 2px 0 #000;padding:2px 0}
+:root[data-apptheme] .tb{height:19px;margin:1px 0;border:0;border-bottom:1px solid #000;background:linear-gradient(#000 50%,transparent 0) content-box;background-size:100% 2px;padding:3px 30px}
+:root[data-apptheme] .tb span{background:#fff;color:#000;font:400 13px var(--f-ui);letter-spacing:0;padding:0 8px}
+:root[data-apptheme] .wclose{left:8px;right:auto;width:13px;height:13px;border:1px solid #000;border-radius:0;background:#fff;box-shadow:0 0 0 2px #fff;color:transparent;font-size:0}
+:root[data-apptheme] .wclose:active{background:repeating-conic-gradient(#000 0 25%,#fff 0 50%) 0 0/2px 2px}
+:root[data-apptheme] .status{background:#fff;color:#000;border:1px solid #000;border-radius:0;box-shadow:2px 2px 0 #000}
+:root[data-apptheme] .modal{background:none}
+
+/* SECTION: the menu bar and the panels */
+:root[data-apptheme] .topbar{background:#fff;border-bottom:1px solid #000;box-shadow:none}
+:root[data-apptheme] .side,:root[data-apptheme] .tree{background:#fff;border:1px solid #000}
+:root[data-apptheme] .dockhead{background:linear-gradient(#000 50%,transparent 0) content-box;background-size:100% 2px;border-bottom:1px solid #000;padding:4px 6px}
+:root[data-apptheme] .dockhead b{flex:none;margin:0 auto;background:#fff;color:#000;padding:0 8px;letter-spacing:0;text-transform:none;font-size:12px}
+:root[data-apptheme] .dockhead :is(button,.dgrip){background:#fff;color:#000}
+:root[data-apptheme] .treehead,:root[data-apptheme] .sect{border-bottom:1px solid #000}
+:root[data-apptheme] .ph{color:#000}
+
+/* SECTION: tabs */
+:root[data-apptheme] .ptab{background:#fff;border:0;border-right:1px solid #000;font-weight:400}
+:root[data-apptheme] .ptab:hover{background:#fff;color:#000;text-decoration:underline}
+:root[data-apptheme] .ptab[aria-selected="true"]{background:#000;color:#fff;box-shadow:none}
+
+/* SECTION: fields */
+:root[data-apptheme] :is(input:not([type]),input[type=text],input[type=search],input[type=number],input[type=url],input[type=email],textarea){border:1px solid #000!important;border-radius:0!important;background-color:#fff!important;color:#000!important;box-shadow:none!important;font-family:var(--f-mono)}
+:root[data-apptheme] select{appearance:none;border:1.5px solid #000!important;border-radius:0!important;background:#fff var(--mac-select) right 2px top 50%/auto no-repeat!important;box-shadow:2px 2px 0 -1px #000!important;color:#000!important;padding:1px 22px 1px 6px!important;font-family:var(--f-ui)}
+:root[data-apptheme] input[type=checkbox]{appearance:none;width:13px;height:13px;margin:0;border:1.5px solid #000;background:#fff;border-radius:0}
+:root[data-apptheme] input[type=checkbox]:checked{background:#fff var(--mac-check) center/contain no-repeat}

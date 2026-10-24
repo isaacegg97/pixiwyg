@@ -1,0 +1,16 @@
+<!-- SECTION: Add panel: Files pane (stylesheets and the library) -->
+  <section class="pane" id="w-files" role="tabpanel" aria-labelledby="t-files" hidden>
+    <div class="files" id="files"></div>
+    <div class="up">
+      <label class="btn" for="cssIn">Add files…</label>
+      <input class="sr" type="file" id="cssIn" accept=".css,text/css,.md,.markdown,.zip,.itermcolors,.json,.toml,.yml,.yaml,.conf,.Xresources,.woff,.woff2,.ttf,.otf,.eot,.png,.jpg,.jpeg,.gif,.svg,.webp,.avif,.bmp,.ico,.cur" multiple>
+      <button class="btn" id="ssetOpen" type="button" title="Preview a style set, then append it or replace the current sheets (Ctrl/⌘+Shift+O)">Load style set…</button>
+      <label class="btn" for="dirIn">Add folder…</label>
+      <input class="sr" type="file" id="dirIn" webkitdirectory multiple>
+      <small>or drop CSS, Markdown, folders or a .zip anywhere. Fonts and images they point to are baked in.</small>
+    </div>
+    <details class="libbox" id="libBox">
+      <summary class="libhead">Library <small id="libCount"></small></summary>
+      <div class="lib" id="lib"></div>
+    </details>
+  </section>

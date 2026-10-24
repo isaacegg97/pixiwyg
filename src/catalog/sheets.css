@@ -1,0 +1,30 @@
+/* SECTION: stylesheet files and the library list */
+.files{display:flex;flex-direction:column;gap:6px}
+.frow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;background:var(--paper);border:2px solid var(--ink);padding:4px 6px}
+.frow input{accent-color:var(--hot);width:16px;height:16px;margin:0}
+.fname{font:500 13px var(--f-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fmeta{display:block;font:12px var(--f-ui);color:var(--muted)}
+.fmeta.warn{color:var(--hot-ink);cursor:help}
+.x{background:none;border:0;cursor:pointer;font-size:18px;line-height:1;padding:0 4px;color:var(--muted)}
+.x:hover,.x.armed{color:var(--hot-ink)}
+.x.armed{font-size:12px;font-weight:600}
+.up{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.up label{display:inline-block}
+.up small{color:var(--muted);font-size:12px}
+
+.libbox{border-top:2px dotted var(--ink);padding-top:6px}
+.libhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:600;cursor:pointer;list-style:none}
+.libhead::-webkit-details-marker{display:none}
+.libhead::before{content:'▸';margin-right:6px}
+.libbox[open] .libhead::before{content:'▾'}
+.libbox[open] .libhead{margin-bottom:6px}
+.libhead small{font-weight:400;color:var(--muted);font-size:12px}
+.lib{display:flex;flex-direction:column;gap:4px}
+.lrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:3px 6px;border:2px dotted var(--ink);background:var(--chrome2)}
+.lrow b{font:500 13px var(--f-mono)}
+.libgroup{margin:8px 0 2px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.libgroup:first-child{margin-top:0}
+.lrow span{display:block;font-size:12px;color:var(--muted)}
+.lrow .btn{font-size:12px;padding:2px 8px}
+.lrow .btn:disabled{background:var(--chrome);color:var(--muted);box-shadow:none;cursor:default}
+.tag-lib{background:var(--lib);border:1px solid var(--ink);padding:0 4px;font-size:11px;color:var(--onsun);margin-left:4px}

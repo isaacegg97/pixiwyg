@@ -1,0 +1,11 @@
+/* SECTION: page palette */
+.palwb{display:flex;flex-direction:column;gap:8px}
+.palrow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px}
+.palrow .btn{padding:2px 8px}
+.palrow select,#palFilter{border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:3px 6px;font:13px var(--f-mono);min-width:0;width:100%;box-sizing:border-box}
+.palgrid{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:3px}
+.psw{position:relative;aspect-ratio:1;border:2px solid var(--ink);overflow:hidden;cursor:pointer;max-width:100%}
+.psw input{position:absolute;inset:-8px;width:60px;height:60px;opacity:0;cursor:pointer}
+.psw b{position:absolute;left:2px;top:0;font:10px var(--f-mono);mix-blend-mode:difference;color:#fff;pointer-events:none}
+.palgrid.off .psw{opacity:.35}
+.paltogs{display:flex;flex-direction:column;gap:4px}

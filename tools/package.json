@@ -1,0 +1,34 @@
+{
+  "name": "pixiwyg",
+  "productName": "PIXIWYG",
+  "version": "1.0.0-beta.1",
+  "description": "Paint under it. Style on top of it.",
+  "author": "PIXIWYG",
+  "private": true,
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "start": "cd ../tauri && cargo run",
+    "serve": "node scripts/serve.mjs",
+    "test": "playwright test",
+    "dist": "node scripts/dist.mjs",
+    "web": "node scripts/web.mjs",
+    "android": "node scripts/web.mjs && npm run tauri -- android build --apk --target aarch64",
+    "install-local": "bash scripts/install-local.sh",
+    "uninstall-local": "bash scripts/uninstall-local.sh",
+    "examples": "node scripts/build-examples.mjs",
+    "bench": "playwright test tests/bench.spec.mjs --project=repo --reporter=list",
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "stamp": "node scripts/stamp-csp.mjs",
+    "pretest": "node scripts/build.mjs",
+    "test:tauri": "cd ../tauri && cargo test",
+    "tauri": "cd ../tauri && node ../tools/node_modules/@tauri-apps/cli/tauri.js",
+    "set-version": "node scripts/version.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@tauri-apps/cli": "2.12.3"
+  }
+}

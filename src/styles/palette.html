@@ -1,0 +1,21 @@
+<!-- SECTION: Properties: Palette -->
+  <details class="sect" id="w-palette"><summary class="ph" id="palTitle">Palette</summary><div class="wb palwb">
+    <div class="palrow">
+      <button class="btn" id="palPrev" title="Previous scheme" aria-label="Previous scheme">‹</button>
+      <select id="palSel" aria-label="Color scheme"></select>
+      <button class="btn" id="palNext" title="Next scheme" aria-label="Next scheme">›</button>
+    </div>
+    <input id="palFilter" type="search" placeholder="Filter schemes, e.g. gruvbox" aria-label="Filter schemes">
+    <div class="palgrid" id="palGrid"></div>
+    <div class="paltogs">
+      <label class="tog2" for="palRecolor"><input type="checkbox" id="palRecolor"> Recolor every style</label>
+      <label class="tog2" for="palPage"><input type="checkbox" id="palPage"> Page text follows the palette</label>
+      <label class="tog2" for="palPaint"><input type="checkbox" id="palPaint"> Paint with these colors</label>
+      <label class="field2" for="palFlip">Light and dark <select id="palFlip"><option value="auto">Match the scheme</option><option value="off">Keep as designed</option><option value="on">Always flip</option></select></label>
+    </div>
+    <div class="row">
+      <label class="btn" for="palFile">Import scheme…</label><input class="sr" type="file" id="palFile" accept=".json,.itermcolors,.toml,.yml,.yaml,.conf,.Xresources,.xresources,.txt,.theme,.colors">
+      <button class="btn" id="palOff">Turn off</button>
+    </div>
+    <small class="credit" id="palCredit">Schemes from iTerm2-Color-Schemes (MIT). Imports Windows Terminal, iTerm2, kitty, Alacritty, Ghostty, WezTerm, Xresources and base16 files.</small>
+  </div></details>

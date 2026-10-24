@@ -1,0 +1,77 @@
+<!-- SECTION: Paint Studio window: file bar, tool options, the canvas between its palettes, what to do with the drawing -->
+<section class="win studiowin" id="w-studio" hidden aria-labelledby="studioTitle">
+  <div class="tb"><span id="studioTitle">Paint Studio</span><button class="wclose" id="studioClose" aria-label="Close the Paint Studio" title="Close (P brings it back)">×</button></div>
+  <div class="wb studio">
+    <div class="row studio-top" role="toolbar" aria-label="Drawing">
+      <label class="field2" for="sSize">New canvas <select id="sSize"><option value="256x256">256 × 256</option><option value="512x512" selected>512 × 512</option><option value="800x600">800 × 600</option><option value="1024x768">1024 × 768</option><option value="page">Page size</option></select></label>
+      <button class="btn" id="sNew">New</button>
+      <label class="btn" for="sOpen" title="Open a picture to paint on (an animated PNG comes apart into frames)">Open…</label><input class="sr" type="file" id="sOpen" accept="image/*">
+      <details class="dd" id="sSaveMenu"><summary class="btn" title="Download the drawing, its layers flattened">Save ▾</summary><div class="ddbody">
+        <button class="btn" id="sSaveFile" title="With frames, an animated PNG any browser plays">Save as .png</button><button class="btn" id="sSaveGif" title="With frames, an animated GIF at this speed">Save as .gif</button></div></details>
+      <span class="ssep" aria-hidden="true"></span>
+      <button class="btn" id="sUndo" title="Undo (Ctrl/⌘+Z while painting)">Undo</button>
+      <button class="btn" id="sRedo" title="Redo (Ctrl/⌘+Shift+Z while painting)">Redo</button>
+      <span class="ssep" aria-hidden="true"></span>
+      <button class="btn" id="sTrim" title="Crop away empty transparent edges, every layer alike">Trim</button>
+      <button class="btn" id="sFx" title="Filters and adjustments on this layer: blur, levels, halftone, dither, sticker outline… (live preview)">Filters…</button>
+      <details class="dd" id="sXform"><summary class="btn">Transform ▾</summary><div class="ddbody">
+        <button class="btn" id="sFlipH">Flip left-right</button><button class="btn" id="sFlipV">Flip upside down</button>
+        <button class="btn" id="sRotL">Rotate 90° left</button><button class="btn" id="sRotR">Rotate 90° right</button>
+        <button class="btn" id="sHalf">Half size</button><button class="btn" id="sDouble">Double size</button></div></details>
+      <button class="btn" id="sClear" title="Erase everything on this layer">Clear layer</button>
+      <span class="ssep" aria-hidden="true"></span>
+      <div class="szoom" role="group" aria-label="Zoom">
+        <button class="btn sqm" id="sZoomOut" title="Zoom out (Ctrl/⌘+−)" aria-label="Zoom out">−</button>
+        <button class="btn sqm" id="sZoomFit" title="Fit the drawing to the view (Ctrl/⌘+0); press again for 100%">Fit</button>
+        <button class="btn sqm" id="sZoomIn" title="Zoom in (Ctrl/⌘+=, or Ctrl/⌘+wheel over the drawing)" aria-label="Zoom in">+</button>
+      </div>
+      <button class="btn" id="sPalBtn" aria-pressed="true" title="Show or hide the palettes (Ctrl/⌘+\)">◫ Palettes</button>
+      <span class="shelp" id="sDims"></span>
+    </div>
+    <div class="row sopts" id="opts" role="toolbar" aria-label="Tool options">
+      <b class="soptname" id="optTool">Pencil</b>
+      <label class="field" id="optSize" for="size">Size <input type="range" id="size" min="1" max="200" value="8"> <span id="sizeVal">8px</span></label>
+      <label class="field" id="optOpacity" for="sOpacity">Opacity <input type="range" id="sOpacity" min="5" max="100" value="100"> <span id="sOpacityVal">100%</span></label>
+      <label class="field" id="optBlend" for="sBlend">Blend <select id="sBlend"></select></label>
+      <div class="stamps" id="stamps" hidden></div>
+      <div class="selbar" id="selBar" hidden><b>Selection</b> <span class="shelp" id="selInfo"></span><button class="btn sqm" id="selCrop" type="button">Crop</button><button class="btn sqm" id="selClear" type="button">Clear</button><button class="btn sqm" id="selNone" type="button">Deselect</button></div>
+      <span class="hint" id="hint"></span>
+    </div>
+    <div class="studio-main" id="studioMain">
+      <div class="sdock l" data-dock="l"></div>
+      <div class="sview" id="sview"><div class="sstack" id="sstack"><canvas id="onion" aria-hidden="true"></canvas><div class="slayers" id="slayers"><canvas class="slayer" id="paint" aria-label="Painting canvas, active layer"></canvas></div><canvas id="sguide" aria-hidden="true"></canvas><canvas id="ssel" aria-hidden="true"></canvas></div></div>
+      <div class="sdock r" data-dock="r"></div>
+      <div class="sdock b" data-dock="b"></div>
+      <section class="spal" data-pal="tools" data-title="Tools"><div class="tools" id="tools" aria-label="Paint tools"></div></section>
+      <section class="spal" data-pal="color" data-title="Color">
+        <div class="swatches" id="swatches" title="Click: foreground color. Right-click or Alt+click: background color."></div>
+        <div class="fgbg">
+          <div class="cur fg" id="curColor" title="Foreground color"><input type="color" id="colorPick" aria-label="Foreground color"></div>
+          <div class="cur bg" id="bgColor" title="Background color"><input type="color" id="bgPick" aria-label="Background color"></div>
+          <button class="swap" id="swapBtn" title="Swap colors (X)" aria-label="Swap colors">⇄</button>
+          <button class="mini" id="defBtn" title="Default colors (D)" aria-label="Default colors"><i></i><i></i></button>
+        </div>
+      </section>
+      <!-- INCLUDE: paint/brush-library.html -->
+      <!-- INCLUDE: paint/layers.html -->
+      <section class="spal" data-pal="frames" data-title="Frames">
+        <div class="frames" id="frames">
+          <div class="fbar"><button class="btn sqm" id="fAdd" title="Add a frame after this one: a copy of it (Shift for blank)">+ Frame</button><button class="btn sqm" id="fBlank" title="Add a blank frame">+ Blank</button><button class="btn sqm" id="fDel" title="Delete this frame">Delete</button>
+            <button class="btn sqm" id="fPrev" title="Previous frame (,)">◀</button><span id="fPos">1 / 1</span><button class="btn sqm" id="fNext" title="Next frame (.)">▶</button>
+            <button class="btn sqm" id="fPlay" title="Play the frames (Space)">▶ Play</button>
+            <label class="sqopt">Speed <select id="fFps"><option value="4">4 fps</option><option value="6">6 fps</option><option value="8" selected>8 fps</option><option value="12">12 fps</option><option value="15">15 fps</option><option value="24">24 fps</option></select></label>
+            <label class="sqopt" title="Show the frame before faintly under this one"><input type="checkbox" id="fOnion" checked> Onion skin</label>
+            <span class="shelp">More than one frame makes an animated PNG: it plays anywhere, no script needed. Every frame has the same layers.</span></div>
+          <div class="fstrip" id="fStrip"></div>
+        </div>
+      </section>
+    </div>
+    <div class="row studio-out">
+      <span class="shelp" id="sEditing">Empty space stays transparent, so drawings work as stickers.</span>
+      <button class="btn" id="sUpdate" hidden>Update</button>
+      <button class="btn" id="sPlace">Place on page</button>
+      <button class="btn" id="sAsBg">Use as background</button>
+      <button class="btn" id="sSavePrim">Save as primitive</button>
+    </div>
+  </div>
+</section>

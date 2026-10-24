@@ -1,0 +1,21 @@
+<!-- SECTION: load style set dialog -->
+<div class="modal" id="ssetModal" hidden>
+  <div class="win ssetwin" role="dialog" aria-modal="true" aria-labelledby="ssetTitle">
+    <div class="tb"><span id="ssetTitle">Load style set</span></div>
+    <div class="wb">
+      <p>Like loading a brush set: choose stylesheets and see what each brings before anything changes. Append adds them to what you have; Replace turns the current sheets off (they stay in the project, ready to turn back on).</p>
+      <div class="row opts2">
+        <label class="btn" for="ssetFiles" id="ssetPick">Stylesheets or .zip…</label><input class="sr" type="file" id="ssetFiles" accept=".css,text/css,.zip,.woff,.woff2,.ttf,.otf,.png,.jpg,.jpeg,.gif,.svg,.webp" multiple>
+        <label class="btn" for="ssetDir">Folder…</label><input class="sr" type="file" id="ssetDir" webkitdirectory multiple>
+        <select id="ssetLib" aria-label="Add a set from the library"></select>
+      </div>
+      <div id="ssetList" class="refslist ssetlist"></div>
+      <div class="row">
+        <label class="field2" for="ssetMode">Then <select id="ssetMode"><option value="append">Append</option><option value="replace">Replace current sheets</option></select></label>
+        <button class="btn primary" id="ssetGo" disabled>Load</button>
+        <button class="btn" id="ssetClose">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+

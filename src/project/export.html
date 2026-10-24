@@ -1,0 +1,29 @@
+<!-- SECTION: export dialog -->
+<div class="modal" id="exportModal" hidden>
+  <div class="win" role="dialog" aria-modal="true" aria-labelledby="expTitle">
+    <div class="tb"><span id="expTitle">Export HTML</span></div>
+    <div class="wb">
+      <div class="expopts">
+        <label class="tog" for="optNoJs"><input type="checkbox" id="optNoJs"><b>No JavaScript</b><small>Plain HTML and CSS. Works with scripts turned off.</small></label>
+        <label class="tog" for="optFonts"><input type="checkbox" id="optFonts"><b>Embed fonts</b><small>Web fonts travel inside the file, so it works offline.</small></label>
+        <label class="tog" for="optImposed" id="optImposedRow"><input type="checkbox" id="optImposed"><b>Imposed for printing</b><small id="optImposedNote">Pages arranged on printer sheets in folding order.</small></label>
+        <label class="tog" for="optBleed" id="optBleedRow"><input type="checkbox" id="optBleed"><b>Include bleed</b><small>Pages come out bigger by the bleed on every side, for a print shop to trim.</small></label>
+        <label class="tog" for="optMarks" id="optMarksRow"><input type="checkbox" id="optMarks"><b id="optMarksName">Print marks</b><small id="optMarksNote"></small></label>
+        <label class="tog" for="optPlayerCdn" id="optPlayerRow"><input type="checkbox" id="optPlayerCdn"><b>Music player from the web</b><small>Loads Webamp from unpkg (checked against PIXIWYG’s own copy) instead of putting its 900 KB in the file.</small></label>
+        <label class="tog" for="optSite" id="optSiteRow" hidden><input type="checkbox" id="optSite"><b>Separate files (a .zip)</b><small>One HTML file per page (index.html, about.html…) with real links, for hosting. Off: one file with every page in it.</small></label>
+        <label class="tog" for="optPrune"><input type="checkbox" id="optPrune"><b>Only the CSS this page uses</b><small>Drops every rule that styles nothing on the page.</small></label>
+      </div>
+      <p id="expNote"></p>
+      <p id="expWarn" class="warnp"></p>
+      <textarea id="expText" readonly aria-label="Exported HTML"></textarea>
+      <div class="row">
+        <button class="btn primary" id="saveHtmlBtn" title="Save the page as an .html file (Ctrl/⌘+S while this is open)">Save as file…</button>
+        <button class="btn" id="copyBtn">Copy HTML</button>
+        <button class="btn" id="printBtn" title="Open the export in a new tab. Print it from there, or save it as a PDF.">Open to print…</button>
+        <button class="btn" id="closeExp">Close</button>
+        <span class="shelp" id="expSize"></span>
+      </div>
+    </div>
+  </div>
+</div>
+

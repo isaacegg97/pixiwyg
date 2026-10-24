@@ -1,0 +1,57 @@
+/* SECTION: Paper: warm cream, black ink, a red pencil. Quiet and bright.
+   Load it from Settings, or More ▾ → Settings… → Load theme file. See template.css for every token. */
+:root[data-apptheme]{
+  color-scheme: light;
+
+  /* SECTION: Desk and panels */
+  --desk: #e8e1d0;
+  --desk2: #e1d9c5;
+  --chrome: #f7f3e8;
+  --chrome2: #ebe4d2;
+  --paper: #fffdf6;
+  --ink: #23201a;
+  --muted: #625b4c;
+  --line: #cfc6b0;
+  --shadow: #23201a;
+  --scrim: rgba(35,32,26,.4);
+
+  /* SECTION: Accents */
+  --hot: #c63a26;
+  --hot2: #e3604d;
+  --onhot: #fffdf6;
+  --sel: #2b5fa8;
+  --onsel: #fffdf6;
+  --sun: #f2c14e;
+  --onsun: #23201a;
+  --act: #23201a;
+  --actfg: #f7f3e8;
+
+  /* SECTION: Status */
+  --bad: #c0392b;
+  --warn: #d98e04;
+  --ok: #3d7a4a;
+  --lib: #dfe9cf;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #fffdf6;
+  --check-b: #ece5d3;
+
+  /* SECTION: Node editors */
+  --n-head: #23201a;
+  --n-events: #b5432f;
+  --n-actions: #2b5fa8;
+  --n-values: #3d7a4a;
+  --n-math: #6b4e9b;
+  --n-anim: #a8641c;
+  --n-misc: #6f6858;
+  --n-imported: #2f7f7a;
+
+  /* SECTION: Logo */
+  --logo3: #3d7a4a;
+  --logo4: #2b5fa8;
+  --logo5: #6b4e9b;
+  --logo6: #a8641c;
+}
+
+/* SECTION: beyond the tokens: a flat, printed look with no pattern on the desk */
+:root[data-apptheme] body{background-image:none}

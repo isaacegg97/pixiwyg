@@ -1,0 +1,69 @@
+/* SECTION: the desk and the stage: elements, selection, guides, drag ghosts, viewport modes */
+.desk.drop-l{box-shadow:inset 6px 0 0 var(--hot)}.desk.drop-r{box-shadow:inset -6px 0 0 var(--hot)}
+
+.desk.fixed,.stage.fixed{background-color:var(--desk);background-image:repeating-conic-gradient(var(--desk2) 0 25%,transparent 0 50%);background-size:4px 4px}
+#zoomwrap{position:relative}
+.desk.fixed #zoomwrap{margin:0 auto}
+.stage{transform-origin:0 0}
+/* RULE: .desk.resp wraps a web-type canvas in a centered viewport column so the page boundary is visible and the
+   desk surround shows the checkerboard pattern. Width is controlled by --resp-w (set by JS). Only active on web
+   canvas; fixed canvases already have their own page rects. */
+.desk.resp{background-color:var(--desk);background-image:repeating-conic-gradient(var(--desk2) 0 25%,transparent 0 50%);background-size:4px 4px}
+.desk.resp #zoomwrap{margin:28px auto;box-shadow:0 0 0 1px rgba(0,0,0,.3),6px 6px 0 rgba(22,18,31,.25);width:var(--resp-w,1280px)}
+.desk.resp .stage{width:var(--resp-w,1280px)!important;min-height:100%}
+.el.isoff{opacity:.1;pointer-events:none;filter:grayscale(1)}
+#selbox.flowing .h{display:none}
+#selbox.flowing{border-style:dotted}
+body[data-ws=write] .stage{outline:2px dashed transparent}
+
+.desk{grid-column:3;grid-row:2;position:relative;overflow:auto;background:var(--page);min-width:0;min-height:0}
+.stage{position:relative;color-scheme:light;background:var(--page);font:16px/1.35 "Times New Roman",Times,serif;color:#000;touch-action:none;user-select:none;-webkit-user-select:none}
+.stage canvas{position:absolute;left:0;top:0}
+#layer{position:absolute;inset:0;z-index:1}
+.el{position:absolute}
+#measBox{position:absolute;inset:0;visibility:hidden;pointer-events:none;contain:strict;z-index:-1}
+.stage[data-tool="select"] .el,.stage[data-tool="place"] .el{cursor:move}
+/* RULE: the hover outline traces what a click would select: the ink box (render.js), not the layout box */
+#hoverbox{position:absolute;z-index:2;pointer-events:none;outline:1px dotted var(--sel);outline-offset:2px}
+#hoverbox[hidden],body.playing #hoverbox{display:none}
+.stage[data-tool="place"]{cursor:copy}
+.stage[data-tool="pencil"],.stage[data-tool="rainbow"],.stage[data-tool="spray"],.stage[data-tool="bubbles"],.stage[data-tool="eraser"]{cursor:crosshair}
+.stage[data-tool="stamp"],.stage[data-tool="bucket"]{cursor:cell}
+.stage[data-tool="eyedrop"]{cursor:crosshair}
+#selbox.multi .h{display:none}.el.insel{outline:1px dashed var(--sel);outline-offset:2px}
+.grpbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px;margin-bottom:8px;border:2px solid var(--sel);background:var(--paper)}.grpbar small{flex-basis:100%;opacity:.75}.grpbar input{flex:1;min-width:100px}
+#selbox{position:absolute;z-index:2;border:2px dashed var(--sel);pointer-events:none;margin:-4px 0 0 -4px;padding:2px}
+#selbox em{position:absolute;left:-2px;bottom:100%;margin-bottom:2px;background:var(--sel);color:var(--onsel);font:500 11px var(--f-mono);font-style:normal;padding:1px 6px;white-space:nowrap}
+#selbox .h{position:absolute;width:10px;height:10px;background:var(--sel);border:2px solid var(--onsel);pointer-events:auto;transform:translate(-50%,-50%);touch-action:none}
+#selbox .h[data-d=nw]{left:0;top:0;cursor:nwse-resize}#selbox .h[data-d=n]{left:50%;top:0;cursor:ns-resize}#selbox .h[data-d=ne]{left:100%;top:0;cursor:nesw-resize}
+#selbox .h[data-d=e]{left:100%;top:50%;cursor:ew-resize}#selbox .h[data-d=se]{left:100%;top:100%;cursor:nwse-resize}#selbox .h[data-d=s]{left:50%;top:100%;cursor:ns-resize}
+#selbox .h[data-d=sw]{left:0;top:100%;cursor:nesw-resize}#selbox .h[data-d=w]{left:0;top:50%;cursor:ew-resize}
+#selbox.small .h[data-d=n],#selbox.small .h[data-d=s],#selbox.small .h[data-d=e],#selbox.small .h[data-d=w]{display:none}
+#gridlines{position:absolute;inset:0;pointer-events:none;--g:8px;--minor:var(--grid-minor);--major:var(--grid-major);
+  background-image:linear-gradient(to right,var(--major) 1px,transparent 1px),linear-gradient(to bottom,var(--major) 1px,transparent 1px),linear-gradient(to right,var(--minor) 1px,transparent 1px),linear-gradient(to bottom,var(--minor) 1px,transparent 1px);
+  background-size:calc(var(--g)*8) calc(var(--g)*8),calc(var(--g)*8) calc(var(--g)*8),var(--g) var(--g),var(--g) var(--g)}
+.dragghost{position:fixed;z-index:100001;pointer-events:none;opacity:.88;color-scheme:light;font:16px/1.35 "Times New Roman",Times,serif;color:#000;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.25))}
+.dragghost.nodrop{opacity:.35}
+/* RULE: .dragghost.outline is the Fluxbox-style ghost — only a dashed bounding box + element name label, no live
+   content. Used for palette drags so the ghost costs nothing to build and renders at snap-resolved coordinates. */
+.dragghost.outline{opacity:1;filter:none;background:rgba(255,255,255,.15);border:2px dashed var(--sel);box-sizing:border-box;display:flex;align-items:center;justify-content:center}
+.dragghost.outline > span{font:700 11px var(--f-mono);color:var(--sel);background:rgba(255,255,255,.85);padding:1px 6px;pointer-events:none;white-space:nowrap;border:1px solid var(--sel)}
+.dragghost.outline.nodrop{border-color:var(--hot);opacity:.6}
+.dragghost.outline.nodrop > span{color:var(--hot-ink);border-color:var(--hot)}
+body.dragging,body.dragging *{cursor:copy!important}
+#guides{position:absolute;inset:0;z-index:4;pointer-events:none}
+.guide{position:absolute;background:var(--hot)}
+.guide.v{width:1px;margin-left:-.5px}
+.guide.h{height:1px;margin-top:-.5px}
+.stage.boom{animation:shake .45s steps(6)}
+.stage.boom::after{content:"";position:absolute;inset:0;z-index:5;background:radial-gradient(circle,#fff 0 20%,var(--sun) 35%,var(--hot) 60%,transparent 75%);animation:flash .5s forwards;pointer-events:none}
+@keyframes shake{0%,100%{transform:none}20%{transform:translate(-10px,6px) rotate(-1deg)}40%{transform:translate(9px,-7px) rotate(1deg)}60%{transform:translate(-6px,-4px)}80%{transform:translate(5px,5px)}}
+@keyframes flash{from{opacity:1;transform:scale(.4)}to{opacity:0;transform:scale(1.6)}}
+
+@media (prefers-reduced-motion:reduce){
+  .stage.boom{animation:none}
+}
+
+.selmore{position:absolute;right:-2px;bottom:100%;margin-bottom:2px;pointer-events:auto;font:600 11px var(--f-ui);background:var(--sel);color:var(--onsel);border:0;padding:1px 7px;cursor:pointer;white-space:nowrap}
+.selmore:hover{background:var(--ink);color:var(--paper)}
+#selbox.multi .selmore,#selbox.flowing .selmore{display:none}

@@ -1,0 +1,24 @@
+<!-- SECTION: XMB, the touch interface: categories across the bottom, their items above; one tool at a time under it -->
+<section class="xmbmenu" id="xmb" hidden aria-label="PIXIWYG">
+  <header class="xmbtop">
+    <span class="xmbproj"><b id="xmbProj"></b><small id="xmbMeta"></small></span>
+    <button class="xmbbtn" id="xmbSearchBtn" type="button" aria-label="Search everything (/)" aria-controls="xmbSearch" aria-expanded="false"><i aria-hidden="true">⌕</i><span>Search</span></button>
+  </header>
+  <input class="xmbsearch" id="xmbSearch" type="search" hidden placeholder="Search every category" aria-label="Search every category" autocomplete="off">
+  <h2 class="xmbhead" id="xmbHead"><i id="xmbHeadIcon" aria-hidden="true"></i><span id="xmbHeadName"></span></h2>
+  <ul class="xmbitems" id="xmbItems" role="list" aria-labelledby="xmbHead"></ul>
+  <footer class="xmbfoot">
+    <div class="xmbcatview"><div class="xmbcats" id="xmbCats" role="tablist" aria-label="Categories"></div></div>
+    <button class="xmbbtn primary" id="xmbResume" type="button" hidden><i aria-hidden="true">▸</i><span id="xmbResumeName">Back</span></button>
+  </footer>
+</section>
+<nav class="xmbstrip" id="xmbStrip" hidden aria-label="Tool">
+  <button class="xmbbtn" id="xmbHome" type="button" aria-label="Menu (Esc)"><i aria-hidden="true">☰</i><span>Menu</span></button>
+  <span class="xmbwhere"><i id="xmbWsIcon" aria-hidden="true"></i><span><b id="xmbWsName"></b><small id="xmbWsFile"></small></span></span>
+  <span class="xmbsheets" id="xmbSheets" role="group" aria-label="Panels for this tool"></span>
+  <button class="xmbbtn" id="xmbAdd" type="button" aria-label="Add panel" aria-pressed="false"><i aria-hidden="true">＋</i><span>Add</span></button>
+  <button class="xmbbtn" id="xmbProps" type="button" aria-label="Properties panel" aria-pressed="false"><i aria-hidden="true">☷</i><span>Properties</span></button>
+  <button class="xmbbtn" id="xmbUndo" type="button" aria-label="Undo"><i aria-hidden="true">↶</i><span>Undo</span></button>
+  <button class="xmbbtn" id="xmbRedo" type="button" aria-label="Redo"><i aria-hidden="true">↷</i><span>Redo</span></button>
+  <button class="xmbbtn primary" id="xmbPrimary" type="button" aria-pressed="false"><i aria-hidden="true" id="xmbPrimaryIcon">▶</i><span id="xmbPrimaryName">Play</span></button>
+</nav>

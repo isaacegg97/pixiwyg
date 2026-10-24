@@ -1,0 +1,52 @@
+/* SECTION: node editor (logic and animation) */
+.nodebody{flex:1;min-height:0;display:flex}
+.npal{width:170px;flex:none;overflow:auto;padding:8px;border-right:2px solid var(--ink);display:flex;flex-direction:column;gap:4px;background:var(--chrome)}
+.npal[hidden]{display:none}
+.npal h4{margin:6px 0 2px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.nview{flex:1;position:relative;overflow:hidden;cursor:grab;outline:none;background-color:var(--paper);background-image:radial-gradient(var(--chrome2) 1.5px,transparent 2px);background-size:20px 20px}
+.nlayer{position:absolute;left:0;top:0;transform-origin:0 0}
+.nwires{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible}
+.wire{fill:none;stroke-width:3;stroke:var(--sel);pointer-events:none}
+.wire.exec{stroke:var(--ink);stroke-width:3.5}
+.wire.state{stroke:var(--hot)}
+.wire.temp{stroke-dasharray:7 5}
+.wirehit{fill:none;stroke:transparent;stroke-width:14;pointer-events:stroke;cursor:pointer}
+.wirehit:hover{stroke:color-mix(in srgb,var(--hot) 35%,transparent)}
+.nnode{position:absolute;min-width:180px;background:var(--chrome);color:var(--ink);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shadow);font-size:12px;user-select:none;cursor:default}
+.nnode.on{outline:3px solid var(--hot);outline-offset:1px}
+.nnode.bad .nhead::before{content:'✖ ';font-weight:700}.nnode.warn .nhead::before{content:'⚠ ';font-weight:700}
+.nnode.bad{box-shadow:0 0 0 3px var(--bad),3px 3px 0 var(--shadow)}.nnode.warn{box-shadow:0 0 0 3px var(--warn),3px 3px 0 var(--shadow)}
+#nodeProblems.bad{background:var(--bad);color:var(--onbad)}.ideabar{display:flex;flex-direction:column;gap:4px;padding:8px;margin-bottom:8px;border:2px dashed var(--sel)}.ideabar .btn{text-align:left;white-space:normal;font-size:11px}
+.nhead{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:3px 7px;background:var(--n-head);color:var(--n-headfg);cursor:move}
+.nhead b{font-size:12px;font-weight:600}
+.k-events .nhead{background:var(--n-events)}.k-actions .nhead{background:var(--n-actions)}.k-values .nhead{background:var(--n-values)}.k-mathandtext .nhead{background:var(--n-math)}.k-animation .nhead{background:var(--n-anim)}
+.nx{background:none;border:0;color:inherit;cursor:pointer;font-size:14px;line-height:1;padding:0 2px}
+.nrow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:3px 0;min-height:20px}
+.nrow.nf{padding:3px 8px;flex-direction:column;align-items:stretch;gap:2px}
+.nrow.nf span{color:var(--muted);font-size:11px}
+.nin,.nout{display:flex;align-items:center;gap:5px}
+.nout{margin-left:auto}
+.nrow input,.nrow select{font:12px var(--f-mono);border:1px solid var(--ink);background:var(--paper);color:var(--ink);padding:1px 4px;max-width:170px;box-sizing:border-box}
+.nin input{width:74px}
+.nrow input[type=checkbox]{width:auto;accent-color:var(--hot)}
+.port{display:inline-block;width:12px;height:12px;border:2px solid var(--ink);border-radius:50%;cursor:crosshair;flex:none;background:var(--sel)}
+.port.exec{border-radius:2px;transform:rotate(45deg);width:9px;height:9px;background:var(--ink)}
+/* RULE: port kinds differ by shape, not just colour: values are filled circles, states rings, exec diamonds, CSS squares. */
+.port.state{background:var(--paper);box-shadow:inset 0 0 0 3px var(--hot)}
+.port:hover{box-shadow:0 0 0 3px var(--sun)}
+.nin .port{margin-left:-8px}.nout .port{margin-right:-8px}
+.nodebar{padding:6px 10px;border-top:2px solid var(--ink);display:flex;gap:8px;align-items:center;margin:0}
+.nodebar{flex-wrap:nowrap}.nodebar .shelp{flex:1;min-width:0}
+.nodebar select{border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:3px 6px;font:12px var(--f-mono)}
+.nodebar [hidden]{display:none}
+.nprev{width:300px;flex:none;border-left:2px solid var(--ink);display:none;flex-direction:column;gap:8px;padding:10px;background:var(--chrome)}
+#nodeModal.anim .nprev{display:flex}
+.nprevbox{flex:1;min-height:220px;display:grid;place-items:center;overflow:hidden;border:2px solid var(--ink);background-color:var(--desk);background-image:repeating-conic-gradient(var(--desk2) 0 25%,transparent 0 50%);background-size:8px 8px}
+.nprevhost{font:16px/1.35 "Times New Roman",Times,serif;color:#000;max-width:260px}
+.ncolor{display:inline-flex;align-items:center;gap:3px}
+.ncurve{display:flex;flex-direction:column;gap:3px}.ncurve canvas{width:132px;height:96px;border:1px solid currentColor;border-radius:3px;touch-action:none;cursor:crosshair;color:inherit}.ncurve input{width:132px;font:11px var(--f-mono)}
+.ncolor input{width:30px;height:20px;padding:0}
+.ncolor:not(.set) input{opacity:.35}
+/* RULE: the node editor docks beside the tree */
+#nodeModal.docked:not([hidden]){inset:var(--tbh,48px) var(--dockR,0px) 0 var(--dockL,220px);padding:0;background:var(--desk);display:flex;align-items:stretch;z-index:56}
+#nodeModal.docked .win.nodewin{flex:1;width:auto;height:auto;max-width:none;max-height:none;box-shadow:none;border:0}

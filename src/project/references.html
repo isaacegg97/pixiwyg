@@ -1,0 +1,24 @@
+<!-- SECTION: references dialog -->
+<div class="modal" id="refsModal" hidden>
+  <div class="win refswin" role="dialog" aria-modal="true" aria-labelledby="refsTitle">
+    <div class="tb"><span id="refsTitle">References</span></div>
+    <div class="wb">
+      <p>Point at files and folders the site needs without putting them in the project: a video, a downloads folder, a dataset. Only the path is kept, relative to the published page. The saved file carries a REFERENCES.md saying where each one goes.</p>
+      <div id="refsList" class="refslist"></div>
+      <div class="row opts2">
+        <label class="field2 grow" for="refPath">Path <input type="text" id="refPath" placeholder="media/intro.mp4 or downloads/" autocomplete="off" spellcheck="false"></label>
+        <label class="field2" for="refKind">Kind <select id="refKind"><option value="file">File</option><option value="dir">Folder</option></select></label>
+      </div>
+      <div class="row opts2">
+        <label class="field2 grow" for="refNote">Note <input type="text" id="refNote" placeholder="Where to get it (optional)" autocomplete="off"></label>
+        <label class="btn" for="refPickFile">Pick file…</label><input class="sr" type="file" id="refPickFile">
+        <label class="btn" for="refPickDir">Pick folder…</label><input class="sr" type="file" id="refPickDir" webkitdirectory>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="refAdd">Add reference</button>
+        <button class="btn" id="refsClose">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,114 @@
+/* SECTION: NES: chunky pixel corners, Press Start 2P, primary-colour buttons that press down. Built with NES.css.
+   The look follows NES.css by B.C.Rikko (MIT, lib/NOTICES.txt); its pixel borders are pulled in at build time.
+   Press Start 2P (from the app's web fonts; offline, a monospace face) marks buttons, titles and tabs; body text
+   keeps the app's own pixel font, which stays readable at panel sizes. */
+/* ASSET: --nes-border lib/nes.css .nes-btn */
+/* ASSET: --nes-box lib/nes.css .nes-container.is-rounded */
+:root[data-apptheme]{
+  color-scheme: light;
+
+  /* SECTION: Desk and panels */
+  --desk: #5c94fc;
+  --desk2: #5c94fc;
+  --chrome: #ffffff;
+  --chrome2: #f0f0f0;
+  --paper: #ffffff;
+  --ink: #212529;
+  --muted: #5a6268;
+  --line: #212529;
+  --shadow: transparent;
+  --scrim: rgba(33,37,41,.4);
+
+  /* SECTION: Accents */
+  --hot: #e76e55;
+  --hot2: #ce372b;
+  --onhot: #212529;
+  --sel: #209cee;
+  --onsel: #ffffff;
+  --sun: #f7d51d;
+  --onsun: #212529;
+  --act: #209cee;
+  --actfg: #ffffff;
+
+  /* SECTION: Status */
+  --bad: #e76e55;
+  --onbad: #212529;
+  --warn: #f7d51d;
+  --ok: #92cc41;
+  --lib: #92cc41;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #ffffff;
+  --check-b: #e7e7e7;
+
+  /* SECTION: Node editors */
+  --n-head: #212529;
+  --n-headfg: #ffffff;
+  --n-events: #e76e55;
+  --n-actions: #209cee;
+  --n-values: #92cc41;
+  --n-math: #a35bd8;
+  --n-anim: #f78f1d;
+  --n-misc: #6c757d;
+  --n-imported: #2fbfb3;
+
+  /* SECTION: Manuscript page view */
+  --doc-desk: #5c94fc;
+
+  /* SECTION: Logo */
+  --logo3: #92cc41;
+  --logo4: #209cee;
+  --logo5: #a35bd8;
+  --logo6: #f78f1d;
+
+  /* SECTION: Type */
+  --f-ui: "Pixelify Sans", "Geneva", system-ui, sans-serif;
+  --nes-font: "Press Start 2P", ui-monospace, monospace;
+}
+
+/* SECTION: the overworld sky, with a brick floor */
+:root[data-apptheme] body{background:linear-gradient(transparent calc(100% - 24px),#c84c0c calc(100% - 24px)) fixed,#5c94fc}
+:root[data-apptheme] :is(.btn,.cmdbtn,.tb span,.dockhead b,.ptab,.ph,.cmdcat,.thcard strong,.setwin h4){font-family:var(--nes-font);letter-spacing:0}
+
+/* SECTION: buttons: pixel-cornered, with a shade that sinks when pressed */
+:root[data-apptheme] :is(.btn,.cmdbtn){background:#fff;color:#212529;border-style:solid;border-width:4px;border-image:var(--nes-border) 2 / 4px / 0 stretch;border-radius:0;box-shadow:inset -4px -4px #adafbc;padding:5px 8px;font-weight:400;font-size:9px;line-height:1.2}
+:root[data-apptheme] :is(.btn,.cmdbtn):hover{background:#fff;color:#212529;box-shadow:inset -6px -6px #adafbc}
+:root[data-apptheme] :is(.btn,.cmdbtn):active,:root[data-apptheme] .btn[aria-pressed="true"].tog-btn,:root[data-apptheme] .dd[open]>summary.btn{transform:none;background:#e7e7e7;color:#212529;box-shadow:inset 4px 4px #adafbc}
+:root[data-apptheme] .btn.primary{background:#209cee;color:#fff;box-shadow:inset -4px -4px #006bb3}
+:root[data-apptheme] .btn.primary:hover{background:#108de0;box-shadow:inset -6px -6px #006bb3}
+:root[data-apptheme] .btn.dyna{background:#e76e55;color:#fff;box-shadow:inset -4px -4px #8c2022}
+:root[data-apptheme] :is(.btn,.cmdbtn,.ptab):focus-visible{outline:2px dashed #212529;outline-offset:3px}
+:root[data-apptheme] :is(.cmdbtn,.cmditem) kbd{background:#fff;border:2px solid #212529;border-radius:0;font-size:8px}
+:root[data-apptheme] :is(.cmditem.on,.cmditem:hover) kbd{background:transparent;border-color:currentColor}
+
+/* SECTION: windows: a rounded pixel box with the title sitting on its edge */
+:root[data-apptheme] :is(.win,.tourcard){background:#fff;border-style:solid;border-width:6px;border-image:var(--nes-box) 3 / 6px / 0 stretch;border-radius:0;box-shadow:none;padding:4px}
+:root[data-apptheme] :is(.ddbody,.ctxmenu){background:#fff;border:4px solid #212529;border-radius:0;box-shadow:4px 4px 0 rgba(33,37,41,.35);padding:4px}
+:root[data-apptheme] .tb{height:auto;margin:0 0 6px;border:0;background:none;padding:4px 30px 6px 6px;justify-content:flex-start}
+:root[data-apptheme] .tb span{background:#fff;color:#212529;font:400 11px var(--f-ui);letter-spacing:0;padding:0 6px}
+:root[data-apptheme] .wclose{width:22px;height:22px;border:4px solid #212529;border-radius:0;background:#e76e55;box-shadow:inset -3px -3px #8c2022;color:#fff;font:400 10px/1 var(--f-ui)}
+:root[data-apptheme] .wclose:hover{background:#ce372b;color:#fff}
+:root[data-apptheme] .status{background:#212529;color:#fff;border:4px solid #fff;outline:4px solid #212529;border-radius:0;box-shadow:none}
+
+/* SECTION: the toolbar and panels */
+:root[data-apptheme] .topbar{background:#fff;border-bottom:4px solid #212529}
+:root[data-apptheme] .side,:root[data-apptheme] .tree{background:#fff;border-left:4px solid #212529;border-right:4px solid #212529}
+:root[data-apptheme] .dockhead{background:#212529;border-bottom:0}
+:root[data-apptheme] .dockhead :is(b,button,.dgrip){color:#fff;font-size:9px}
+:root[data-apptheme] .dockhead button:hover{background:#f7d51d;color:#212529}
+:root[data-apptheme] .treehead,:root[data-apptheme] .sect{border-bottom:4px solid #212529}
+:root[data-apptheme] :is(.ph,.cmdcat){font-size:8px;color:#212529}
+:root[data-apptheme] .tb span{font-size:10px}
+
+/* SECTION: tabs */
+:root[data-apptheme] .ptab{background:#fff;border:0;border-right:4px solid #212529;font-weight:400;font-size:9px}
+:root[data-apptheme] .ptab:hover{background:#f7d51d;color:#212529}
+:root[data-apptheme] .ptab[aria-selected="true"]{background:#209cee;color:#fff;box-shadow:inset 0 -4px #006bb3}
+
+/* SECTION: fields */
+:root[data-apptheme] :is(input:not([type]),input[type=text],input[type=search],input[type=number],input[type=url],input[type=email],textarea,select){border:4px solid #212529!important;border-radius:0!important;background-color:#fff!important;color:#212529!important;box-shadow:none!important}
+:root[data-apptheme] select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#212529 50%),linear-gradient(135deg,#212529 50%,transparent 50%)!important;background-position:right 12px top 50%,right 6px top 50%!important;background-size:6px 6px!important;background-repeat:no-repeat!important;padding-right:24px!important}
+:root[data-apptheme] input[type=checkbox]{appearance:none;width:16px;height:16px;margin:0;border:4px solid #212529;background:#fff;border-radius:0}
+:root[data-apptheme] input[type=checkbox]:checked{background:#212529;box-shadow:inset 0 0 0 2px #fff}
+:root[data-apptheme] ::-webkit-scrollbar{width:12px;height:12px;background:#fff}
+:root[data-apptheme] ::-webkit-scrollbar-thumb{background:#212529;border:2px solid #fff}

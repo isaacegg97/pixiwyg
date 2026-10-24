@@ -1,0 +1,4 @@
+/* SECTION: load style set dialog */
+.ssetlist{max-height:50vh}.ssrow{padding:6px 8px;border-bottom:1px solid var(--chrome2)}
+.sshead{display:flex;align-items:center;gap:8px}.sshead small{flex:1;opacity:.7}
+.sschips{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.sschip{font:11px var(--f-mono);padding:1px 6px;border:1px solid var(--ink);background:var(--chrome)}

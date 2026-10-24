@@ -1,0 +1,113 @@
+/* SECTION: XMB interface: the home (categories across the bottom, items above) and the tool strip */
+/* FORMAT: --xmbh is the strip's height; every full-screen tool surface stops above it. */
+body.xmb{--xmbh:calc(60px + env(safe-area-inset-bottom,0px));box-sizing:border-box;padding-bottom:60px}
+/* RULE: the desktop chrome is gone, not folded: no toolbar, tree, docks or resizers; panels overlay the tool one at a time */
+body.xmb #topbar,body.xmb .tree,body.xmb .dockhead,body.xmb .rsz,body.xmb #title,body.xmb .drail{display:none!important}
+body.xmb,body.xmb.noL,body.xmb.noR,body.xmb.noT{--lw:0px!important;--rw:0px!important;--tw:0px!important}
+body.xmb.noL .side.left,body.xmb.noR .side.right{display:none!important}
+body.xmb .side{position:fixed;top:env(safe-area-inset-top,0px);bottom:var(--xmbh);z-index:55;width:min(380px,calc(100vw - 24px));box-shadow:4px 0 0 var(--shadow)}
+body.xmb .side.left{left:0}body.xmb .side.right{right:0;box-shadow:-4px 0 0 var(--shadow)}
+/* RULE: a drag out of a panel slides the panel away, so the whole page is there to drop on; it slides back after */
+/* FIX: a finger on a style or primitive card scrolled the list and cancelled the drag. Up and down still scroll it;
+   sideways, towards the page, picks the card up. */
+body.xmb .scard,body.xmb .pcard{touch-action:pan-y}
+body.xmb .side{transition:transform .16s ease-out}body.xmb.dragging .side.left{transform:translateX(-104%)}body.xmb.dragging .side.right{transform:translateX(104%)}
+/* HACK: each full-screen tool pins its own bottom to 0; these lift them above the strip */
+body.xmb[data-ws=paint] #w-studio:not([hidden]),body.xmb[data-ws=music] #seqModal:not([hidden]),body.xmb[data-ws=model] #m3dModal:not([hidden]),
+body.xmb #nodeModal.docked:not([hidden]),body.xmb.wrfocus #writer,body.xmb.docfocus #w-text{bottom:var(--xmbh)}
+/* RULE: messages drop in from the top in XMB: the bottom of the screen is where the thumbs and the controls are */
+body.xmb .status{top:calc(env(safe-area-inset-top,0px) + 10px);bottom:auto;max-width:calc(100vw - 32px);box-sizing:border-box}
+/* RULE: touch handles keep their look and get a finger-sized hit area */
+body.xmb #selbox .h{width:16px;height:16px}
+body.xmb #selbox .h::after{content:'';position:absolute;inset:-12px}
+body.xmb .desk{touch-action:none}
+/* RULE: the page HUD's jobs are the fingers' (pinch) and the Page category's (snap, grid, zoom, viewport) in XMB */
+body.xmb #obModal .obmore,body.xmb #stageHud,body.xmb[data-ws=model] #m3dModal .m3dwin>.tb{display:none!important}
+
+.xmbbtn{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:52px;min-height:48px;padding:4px 8px;border:2px solid transparent;border-radius:10px;background:none;color:var(--ink);font:600 11px var(--f-ui);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.xmbbtn i{font-style:normal;font-size:20px;line-height:1}
+.xmbbtn:hover{background:var(--chrome2)}
+.xmbbtn:focus-visible,.xitem:focus-visible,.xcat:focus-visible{outline:3px solid var(--sel);outline-offset:2px}
+.xmbbtn[aria-pressed=true]{background:var(--chrome2);border-color:var(--ink);box-shadow:inset 0 -4px 0 var(--hot)}
+.xmbbtn.primary{background:var(--act);color:var(--actfg);border-color:var(--ink);box-shadow:3px 3px 0 var(--shadow)}
+.xmbbtn.primary[aria-pressed=true]{box-shadow:inset 0 -4px 0 var(--hot),3px 3px 0 var(--shadow)}
+.xmbbtn[hidden]{display:none}
+
+/* SECTION: XMB home */
+.xmbmenu{position:fixed;inset:0;z-index:99000;display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);color:var(--ink);touch-action:pan-y;user-select:none;-webkit-user-select:none;
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+  background:var(--desk);overflow:hidden;isolation:isolate}
+/* PERF: the wave is its own layer moved by transform, which the compositor does alone; animating background-position
+   repainted the whole screen every frame. */
+.xmbmenu::before{content:'';position:absolute;inset:-25%;z-index:-1;pointer-events:none;will-change:transform;
+  background:radial-gradient(60% 40% at 20% 80%,color-mix(in srgb,var(--hot) 22%,transparent),transparent 70%),radial-gradient(50% 35% at 80% 20%,color-mix(in srgb,var(--sel) 22%,transparent),transparent 70%);
+  animation:xmbwave 24s ease-in-out infinite alternate}
+/* INVARIANT: each part names its row, so the hidden search box leaves its row empty instead of shifting the rest up */
+.xmbtop{grid-row:1}.xmbsearch{grid-row:2}.xmbhead{grid-row:3}.xmbitems{grid-row:4}.xmbfoot{grid-row:5}
+@keyframes xmbwave{to{transform:translate(9%,-7%) rotate(5deg)}}
+.xmbtop{display:flex;align-items:center;gap:8px;padding:10px 16px 4px}
+.xmbproj{flex:1;min-width:0;display:flex;flex-direction:column}
+.xmbproj b{font:700 18px var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* RULE: the project's metadata reads at full ink, not muted: it answers "where am I, and is it saved". */
+.xmbproj small{font:600 12px var(--f-mono);color:var(--ink)}
+.xmbsearch{justify-self:center;width:calc(100% - 32px);max-width:688px;box-sizing:border-box;margin:4px 16px;padding:12px 14px;border:2px solid var(--ink);border-radius:10px;background:var(--paper);color:var(--ink);font:16px var(--f-ui);box-shadow:3px 3px 0 var(--shadow)}
+.xmbhead{display:flex;align-items:center;gap:10px;justify-self:center;width:100%;max-width:720px;box-sizing:border-box;margin:6px 0 4px;padding:0 16px;font:700 26px var(--f-ui);letter-spacing:.02em}
+.xmbhead i{font-style:normal;display:inline-grid;place-items:center;width:40px;height:40px;border:2px solid var(--ink);border-radius:10px;background:var(--chrome);font-size:22px}
+.xmbitems{list-style:none;margin:0;padding:4px 16px 16px;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:6px;max-width:720px;width:100%;box-sizing:border-box;justify-self:center}
+.xmbitems.in{animation:xmbin .22s ease-out}
+@keyframes xmbin{from{opacity:0;transform:translateX(var(--from,0px))}}
+.xmbitems .empty{padding:24px;text-align:center;font:600 14px var(--f-ui)}
+.xitem{display:flex;align-items:center;gap:12px;width:100%;min-height:60px;padding:8px 12px;border:2px solid transparent;border-radius:12px;background:color-mix(in srgb,var(--chrome) 70%,transparent);color:var(--ink);text-align:left;cursor:pointer;touch-action:pan-y;-webkit-tap-highlight-color:transparent;transition:transform .12s,background .12s}
+/* RULE: the current item is marked by shape (border, offset shadow, scale), not colour alone */
+.xitem.on{background:var(--chrome);border-color:var(--ink);box-shadow:4px 4px 0 var(--shadow);transform:translateX(4px)}
+.xitem:active{transform:translateX(4px) scale(.99)}
+.xico{flex:none;display:grid;place-items:center;width:40px;height:40px;border:2px solid var(--ink);border-radius:10px;background:var(--paper);font:normal 20px/1 var(--f-ui)}
+.xtxt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.xtxt b{font:700 16px var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xtxt small{font:13px var(--f-ui);color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.xitem.on .xtxt small{color:var(--ink)}
+.xbadge{flex:none;min-width:40px;padding:3px 10px;border:2px solid var(--ink);border-radius:999px;font:700 12px var(--f-mono);font-style:normal;text-align:center;text-transform:uppercase;background:transparent;color:var(--ink)}
+.xbadge.lit{background:var(--ink);color:var(--paper)}
+.xmbfoot{display:flex;align-items:center;gap:8px;padding:6px 12px 10px;border-top:2px solid var(--ink);background:color-mix(in srgb,var(--chrome) 85%,transparent)}
+.xmbcatview{flex:1;min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.xmbcats{display:flex;gap:4px;width:max-content;transform:translateX(calc(var(--off,0px) + var(--drag,0px)));transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.xmbcats.drag{transition:none}
+.xcat{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:72px;min-height:60px;padding:6px 8px;border:2px solid transparent;border-radius:12px;background:none;color:var(--ink);cursor:pointer;opacity:.62;touch-action:pan-y;-webkit-tap-highlight-color:transparent;transition:opacity .2s,transform .2s}
+.xcat i{font-style:normal;font-size:22px;line-height:1}
+.xcat b{font:600 11px var(--f-ui);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.xcat[aria-selected=true]{opacity:1;transform:scale(1.12);border-color:var(--ink);background:var(--chrome);box-shadow:inset 0 -4px 0 var(--hot)}
+.xmbfoot .xmbbtn.primary{flex:none;flex-direction:row;gap:6px;min-height:52px;padding:6px 14px;font-size:14px}
+
+/* SECTION: XMB tool strip */
+.xmbstrip{position:fixed;left:0;right:0;bottom:0;z-index:98000;display:flex;align-items:center;gap:4px;height:60px;padding:0 max(8px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(8px,env(safe-area-inset-left,0px));background:var(--chrome);border-top:2px solid var(--ink)}
+.xmbwhere{flex:1;min-width:0;display:flex;align-items:center;gap:8px;padding:0 4px}
+.xmbwhere>i{font-style:normal;font-size:20px}
+.xmbwhere>span{min-width:0;display:flex;flex-direction:column}
+.xmbwhere b{font:700 13px var(--f-ui)}
+.xmbwhere small{font:600 11px var(--f-mono);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:520px){.xmbstrip .xmbbtn span{display:none}.xmbstrip .xmbbtn{min-width:46px}.xmbwhere small{display:none}}
+@media (prefers-reduced-motion:reduce){.xmbmenu::before{animation:none}.xmbitems.in{animation:none}.xmbcats,.xcat,.xitem{transition:none}}
+
+/* SECTION: XMB sheets: a tool's secondary controls, one at a time, above the strip */
+.xmbsheets{display:flex;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.xmbsheets:empty{display:none}
+body.xmb[data-ws=paint] #w-studio>.tb,body.xmb[data-ws=paint] .studio-top,body.xmb[data-ws=paint] .spal,
+body.xmb[data-ws=music] .seqbar,body.xmb[data-ws=music] .seqtracks,body.xmb[data-ws=music] .seqfoot{display:none}
+body.xmb[data-ws=paint] .sdock{display:contents}
+body.xmb .xsheet{display:flex!important;position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:var(--xmbh)!important;z-index:97000;width:auto!important;max-width:none!important;
+  max-height:min(62vh,560px);overflow:auto;box-sizing:border-box;margin:0;background:var(--chrome);border:0;border-top:2px solid var(--ink);box-shadow:0 -4px 0 var(--shadow);animation:xmbsheet .18s ease-out}
+@keyframes xmbsheet{from{transform:translateY(24px);opacity:0}}
+body.xmb .xsheet>.spalhead{display:none}
+body.xmb .spal.xsheet{flex-direction:column}
+body.xmb .spal.xsheet>.spalbody{display:flex!important;padding:12px}
+body.xmb .xsheet.studio-top,body.xmb .xsheet.seqbar,body.xmb .xsheet.seqfoot{flex-direction:row;flex-wrap:wrap;align-items:center;gap:10px;padding:12px}
+body.xmb .xsheet.seqtracks{flex-direction:column;padding:12px}
+body.xmb[data-ws=paint] .sopts{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;min-height:0;height:auto;align-items:center}
+body.xmb[data-ws=paint] .sopts #hint{display:none}
+body.xmb #sPalBtn{display:none}
+/* RULE: swatches and the colour wells grow to finger size in the sheet */
+body.xmb .xsheet .swatches{grid-template-columns:repeat(auto-fill,36px);gap:6px}body.xmb .xsheet .swatches>*{width:36px;height:36px}
+body.xmb[data-ws=paint] .studio-main{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important}
+body.xmb[data-ws=paint] .sview{grid-column:1;grid-row:1}
+@media (max-width:520px){body.xmbsheeted .xmbwhere{display:none}body.xmbsheeted .xmbstrip .xmbbtn{min-width:40px;padding:4px 2px}}
+@media (prefers-reduced-motion:reduce){body.xmb .xsheet{animation:none}body.xmb .side{transition:none}}

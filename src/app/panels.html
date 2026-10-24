@@ -1,0 +1,23 @@
+<!-- SECTION: side panels; each pane is included from its feature -->
+<aside class="side left" id="sideL" aria-label="Add to the page">
+  <div class="ptabs" role="tablist">
+    <button class="ptab" role="tab" id="t-styles" aria-controls="w-styles" aria-selected="true">Catalog</button>
+    <button class="ptab" role="tab" id="t-prims" aria-controls="w-prims" aria-selected="false">Primitives</button>
+    <button class="ptab" role="tab" id="t-files" aria-controls="w-files" aria-selected="false">Stylesheets</button>
+    <button class="ptab" role="tab" id="t-text" aria-controls="w-text" aria-selected="false" title="Manuscripts: long-form writing in Markdown, flowed onto the pages">Text</button>
+  </div>
+  <!-- INCLUDE: catalog/cards.html -->
+  <!-- INCLUDE: catalog/primitives-pane.html -->
+  <!-- INCLUDE: writing/text-panel.html -->
+  <!-- INCLUDE: catalog/sheets.html -->
+</aside>
+
+<aside class="side right" id="sideR" aria-label="Properties">
+  <section class="sect" id="w-selected"><h2 class="ph" id="insTitle">Inspector</h2><div class="wb ins" id="ins"></div></section>
+  <!-- INCLUDE: page/checks.html -->
+  <details class="sect" id="w-pages" hidden><summary class="ph" id="pagesTitle">Pages</summary><div class="wb pgwb" id="pagesWb"></div></details>
+  <details class="sect" id="w-canvas"><summary class="ph" id="canvasTitle">Canvas</summary><div class="wb cvwb" id="canvasWb"></div></details>
+  <!-- INCLUDE: page/background.html -->
+  <!-- INCLUDE: styles/palette.html -->
+</aside>
+

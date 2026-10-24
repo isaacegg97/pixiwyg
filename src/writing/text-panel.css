@@ -1,0 +1,17 @@
+/* SECTION: Text panel (manuscripts) */
+#docStats{color:var(--ink);font-size:12px}
+.textpane{display:flex;flex-direction:column;min-height:0}
+.textpane:not([hidden]){display:flex}
+.docbody{display:flex;flex-direction:column;gap:6px;flex:1;min-height:0}
+.docbody[hidden]{display:none}
+.docbar{gap:4px;flex-wrap:nowrap}.docbar select{flex:1;min-width:0;font:12px var(--f-mono);border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:2px 4px}
+.docopts{display:grid;grid-template-columns:1fr 1fr;gap:4px 8px}.docopts input,.docopts select{width:100%;box-sizing:border-box}
+.docopts [hidden]{display:none}
+.mdtools{display:flex;flex-wrap:wrap;gap:3px}
+#docText{flex:1;min-height:200px;resize:none;font:15px/1.55 Georgia,"Times New Roman",serif;padding:10px 12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);tab-size:4}
+.docfoot{justify-content:space-between;flex-wrap:nowrap;gap:6px}.docfoot small{color:var(--muted);font-size:11px}
+.docempty p{font-size:13px;margin:0 0 10px}
+.docempty[hidden]{display:none}
+body.docfocus #w-text{position:fixed;inset:var(--tbh,48px) 0 0 0;z-index:90;background:var(--doc-desk);overflow:auto;padding:4vh 0 40vh}
+body.docfocus #w-text .docempty,body.docfocus #w-text .docbar,body.docfocus #w-text .docopts,body.docfocus #w-text .mdtools,body.docfocus #w-text #docText{display:none}
+body.docfocus #w-text .docbody{max-width:760px;margin:0 auto}body.docfocus .docpage{padding:72px 88px;font-size:19px;min-height:80vh}

@@ -1,0 +1,93 @@
+/* FORMAT: velvet-requiem.css, PIXIWYG house style, MIT License. 90s goth with vampiric energy: crushed velvet and
+   damask in black and blood red, black lace, silver jewellery, roses, bats, ankhs, candlelight and the odd drip of
+   blood. Plain text stays deep wine for light pages; panels bring the velvet with them. Textures are inline SVG, so
+   the sheet works offline and exports whole. Fonts are the app's own (Fraunces). */
+:root{--vr-blood:#b0102e;--vr-fresh:#cc1838;--vr-wine:#5c0616;--vr-ink:#1b0710;--vr-black:#0b0509;--vr-velvetc:#3a0a18;--vr-silver:#c9c1d2;
+  --vr-porcelain:#f0e4ec;--vr-violet:#4a1a62;--vr-glow:rgba(204,24,56,.5);
+  --vr-velvet:radial-gradient(130% 90% at 30% 0%,rgba(176,16,46,.28),transparent 55%),radial-gradient(120% 90% at 80% 100%,rgba(106,42,138,.18),transparent 60%);
+  --vr-silverfill:linear-gradient(180deg,#f2eef6,#bdb4c8 50%,#7d7389);
+  --vr-damask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='140' height='180' viewBox='0 0 140 180'%3E%3Cdefs%3E%3Cg id='d'%3E%3Cg%3E%3Cpath d='M0-56C10-46 16-33 12-21C24-27 35-17 31-6C41-2 41 13 31 17C35 29 25 39 15 33C13 43 7 49 0 56Z' fill='%231c0710'/%3E %3Cpath d='M0-56C10-46 16-33 12-21C24-27 35-17 31-6C41-2 41 13 31 17C35 29 25 39 15 33C13 43 7 49 0 56' fill='none' stroke='%23521022' stroke-width='1.6'/%3E %3Cpath d='M12-21c-8 2-8 12 0 12c5 0 6-6 2-7M31-6c-9 0-11 10-3 12M15 33c-2-8-12-8-12 0c0 4 4 5 6 3M22 6c-6-3-10 3-6 6' fill='none' stroke='%236a1428' stroke-width='1.3' stroke-linecap='round'/%3E%3C/g%3E%3Cg transform='scale(-1 1)'%3E%3Cpath d='M0-56C10-46 16-33 12-21C24-27 35-17 31-6C41-2 41 13 31 17C35 29 25 39 15 33C13 43 7 49 0 56Z' fill='%231c0710'/%3E %3Cpath d='M0-56C10-46 16-33 12-21C24-27 35-17 31-6C41-2 41 13 31 17C35 29 25 39 15 33C13 43 7 49 0 56' fill='none' stroke='%23521022' stroke-width='1.6'/%3E %3Cpath d='M12-21c-8 2-8 12 0 12c5 0 6-6 2-7M31-6c-9 0-11 10-3 12M15 33c-2-8-12-8-12 0c0 4 4 5 6 3M22 6c-6-3-10 3-6 6' fill='none' stroke='%236a1428' stroke-width='1.3' stroke-linecap='round'/%3E%3C/g%3E %3Cpath d='M0-14L8 0L0 14L-8 0Z' fill='%233a0a18' stroke='%236a1428' stroke-width='1.2'/%3E%3Ccircle cy='-62' r='4' fill='%233a0a18'/%3E%3Ccircle cx='-6' cy='-58' r='3' fill='%233a0a18'/%3E%3Ccircle cx='6' cy='-58' r='3' fill='%233a0a18'/%3E%3C/g%3E%3C/defs%3E%3Cuse xlink:href='%23d' transform='translate(70 90)'/%3E%3Cuse xlink:href='%23d' transform='translate(0 0) scale(.55)'/%3E%3Cuse xlink:href='%23d' transform='translate(0 180) scale(.55)'/%3E%3Cuse xlink:href='%23d' transform='translate(140 0) scale(.55)'/%3E%3Cuse xlink:href='%23d' transform='translate(140 180) scale(.55)'/%3E%3C/svg%3E");
+  --vr-ornaments:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='420' height='420' viewBox='0 0 420 420'%3E%3Cdefs%3E%3Cg id='b'%3E%3Cpath d='M0 1L2.6-4L3.6-1C8-5 14-7 21-3C18-2 17 1 17 5C14 3 11 4 10 7C8 5 5 5 2.5 8Z'/%3E%3Cpath d='M0 1L2.6-4L3.6-1C8-5 14-7 21-3C18-2 17 1 17 5C14 3 11 4 10 7C8 5 5 5 2.5 8Z' transform='scale(-1 1)'/%3E%3Ccircle cy='-1' r='2.4'/%3E%3C/g%3E%3Cg id='r'%3E%3Cpath d='M-4 6q-10 6-14 2q6-1 8-6Z' fill='%231f2e1c'/%3E%3Cpath d='M3 8q8 8 14 4q-6-2-9-7Z' fill='%231f2e1c'/%3E %3Ccircle r='9' fill='%237a0a20'/%3E%3Cpath d='M-6-3q0-6 6-6q7 0 7 7q0 6-6 6q-5 0-5-5q0-4 4-4q3 0 3 3' fill='none' stroke='%232a0410' stroke-width='1.4' stroke-linecap='round'/%3E %3Cpath d='M-8 2q4 5 10 4M2-8q5 2 6 7' fill='none' stroke='%23a8122e' stroke-width='1' opacity='.7'/%3E%3C/g%3E%3C/defs%3E%3Cg opacity='.55'%3E %3Cuse xlink:href='%23r' transform='translate(64 92) rotate(-20)'/%3E%3Cuse xlink:href='%23r' transform='translate(300 330) rotate(15) scale(.85)'/%3E%3Cuse xlink:href='%23r' transform='translate(372 70) scale(.7)'/%3E %3Cg fill='%232a1622'%3E%3Cuse xlink:href='%23b' transform='translate(210 60) rotate(-8)'/%3E%3Cuse xlink:href='%23b' transform='translate(120 300) rotate(10) scale(.7)'/%3E%3Cuse xlink:href='%23b' transform='translate(360 210) scale(.55)'/%3E%3C/g%3E %3Cpath d='M30 0a16 16 0 1 0 0 32a12 12 0 1 1 0-32Z' fill='%23c7bfd0' opacity='.16' transform='translate(220 190)'/%3E %3Cg fill='none' stroke='%23c7bfd0' stroke-width='2.2' opacity='.18' transform='translate(70 380)'%3E%3Cellipse cx='0' cy='-8' rx='5' ry='7'/%3E%3Cpath d='M0-1V20M-8 2H8'/%3E%3C/g%3E %3C/g%3E%3C/svg%3E");
+  --vr-lace:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='24' height='12' viewBox='0 0 24 12'%3E%3Cpath fill-rule='evenodd' fill='%23050205' d='M0 0H24V4Q18 12 12 4Q6 12 0 4ZM6 5.2a1.5 1.5 0 1 0 0.01 0ZM18 5.2a1.5 1.5 0 1 0 0.01 0ZM12 1.4a1 1 0 1 0 0.01 0ZM0 1.4a1 1 0 1 0 0.01 0ZM24 1.4a1 1 0 1 0 0.01 0Z'/%3E%3C/svg%3E");
+  --vr-drip:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='140' height='18' viewBox='0 0 140 18'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23b0102e'/%3E%3Cstop offset='1' stop-color='%235c0616'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23g)'%3E%3Crect width='140' height='2.6'/%3E%3Crect x='7.3' y='0' width='3.4' height='9' rx='1.7'/%3E%3Ccircle cx='9' cy='9' r='2.79'/%3E%3Crect x='29.8' y='0' width='2.4' height='5' rx='1.2'/%3E%3Ccircle cx='31' cy='5' r='1.97'/%3E%3Crect x='50.0' y='0' width='4' height='13' rx='2.0'/%3E%3Ccircle cx='52' cy='13' r='3.28'/%3E%3Crect x='75.7' y='0' width='2.6' height='6' rx='1.3'/%3E%3Ccircle cx='77' cy='6' r='2.13'/%3E%3Crect x='99.4' y='0' width='3.2' height='10' rx='1.6'/%3E%3Ccircle cx='101' cy='10' r='2.62'/%3E%3Crect x='122.9' y='0' width='2.2' height='4' rx='1.1'/%3E%3Ccircle cx='124' cy='4' r='1.80'/%3E%3C/g%3E%3Cg fill='%23ff8fa0' opacity='.35'%3E%3Ccircle cx='8.2' cy='8.0' r='0.75'/%3E%3Ccircle cx='51.0' cy='11.8' r='0.88'/%3E%3Ccircle cx='100.2' cy='9.0' r='0.70'/%3E%3C/g%3E%3C/svg%3E")}
+body{font-family:"Fraunces",Georgia,"Times New Roman",serif;color:var(--vr-ink)}
+
+/* SECTION: texture swatches (also what the interface theme and the page-background primitive borrow)
+   RULE: the damask is 140 x 180 and seamless; the ornaments (roses, bats, moon, ankh) are a sparse 420px tile laid
+   over it; lace (24 x 12) and the blood drip (140 x 18) repeat across. */
+.vr-tex-damask{background-image:var(--vr-damask)}
+.vr-tex-ornaments{background-image:var(--vr-ornaments)}
+.vr-tex-lace{background-image:var(--vr-lace)}
+.vr-tex-drip{background-image:var(--vr-drip)}
+
+/* SECTION: headings: italic small caps, blood red, lit from within */
+h1{font:italic 900 54px/1 "Fraunces",Georgia,serif;font-variant:small-caps;margin:0;letter-spacing:.04em;color:var(--vr-blood);text-shadow:2px 2px 0 var(--vr-black),0 0 18px var(--vr-glow)}
+h1.bleeding{padding-bottom:18px;background:var(--vr-drip) repeat-x left bottom/140px 18px}
+h1.crypt{display:inline-block;color:var(--vr-porcelain);background:var(--vr-velvet),var(--vr-damask) 0 0/140px 180px,var(--vr-black);padding:16px 24px;border:1px solid var(--vr-silver);outline:1px solid var(--vr-black);outline-offset:-6px;text-shadow:0 0 14px var(--vr-glow)}
+h1.silver{background:var(--vr-silverfill);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1.5px var(--vr-black);text-shadow:none;filter:drop-shadow(0 0 10px var(--vr-glow))}
+h2{font:italic 600 30px/1.15 "Fraunces",Georgia,serif;font-variant:small-caps;letter-spacing:.12em;margin:0;color:var(--vr-wine)}
+h2::before,h2::after{content:"†";color:var(--vr-blood);margin:0 .35em;font-style:normal}
+h2.lace{display:inline-block;color:var(--vr-porcelain);background:var(--vr-lace) repeat-x left bottom/24px 12px,linear-gradient(180deg,var(--vr-blood),var(--vr-wine));padding:6px 22px 14px}
+h2.lace::before,h2.lace::after{color:var(--vr-silver)}
+h2.rose::before{content:"🥀";margin-right:.4em}h2.rose::after{content:none}
+h3{font:600 17px/1.2 "Fraunces",Georgia,serif;margin:0;text-transform:uppercase;letter-spacing:.24em;color:var(--vr-violet)}
+h3.ankh::before{content:"☥ ";color:var(--vr-blood);letter-spacing:0}
+
+/* SECTION: text */
+p{font:17px/1.7 "Fraunces",Georgia,serif;margin:0;color:var(--vr-ink)}
+p.diary{font-style:italic;background:linear-gradient(180deg,#fbf3f6,#f1e2e8);padding:16px 20px;border-left:4px solid var(--vr-blood);box-shadow:0 6px 18px rgba(27,7,16,.18)}
+p.incantation{text-align:center;font-style:italic;font-variant:small-caps;letter-spacing:.16em;color:var(--vr-wine)}
+p.bloodline{font-style:italic;font-size:22px;color:var(--vr-blood);text-shadow:0 0 10px var(--vr-glow)}
+blockquote{margin:0;font:italic 21px/1.5 "Fraunces",Georgia,serif;color:var(--vr-ink);padding:6px 0 6px 52px;position:relative}
+blockquote::before{content:"“";position:absolute;left:0;top:-14px;font:900 80px/1 "Fraunces",serif;color:var(--vr-blood);text-shadow:0 0 12px var(--vr-glow)}
+blockquote.velvet{color:var(--vr-porcelain);background:var(--vr-lace) repeat-x left bottom/24px 12px,var(--vr-velvet),linear-gradient(180deg,var(--vr-velvetc),var(--vr-black));padding:22px 26px 28px 62px}
+blockquote.velvet::before{left:16px;top:6px}
+code{font:14px "DM Mono",monospace;background:var(--vr-black);color:var(--vr-silver);padding:2px 7px;border-radius:2px}
+pre{font:14px/1.5 "DM Mono",monospace;background:var(--vr-velvet),var(--vr-black);color:var(--vr-porcelain);border-left:4px solid var(--vr-blood);padding:12px 16px;margin:0;white-space:pre-wrap}
+a{color:var(--vr-blood);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+a:hover{color:var(--vr-fresh);text-shadow:0 0 8px var(--vr-glow)}
+label{font:italic 600 15px "Fraunces",Georgia,serif;font-variant:small-caps;letter-spacing:.1em;color:var(--vr-wine)}
+
+/* SECTION: buttons and fields: black velvet with silver rims; touched, they flush red */
+button{font:italic 600 16px "Fraunces",Georgia,serif;font-variant:small-caps;letter-spacing:.1em;color:var(--vr-porcelain);background:linear-gradient(180deg,#24121c,var(--vr-black));border:1px solid var(--vr-silver);border-radius:3px;padding:8px 22px;box-shadow:0 0 0 1px var(--vr-black),0 4px 10px rgba(0,0,0,.45);cursor:pointer}
+button:hover{background:linear-gradient(180deg,var(--vr-velvetc),#170610);box-shadow:0 0 0 1px var(--vr-black),0 0 16px var(--vr-glow)}
+button:active{transform:translateY(1px);box-shadow:inset 0 2px 6px #000}
+button.blood{background:var(--vr-velvet),linear-gradient(180deg,var(--vr-blood),var(--vr-wine))}
+button.silver{background:var(--vr-silverfill);color:var(--vr-black);border-color:var(--vr-black)}
+input,textarea,select{font:16px "Fraunces",Georgia,serif;background:var(--vr-black);color:var(--vr-porcelain);border:1px solid #6a5a6a;border-radius:2px;padding:7px 12px}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--vr-fresh);box-shadow:0 0 0 3px rgba(204,24,56,.35)}
+
+/* SECTION: lists and tables */
+ul,ol{margin:0;padding-left:1.8em;font:17px/1.7 "Fraunces",Georgia,serif;color:var(--vr-ink)}
+ul li::marker{content:"†  ";color:var(--vr-blood)}
+ul.roses li::marker{content:"❦  ";color:var(--vr-blood)}
+ol{list-style:upper-roman}ol li::marker{color:var(--vr-blood);font-style:italic}
+table{border-collapse:collapse;font:15px "Fraunces",Georgia,serif;color:var(--vr-porcelain);background:linear-gradient(rgba(11,5,9,.88),rgba(11,5,9,.88)),var(--vr-damask) 0 0/140px 180px}
+th{background:linear-gradient(180deg,var(--vr-blood),var(--vr-wine));color:var(--vr-porcelain);font-style:italic;font-variant:small-caps;letter-spacing:.12em;padding:8px 12px;border:1px solid var(--vr-black)}
+td{padding:7px 12px;border:1px solid #3f1a2b}
+
+/* SECTION: pictures and rules */
+img{border:6px double var(--vr-silver);outline:2px solid var(--vr-black);box-shadow:0 8px 20px rgba(0,0,0,.5);filter:saturate(.9) contrast(1.05)}
+img.cameo{border-radius:50%;border:4px solid var(--vr-silver);outline:3px solid var(--vr-black);outline-offset:0;box-shadow:0 0 0 7px var(--vr-wine),0 0 22px var(--vr-glow)}
+hr{border:0;height:12px;margin:12px 0;background:var(--vr-lace) repeat-x center/24px 12px}
+hr.blood{height:18px;background:var(--vr-drip) repeat-x left top/140px 18px}
+
+/* SECTION: panels: velvet, damask, coffins and letters
+   RULE: text on damask or velvet always sits on near-black, so it reads; lace and drips edge it, never cover it. */
+div{font:17px/1.6 "Fraunces",Georgia,serif;color:var(--vr-ink)}
+.velvet{background:var(--vr-lace) repeat-x left bottom/24px 12px,var(--vr-velvet),linear-gradient(180deg,var(--vr-velvetc),var(--vr-black));color:var(--vr-porcelain);padding:20px 20px 30px;border:1px solid var(--vr-silver)}
+.damask{background:linear-gradient(rgba(11,5,9,.6),rgba(11,5,9,.6)),var(--vr-ornaments) 0 0/420px,var(--vr-damask) 0 0/140px 180px,var(--vr-black);color:var(--vr-porcelain);padding:22px;box-shadow:inset 0 0 60px #000}
+.coffin{background:var(--vr-velvet),linear-gradient(180deg,#2a0a16,var(--vr-black));color:var(--vr-porcelain);padding:34px 30px;clip-path:polygon(30% 0,70% 0,100% 22%,82% 100%,18% 100%,0 22%);text-align:center}
+.letter{position:relative;background:linear-gradient(180deg,#fbf3f6,#efdfe6);color:var(--vr-ink);padding:22px 24px;font-style:italic;box-shadow:0 8px 20px rgba(27,7,16,.2)}
+.letter::after{content:"";position:absolute;right:22px;bottom:-14px;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--vr-fresh),var(--vr-wine) 70%);box-shadow:0 2px 0 #3a0410}
+.candlelit{background:radial-gradient(60% 70% at 50% 60%,rgba(255,170,90,.22),transparent 70%),var(--vr-black);color:var(--vr-porcelain);padding:22px;border:1px solid #3f1a2b}
+
+/* SECTION: little things */
+span.sigil{display:inline-block;border:1px solid var(--vr-blood);color:var(--vr-blood);padding:1px 10px;font-variant:small-caps;letter-spacing:.2em;box-shadow:0 0 10px var(--vr-glow)}
+span.blood{display:inline-block;background:var(--vr-blood);color:var(--vr-porcelain);padding:1px 10px;font-style:italic}
+span.silver{display:inline-block;background:var(--vr-silverfill);color:var(--vr-black);padding:1px 10px;border-radius:999px;font-variant:small-caps;letter-spacing:.08em}
+span.whisper{font-style:italic;font-variant:small-caps;letter-spacing:.14em;color:#7a5a6a}
+nav{font:italic 600 17px "Fraunces",Georgia,serif;font-variant:small-caps;letter-spacing:.1em;display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+nav a{color:var(--vr-ink);text-decoration:none;padding:2px 6px}
+nav a+a::before{content:"†";color:var(--vr-blood);margin-right:12px;font-style:normal}
+nav a:hover{color:var(--vr-blood);text-shadow:0 0 8px var(--vr-glow)}

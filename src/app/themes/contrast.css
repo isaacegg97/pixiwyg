@@ -1,0 +1,65 @@
+/* SECTION: High contrast: black, white and yellow, with thick focus rings. For low vision and bright rooms.
+   Load it from Settings, or More ▾ → Settings… → Load theme file. See template.css for every token. */
+:root[data-apptheme]{
+  color-scheme: dark;
+
+  /* SECTION: Desk and panels */
+  --desk: #000000;
+  --desk2: #000000;
+  --chrome: #000000;
+  --chrome2: #1a1a1a;
+  --paper: #000000;
+  --ink: #ffffff;
+  --muted: #e0e0e0;
+  --line: #ffffff;
+  --shadow: #ffffff;
+  --scrim: rgba(0,0,0,.85);
+
+  /* SECTION: Accents */
+  --hot: #ffff00;
+  --hot2: #ffff66;
+  --onhot: #000000;
+  --sel: #00ffff;
+  --onsel: #000000;
+  --sun: #ffff00;
+  --onsun: #000000;
+  --act: #ffffff;
+  --actfg: #000000;
+
+  /* SECTION: Status */
+  --bad: #ff6060;
+  --warn: #ffb000;
+  --ok: #00ff66;
+  --lib: #000000;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #000000;
+  --check-b: #333333;
+
+  /* SECTION: Node editors */
+  --n-head: #ffffff;
+  --n-headfg: #000000;
+  --n-events: #ffff00;
+  --n-actions: #00ffff;
+  --n-values: #00ff66;
+  --n-math: #ff99ff;
+  --n-anim: #ffb000;
+  --n-misc: #e0e0e0;
+  --n-imported: #99ccff;
+
+  /* SECTION: Manuscript page view */
+  --doc-paper: #ffffff;
+  --doc-ink: #000000;
+  --doc-desk: #000000;
+
+  /* SECTION: Logo */
+  --logo3: #00ff66;
+  --logo4: #00ffff;
+  --logo5: #ff99ff;
+  --logo6: #ffb000;
+}
+
+/* SECTION: beyond the tokens: thick focus rings, underlined links, no desk pattern */
+:root[data-apptheme] :focus-visible{outline:4px solid var(--sel);outline-offset:3px}
+:root[data-apptheme] body{background-image:none}
+:root[data-apptheme] .tag-lib{border-color:var(--ink);color:var(--ink)}

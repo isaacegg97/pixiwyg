@@ -1,0 +1,22 @@
+<!-- SECTION: Layers palette (rows are built by layers.js, top layer first) -->
+      <section class="spal" data-pal="layers" data-title="Layers">
+        <div class="lyopts">
+          <label class="field" for="lyOpacity">Opacity <input type="range" id="lyOpacity" min="0" max="100" value="100"> <span id="lyOpacityVal">100%</span></label>
+          <label class="field" for="lyBlend">Blend <select id="lyBlend"></select></label>
+        </div>
+        <div class="lyfx">
+          <label class="field2 grow" for="lyFx">Effects <select id="lyFx" title="A style from the node editor, worn by this layer: its shadow, glow and outline follow what's painted"></select></label>
+          <button class="btn sqm" id="lyFxNew" type="button" title="Make a new style for this layer in the node editor">New…</button>
+          <button class="btn sqm" id="lyFxEdit" type="button" title="Open this layer's style in the node editor; the layer shows every change">Edit…</button>
+          <label class="sqopt" title="Paint the whole layer in the style's fill colour or gradient"><input type="checkbox" id="lyFxFill"> Recolor with its fill</label>
+        </div>
+        <ol class="lylist" id="lyList" role="listbox" aria-label="Layers, top first" tabindex="0"></ol>
+        <div class="lybar">
+          <button class="btn sqm" id="lyAdd" type="button" title="New layer above this one (Ctrl/⌘+Alt+N)">＋ New</button>
+          <button class="btn sqm" id="lyDup" type="button" title="Duplicate this layer (Ctrl/⌘+J)">Duplicate</button>
+          <button class="btn sqm" id="lyMerge" type="button" title="Merge this layer into the one below (Ctrl/⌘+E)" aria-label="Merge down">Merge ↓</button>
+          <button class="btn sqm" id="lyUp" type="button" title="Move this layer up (Ctrl/⌘+])" aria-label="Move layer up">▲</button>
+          <button class="btn sqm" id="lyDown" type="button" title="Move this layer down (Ctrl/⌘+[)" aria-label="Move layer down">▼</button>
+          <button class="btn sqm" id="lyDel" type="button" title="Delete this layer" aria-label="Delete layer">✕</button>
+        </div>
+      </section>

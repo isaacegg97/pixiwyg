@@ -1,0 +1,87 @@
+/* FORMAT: sugarplum.css, PIXIWYG house style, MIT License. Lilac and pastel, sweet as a sugarplum: unicorns with
+   rainbow manes, rainbows, hearts, bows, sparkles and a flower garland, in soft rounded shapes on cream. Textures are
+   inline SVG, so the sheet works offline and exports whole. Fonts are the app's own (Fraunces, Neucha). */
+:root{--sp-plum:#4a2a6b;--sp-violet:#7646e8;--sp-lilac:#c9a8ff;--sp-lav:#efe3ff;--sp-pink:#ff6fb5;--sp-blush:#ffb3da;--sp-rose:#b8296f;
+  --sp-butter:#ffe08a;--sp-mint:#9fe8d2;--sp-sky:#a9d8ff;--sp-peach:#ffd1a8;--sp-cream:#fffaff;
+  --sp-rainbow:linear-gradient(90deg,#ffc3e1,#ffe7a8 25%,#c9f2df 50%,#c7e6ff 75%,#dcc8ff);
+  --sp-rainbow-bold:linear-gradient(90deg,#ff6fb5,#ffb84d 20%,#ffe08a 38%,#5fd6a8 55%,#5fb0ff 72%,#a07cff 90%);
+  --sp-tile:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='240' height='240' viewBox='0 0 240 240'%3E%3Cdefs%3E%3Cg id='u'%3E %3Ccircle cx='22' cy='13' r='7' fill='%23ffe08a'/%3E%3Ccircle cx='17' cy='22' r='9' fill='%23ffb3da'/%3E%3Ccircle cx='13' cy='33' r='8' fill='%23c9a8ff'/%3E%3Ccircle cx='16' cy='44' r='8' fill='%239fe8d2'/%3E %3Cpath d='M24 54C20 40 22 26 30 20C36 16 44 18 48 26L54 36C56 40 53 44 48 43L40 41C36 44 34 50 34 54Z' fill='%23fff' stroke='%237a56a8' stroke-width='1.6' stroke-linejoin='round'/%3E %3Cpath d='M30 21L27 10L35 17Z' fill='%23fff' stroke='%237a56a8' stroke-width='1.4' stroke-linejoin='round'/%3E %3Cpath d='M35 17L45 1L41 19Z' fill='%23ffd86b' stroke='%23c99a2e' stroke-width='1.2' stroke-linejoin='round'/%3E %3Cpath d='M38 13L43 11M37 16L42 14M39 9L44 7' stroke='%23c99a2e' stroke-width='1'/%3E %3Cpath d='M37 28q3 3 6 0' fill='none' stroke='%234a2a6b' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M38 30l-1 2M40 31v2M42 30l1 2' stroke='%234a2a6b' stroke-width='1' stroke-linecap='round'/%3E %3Cellipse cx='45' cy='35' rx='3' ry='2' fill='%23ff9ccf' opacity='.7'/%3E%3Ccircle cx='51' cy='38' r='1' fill='%237a56a8'/%3E %3C/g%3E%3C/defs%3E%3Cg opacity='.62'%3E %3Cuse xlink:href='%23u' transform='translate(14 18) scale(.9)'/%3E %3Cuse xlink:href='%23u' transform='translate(226 140) scale(-.72 .72)'/%3E %3Cpath d='M0 3C0-1 6-1 6 3C6-1 12-1 12 3C12 7 6 10 6 12C6 10 0 7 0 3Z' fill='%23ff9ccf' transform='translate(146 34)'/%3E%3Cpath d='M0 3C0-1 6-1 6 3C6-1 12-1 12 3C12 7 6 10 6 12C6 10 0 7 0 3Z' fill='%23c6a4ff' transform='translate(56 168) scale(.8)'/%3E%3Cpath d='M0 3C0-1 6-1 6 3C6-1 12-1 12 3C12 7 6 10 6 12C6 10 0 7 0 3Z' fill='%23ffb3da' transform='translate(196 214) scale(.6)'/%3E %3Cg fill='%23ffe08a'%3E%3Cpath d='M0-6L1.5-1.5L6 0L1.5 1.5L0 6L-1.5 1.5L-6 0L-1.5-1.5Z' transform='translate(118 108)'/%3E%3Cpath d='M0-6L1.5-1.5L6 0L1.5 1.5L0 6L-1.5 1.5L-6 0L-1.5-1.5Z' transform='translate(28 120) scale(.7)'/%3E%3Cpath d='M0-6L1.5-1.5L6 0L1.5 1.5L0 6L-1.5 1.5L-6 0L-1.5-1.5Z' transform='translate(190 88) scale(.9)'/%3E%3Cpath d='M0-6L1.5-1.5L6 0L1.5 1.5L0 6L-1.5 1.5L-6 0L-1.5-1.5Z' transform='translate(108 212) scale(.6)'/%3E%3C/g%3E %3Cg fill='%23fff'%3E%3Cpath d='M0-6L1.5-1.5L6 0L1.5 1.5L0 6L-1.5 1.5L-6 0L-1.5-1.5Z' transform='translate(84 140) scale(.6)'/%3E%3Cpath d='M0-6L1.5-1.5L6 0L1.5 1.5L0 6L-1.5 1.5L-6 0L-1.5-1.5Z' transform='translate(222 22) scale(.7)'/%3E%3Cpath d='M0-6L1.5-1.5L6 0L1.5 1.5L0 6L-1.5 1.5L-6 0L-1.5-1.5Z' transform='translate(160 186) scale(.5)'/%3E%3C/g%3E %3Cg transform='translate(128 176)'%3E%3Cg fill='none' stroke-width='3.2' stroke-linecap='round'%3E%3Cpath d='M-20 0a20 20 0 0 1 40 0' stroke='%23ffb3da'/%3E%3Cpath d='M-16 0a16 16 0 0 1 32 0' stroke='%23ffe08a'/%3E%3Cpath d='M-12 0a12 12 0 0 1 24 0' stroke='%239fe8d2'/%3E%3Cpath d='M-8 0a8 8 0 0 1 16 0' stroke='%23a9d8ff'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Ccircle cx='-21' cy='2' r='4'/%3E%3Ccircle cx='-16' cy='3' r='3.4'/%3E%3Ccircle cx='21' cy='2' r='4'/%3E%3Ccircle cx='16' cy='3' r='3.4'/%3E%3C/g%3E%3C/g%3E %3Cpolygon points='92.0,52.0 93.6,55.8 97.7,56.1 94.6,58.8 95.5,62.9 92.0,60.7 88.5,62.9 89.4,58.8 86.3,56.1 90.4,55.8' fill='%23c9a8ff' opacity='1'/%3E%3Cpolygon points='232.0,61.5 233.2,64.4 236.3,64.6 233.9,66.6 234.6,69.6 232.0,68.0 229.4,69.6 230.1,66.6 227.7,64.6 230.8,64.4' fill='%23ffb3da' opacity='1'/%3E%3Cpolygon points='40.0,223.0 41.3,226.2 44.8,226.5 42.1,228.7 42.9,232.0 40.0,230.2 37.1,232.0 37.9,228.7 35.2,226.5 38.7,226.2' fill='%23a9d8ff' opacity='1'/%3E %3Cg transform='translate(176 124)'%3E%3Cg fill='%23c9a8ff' stroke='%239c78d6' stroke-width='1'%3E%3Cpath d='M0 0L-11-7L-11 7Z'/%3E%3Cpath d='M0 0L11-7L11 7Z'/%3E%3Ccircle r='3' fill='%23e4d2ff'/%3E%3C/g%3E%3C/g%3E %3C/g%3E%3C/svg%3E");
+  --sp-garland:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='120' height='28' viewBox='0 0 120 28'%3E%3Cpath d='M0 18Q30 8 60 18T120 18' fill='none' stroke='%238fd3ad' stroke-width='2'/%3E %3Cg fill='%23a8e6c1'%3E%3Cpath d='M20 14q5-7 10-1q-6 3-10 1Z'/%3E%3Cpath d='M84 19q6 6 11 0q-6-3-11 0Z'/%3E%3Cpath d='M48 16q-3-7 3-9q2 6-3 9Z'/%3E%3C/g%3E %3Cg transform='translate(10 19) scale(1)'%3E%3Cg fill='%23ffb3da'%3E%3Ccircle cx='0' cy='-4' r='3.2'/%3E%3Ccircle cx='3.8' cy='-1.2' r='3.2'/%3E%3Ccircle cx='2.4' cy='3.3' r='3.2'/%3E%3Ccircle cx='-2.4' cy='3.3' r='3.2'/%3E%3Ccircle cx='-3.8' cy='-1.2' r='3.2'/%3E%3C/g%3E%3Ccircle r='2' fill='%23ffe08a'/%3E%3C/g%3E%3Cg transform='translate(40 13) scale(0.9)'%3E%3Cg fill='%23c9a8ff'%3E%3Ccircle cx='0' cy='-4' r='3.2'/%3E%3Ccircle cx='3.8' cy='-1.2' r='3.2'/%3E%3Ccircle cx='2.4' cy='3.3' r='3.2'/%3E%3Ccircle cx='-2.4' cy='3.3' r='3.2'/%3E%3Ccircle cx='-3.8' cy='-1.2' r='3.2'/%3E%3C/g%3E%3Ccircle r='2' fill='%23ffe08a'/%3E%3C/g%3E%3Cg transform='translate(70 17) scale(0.8)'%3E%3Cg fill='%23ffd1a8'%3E%3Ccircle cx='0' cy='-4' r='3.2'/%3E%3Ccircle cx='3.8' cy='-1.2' r='3.2'/%3E%3Ccircle cx='2.4' cy='3.3' r='3.2'/%3E%3Ccircle cx='-2.4' cy='3.3' r='3.2'/%3E%3Ccircle cx='-3.8' cy='-1.2' r='3.2'/%3E%3C/g%3E%3Ccircle r='2' fill='%23ffe08a'/%3E%3C/g%3E%3Cg transform='translate(102 20) scale(0.9)'%3E%3Cg fill='%23a9d8ff'%3E%3Ccircle cx='0' cy='-4' r='3.2'/%3E%3Ccircle cx='3.8' cy='-1.2' r='3.2'/%3E%3Ccircle cx='2.4' cy='3.3' r='3.2'/%3E%3Ccircle cx='-2.4' cy='3.3' r='3.2'/%3E%3Ccircle cx='-3.8' cy='-1.2' r='3.2'/%3E%3C/g%3E%3Ccircle r='2' fill='%23ffe08a'/%3E%3C/g%3E%3C/svg%3E")}
+body{font-family:"Neucha","Patrick Hand SC","Comic Sans MS",cursive;color:var(--sp-plum)}
+
+/* SECTION: texture swatches (also what the interface theme and the page-background primitive borrow)
+   RULE: the unicorn wallpaper is 240px and seamless; the garland is a 120 x 28 strip that repeats across. */
+.sp-tex-tile{background-image:var(--sp-tile)}
+.sp-tex-garland{background-image:var(--sp-garland)}
+
+/* SECTION: headings: soft serif italics with pastel shadows, rainbows and sparkles */
+h1{font:italic 900 52px/1 "Fraunces",Georgia,serif;margin:0;color:var(--sp-plum);text-shadow:3px 3px 0 var(--sp-blush),6px 6px 0 var(--sp-lilac)}
+h1.rainbow{background:var(--sp-rainbow-bold);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1.5px var(--sp-plum);text-shadow:none;filter:drop-shadow(3px 3px 0 var(--sp-lilac))}
+h1.sparkle::before,h1.sparkle::after{content:"✦";color:var(--sp-butter);margin:0 .25em;font-size:.6em;vertical-align:.35em;text-shadow:0 0 6px #fff}
+h1.unicorn{background:linear-gradient(var(--sp-cream),var(--sp-cream)) content-box,var(--sp-tile) 0 0/130px padding-box,var(--sp-lav);padding:30px;border-radius:28px;border:3px solid var(--sp-lilac);box-shadow:0 6px 0 var(--sp-lilac);text-align:center}
+h2{font:italic 700 28px/1.15 "Fraunces",Georgia,serif;margin:0;color:var(--sp-plum);text-decoration:underline wavy var(--sp-pink);text-underline-offset:6px;text-decoration-thickness:2px}
+h2.ribbon{display:inline-block;text-decoration:none;color:var(--sp-cream);background:var(--sp-pink);padding:6px 34px;clip-path:polygon(0 0,100% 0,calc(100% - 14px) 50%,100% 100%,0 100%,14px 50%);text-shadow:0 2px 0 var(--sp-rose)}
+h2.bubble{display:inline-block;text-decoration:none;background:var(--sp-lav);border:2px solid var(--sp-lilac);border-radius:999px;padding:6px 20px;box-shadow:0 4px 0 var(--sp-lilac)}
+h3{font:400 19px/1.2 "Neucha",cursive;margin:0;text-transform:uppercase;letter-spacing:.14em;color:var(--sp-violet)}
+h3.heart::before{content:"♥ ";color:var(--sp-pink)}
+
+/* SECTION: text */
+p{font:18px/1.6 "Neucha","Comic Sans MS",cursive;margin:0;color:var(--sp-plum)}
+p.diary{background:repeating-linear-gradient(transparent 0 27px,#ffd1e8 27px 29px),var(--sp-cream);line-height:29px;padding:4px 18px 4px 46px;border-left:3px double var(--sp-pink);border-radius:12px;box-shadow:0 4px 0 var(--sp-lilac)}
+p.whisper{font-size:15px;font-style:italic;color:#74579a;letter-spacing:.04em}
+p.sparkle{text-align:center}p.sparkle::before,p.sparkle::after{content:" ✧ ";color:var(--sp-pink)}
+blockquote{margin:0;font:italic 20px/1.5 "Fraunces",Georgia,serif;color:var(--sp-plum);border-left:6px solid var(--sp-blush);border-radius:4px;padding:6px 0 6px 18px}
+blockquote.cloud{position:relative;background:#fff;border:0;border-radius:40px;padding:20px 26px;box-shadow:0 0 0 3px var(--sp-lilac),0 8px 0 var(--sp-lav)}
+blockquote.cloud::after{content:"";position:absolute;left:34px;bottom:-16px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 0 0 3px var(--sp-lilac),-14px 14px 0 -4px #fff,-14px 14px 0 -1px var(--sp-lilac)}
+code{font:14px "DM Mono",monospace;background:var(--sp-lav);color:var(--sp-violet);padding:2px 7px;border-radius:8px}
+pre{font:14px/1.5 "DM Mono",monospace;background:var(--sp-cream);color:var(--sp-plum);border:2px dashed var(--sp-lilac);border-radius:14px;padding:12px 14px;margin:0;white-space:pre-wrap}
+a{color:var(--sp-violet);text-decoration:underline wavy var(--sp-pink);text-underline-offset:4px}
+a:hover{color:var(--sp-rose)}
+label{font:16px "Neucha",cursive;color:var(--sp-violet)}label::after{content:" ♡";color:var(--sp-pink)}
+
+/* SECTION: buttons and fields: round, soft and pressable */
+button{font:700 16px "Neucha",cursive;color:var(--sp-plum);background:linear-gradient(180deg,#ffa3d2,var(--sp-pink));border:2px solid #e0559b;border-radius:999px;padding:8px 22px;box-shadow:0 4px 0 #e0559b;cursor:pointer}
+button:hover{transform:translateY(-1px);box-shadow:0 5px 0 #e0559b,0 0 14px rgba(255,111,181,.45)}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 #e0559b}
+button.lilac{background:linear-gradient(180deg,#e2d1ff,var(--sp-lilac));border-color:#9c78d6;box-shadow:0 4px 0 #9c78d6}
+button.rainbow{background:var(--sp-rainbow);border-color:var(--sp-lilac);box-shadow:0 4px 0 var(--sp-lilac)}
+input,textarea,select{font:16px "Neucha",cursive;background:var(--sp-cream);color:var(--sp-plum);border:2px solid var(--sp-lilac);border-radius:12px;padding:7px 12px}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--sp-pink);box-shadow:0 0 0 4px rgba(255,179,218,.6)}
+
+/* SECTION: lists and tables */
+ul,ol{margin:0;padding-left:1.7em;font:18px/1.6 "Neucha",cursive;color:var(--sp-plum)}
+ul li::marker{content:"♥  ";color:var(--sp-pink)}
+ul.sparkle li::marker{content:"✦  ";color:#e8b830}
+ol li::marker{color:var(--sp-violet);font-weight:700}
+table{border-collapse:separate;border-spacing:0;font:16px "Neucha",cursive;color:var(--sp-plum);background:var(--sp-cream);border:2px solid var(--sp-lilac);border-radius:14px;overflow:hidden}
+th{background:var(--sp-rainbow);padding:7px 12px;text-align:left;border-bottom:2px solid var(--sp-lilac)}
+td{padding:7px 12px;border-bottom:1px dashed #ffc2e0}
+tr:nth-child(even) td{background:#fff0f8}
+
+/* SECTION: pictures and rules */
+img{border-radius:18px;border:4px solid #fff;box-shadow:0 0 0 2px var(--sp-lilac),0 6px 0 var(--sp-lav)}
+img.polaroid{border-radius:4px;border-width:10px 10px 34px;transform:rotate(-3deg);box-shadow:0 8px 18px rgba(118,70,232,.25)}
+hr{border:0;height:6px;border-radius:999px;background:var(--sp-rainbow-bold);margin:12px 0}
+hr.garland{height:28px;border-radius:0;background:var(--sp-garland) repeat-x center/120px 28px}
+
+/* SECTION: panels: cards, clouds, notes and the unicorn meadow
+   RULE: text never sits straight on the wallpaper: a meadow panel keeps a cream plaque inside it. */
+div{font:18px/1.55 "Neucha",cursive;color:var(--sp-plum)}
+.card{background:var(--sp-cream);border:2px solid var(--sp-lilac);border-radius:22px;padding:18px;box-shadow:0 6px 0 var(--sp-lilac)}
+.meadow{background:linear-gradient(var(--sp-cream),var(--sp-cream)) content-box,var(--sp-tile) 0 0/140px padding-box,var(--sp-lav);padding:34px;border-radius:28px;border:3px solid var(--sp-lilac)}
+.meadow>*{padding:14px 16px}
+.note{background:#fff3b8;color:var(--sp-plum);padding:18px;border-radius:4px 4px 18px 4px;transform:rotate(-2deg);box-shadow:0 8px 14px rgba(74,42,107,.15);border-top:14px solid rgba(255,179,218,.75)}
+.rainbow{border:6px solid transparent;border-radius:24px;padding:16px;background:linear-gradient(var(--sp-cream),var(--sp-cream)) padding-box,var(--sp-rainbow-bold) border-box}
+.bow{position:relative;background:var(--sp-cream);border:2px solid var(--sp-blush);border-radius:18px;padding:22px 18px 18px}
+.bow::before{content:"🎀";position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:28px}
+
+/* SECTION: little things */
+span.badge{display:inline-block;background:var(--sp-pink);color:#3b1d57;border-radius:999px;padding:2px 12px;font-weight:700}
+span.heart::before{content:"♥";color:var(--sp-pink);margin-right:.25em}
+span.glitter{background:var(--sp-rainbow-bold);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;animation:sp-shimmer 3s linear infinite}
+span.sticker{display:inline-block;background:#fff;border:3px solid var(--sp-lilac);border-radius:999px;padding:3px 12px;transform:rotate(-4deg);box-shadow:0 3px 0 var(--sp-lav)}
+nav{font:17px "Neucha",cursive;display:flex;gap:8px;flex-wrap:wrap}
+nav a{text-decoration:none;color:var(--sp-plum);background:var(--sp-lav);border:2px solid var(--sp-lilac);border-radius:999px;padding:4px 14px}
+nav a:hover{background:#ffe8f4;border-color:var(--sp-pink)}
+@keyframes sp-shimmer{to{background-position:200% 0}}
+@media (prefers-reduced-motion:reduce){span.glitter{animation:none}}

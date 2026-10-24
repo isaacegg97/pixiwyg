@@ -1,0 +1,16 @@
+<!-- SECTION: Add panel: Primitives pane -->
+  <section class="pane primwb" id="w-prims" role="tabpanel" aria-labelledby="t-prims" hidden>
+    <div class="row">
+      <select id="primCol" aria-label="Collection"></select>
+      <button class="btn" id="primNewCol">New collection</button>
+      <button class="btn" id="primDelCol" hidden title="Delete this collection. Its primitives move to Unsorted.">Delete collection</button>
+    </div>
+    <div class="row" id="primNewForm" hidden><input id="primNewName" type="text" placeholder="Collection name" aria-label="New collection name"><button class="btn" id="primNewGo">Add</button></div>
+    <div class="primgrid" id="primGrid"></div>
+    <div class="primbar" id="primBar"></div>
+    <div class="row">
+      <button class="btn" id="primExport" title="Export everything in this view">Export collection…</button>
+      <button class="btn" id="primImport">Import…</button>
+    </div>
+    <small class="credit">Drag a primitive onto the page. Drawings become images, elements keep their style, backgrounds apply to the page.</small>
+  </section>

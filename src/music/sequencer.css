@@ -1,0 +1,32 @@
+/* SECTION: sequencer window */
+.seqbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:8px 10px;border-bottom:2px solid var(--ink)}
+.seqbar .grow{flex:1}
+.sqopt{display:inline-flex;align-items:center;gap:5px;font-size:12px}
+.sqopt input[type=number]{width:56px}
+.sqname{font:12px var(--f-mono);border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:2px 5px;width:150px}
+.sqsep{width:2px;align-self:stretch;background:var(--ink);opacity:.3}
+#seqSfName{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.sqopt input[type=number],.sqopt select,.sqtrack input[type=text],.sqtrack select{font:12px var(--f-mono);border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:2px 5px}
+.seqbody{flex:1;min-height:0;display:flex}
+.seqtracks{width:250px;flex:none;overflow:auto;border-right:2px solid var(--ink);background:var(--chrome);padding:8px;display:flex;flex-direction:column;gap:6px}
+.sqtrack{border:2px solid var(--ink);background:var(--paper);padding:5px;display:flex;flex-direction:column;gap:4px;cursor:pointer;border-left:8px solid var(--tc)}
+.sqtrack.on{box-shadow:3px 3px 0 var(--tc);outline:2px solid var(--tc)}
+.sqtop{display:flex;gap:4px;align-items:center}
+.sqtop input[type=text]{flex:1;min-width:0}
+.sqtop select{flex:1;min-width:0}
+.sqtop input[type=range]{width:70px;accent-color:var(--tc)}
+.sqdot{display:none}
+.seqview{flex:1;min-width:0;position:relative}
+/* PERF: the canvas covers only what shows over the scroller; the scroller carries just the scrollbars and pointer */
+.seqscroll{position:absolute;inset:0;overflow:auto;outline:none;background:var(--paper);touch-action:none;cursor:crosshair}
+.seqview canvas{position:absolute;left:0;top:0;pointer-events:none}
+.seqspace{pointer-events:none}
+.seqfoot{padding:6px 10px;border-top:2px solid var(--ink);display:flex;gap:8px;align-items:center;margin:0;flex-wrap:nowrap}
+.seqfoot .shelp{flex:1;min-width:0}
+/* RULE: Music and Paint fill the space under the bars */
+body[data-ws=music] #seqModal:not([hidden]){position:fixed;inset:var(--tbh,48px) var(--dockR,0px) 0 var(--dockL,220px);padding:0;background:var(--desk);z-index:55;display:flex;align-items:stretch;justify-content:stretch}
+body[data-ws=music] #seqModal .seqwin{flex:1;width:auto;height:auto;max-width:none;max-height:none;box-shadow:none;border:0}
+body[data-ws=music] #seqModal .seqwin>.tb,body[data-ws=music] #seqDone{display:none}
+
+#seqModal .sqhelp{flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#seqRec.rec{background:var(--bad);color:var(--onbad);border-color:var(--ink)}#seqRepA,#seqRepB{width:3.4em}

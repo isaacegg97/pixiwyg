@@ -1,0 +1,4 @@
+/* SECTION: about and problem report */
+#aboutNotices,#reportText{width:100%;box-sizing:border-box;font:12px/1.4 var(--f-mono);border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:8px}
+#reportText{height:38vh}
+#aboutNotices{height:28vh}

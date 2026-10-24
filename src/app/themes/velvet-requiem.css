@@ -1,0 +1,132 @@
+/* SECTION: Velvet Requiem: 90s goth, all vampiric energy. Crushed velvet, black lace, blood and silver.
+   The desk is black-on-oxblood damask over crushed velvet, strewn with roses, bats, a crescent moon and an ankh,
+   lit low like a room full of candles; blood drips from the toolbar, title bars are velvet edged in black lace,
+   buttons are black with silver rims that flush red when touched, and every title is a whispered italic.
+   Something with a pale face keeps vigil low in the Properties panel.
+   Built from velvet-requiem.css (PIXIWYG house style, lib/velvet-requiem.css): its textures are pulled in at build time. */
+/* ASSET: --vr-damask lib/velvet-requiem.css .vr-tex-damask */
+/* ASSET: --vr-ornaments lib/velvet-requiem.css .vr-tex-ornaments */
+/* ASSET: --vr-lace lib/velvet-requiem.css .vr-tex-lace */
+/* ASSET: --vr-drip lib/velvet-requiem.css .vr-tex-drip */
+:root[data-apptheme]{
+  color-scheme: dark;
+
+  /* SECTION: Desk and panels */
+  --desk: #0b0509;
+  --desk2: #12070d;
+  --chrome: #130a10;
+  --chrome2: #0b0609;
+  --paper: #1b0f17;
+  --ink: #f0e4ec;
+  --muted: #b89cae;
+  --line: #3f1a2b;
+  --shadow: #000000;
+  --scrim: rgba(12,0,6,.8);
+
+  /* SECTION: Accents */
+  --hot: #b0102e;
+  --hot2: #cc1838;
+  --onhot: #fdeef2;
+  --hot-ink: #ff7088;
+  --sel: #c9c1d2;
+  --onsel: #0b0509;
+  --sun: #c9c1d2;
+  --onsun: #0b0509;
+  --act: #7a0a1f;
+  --actfg: #fdeef2;
+
+  /* SECTION: Status */
+  --bad: #ff4d6a;
+  --onbad: #0b0509;
+  --warn: #e0a040;
+  --ok: #9fc7a8;
+  --lib: #2a0f1a;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #1b0f17;
+  --check-b: #26141f;
+
+  /* SECTION: Node editors */
+  --n-head: #24121c;
+  --n-headfg: #f0e4ec;
+  --n-events: #9e0b26;
+  --n-actions: #6a2a8a;
+  --n-values: #4a5a6a;
+  --n-math: #7a1a4a;
+  --n-anim: #a0522d;
+  --n-misc: #3a2a34;
+  --n-imported: #5c0616;
+
+  /* SECTION: Manuscript page view */
+  --doc-desk: #0b0509;
+
+  /* SECTION: Logo */
+  --logo3: #f0e4ec;
+  --logo4: #c9c1d2;
+  --logo5: #8a3aaa;
+  --logo6: #cc1838;
+
+  /* SECTION: Shape */
+  --radius: 3px;
+
+  /* SECTION: Type */
+  --f-ui: "Fraunces", Georgia, "Times New Roman", serif;
+  --vr-owl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='46' height='50' viewBox='0 0 46 50'%3E%3Cpath d='M2 46C10 44 18 47 26 45S40 44 46 46' fill='none' stroke='%231f2e1c' stroke-width='2.4' stroke-linecap='round'/%3E %3Cpath d='M8 45l-2 3M17 46l1 3M33 45l-1 3' stroke='%231f2e1c' stroke-width='1.2'/%3E %3Cg transform='translate(39 42) scale(.42)'%3E%3Ccircle r='9' fill='%237a0a20'/%3E%3Cpath d='M-6-3q0-6 6-6q7 0 7 7q0 6-6 6q-5 0-5-5q0-4 4-4q3 0 3 3' fill='none' stroke='%232a0410' stroke-width='2' stroke-linecap='round'/%3E%3C/g%3E %3Cellipse cx='22' cy='28' rx='13' ry='15.5' fill='%23221a20' stroke='%23050205' stroke-width='1.2'/%3E %3Cpath d='M9 26q-4 11 3 18q2-9-3-18ZM35 26q4 11-3 18q-2-9 3-18Z' fill='%23151015'/%3E %3Cellipse cx='22' cy='33' rx='7' ry='8.5' fill='%233a2f38'/%3E%3Cg fill='%23c7bfd0' opacity='.55'%3E%3Ccircle cx='19' cy='30' r='.7'/%3E%3Ccircle cx='24' cy='31' r='.7'/%3E%3Ccircle cx='21' cy='35' r='.7'/%3E%3Ccircle cx='25' cy='36' r='.7'/%3E%3Ccircle cx='18' cy='37' r='.7'/%3E%3C/g%3E %3Cpath d='M22 23C17 12 7 12 8 19C8 26 16 28 22 25C28 28 36 26 36 19C37 12 27 12 22 23Z' fill='%23e2d8e0' stroke='%236a5a66' stroke-width='.8'/%3E %3Cellipse cx='15.5' cy='19.5' rx='3.2' ry='3.4' fill='%23050205'/%3E%3Cellipse cx='28.5' cy='19.5' rx='3.2' ry='3.4' fill='%23050205'/%3E %3Ccircle cx='16.3' cy='18.6' r='.9' fill='%23e0203f'/%3E%3Ccircle cx='29.3' cy='18.6' r='.9' fill='%23e0203f'/%3E %3Cpath d='M21 23h2l-1 3.4Z' fill='%238a7a86'/%3E %3Cg stroke='%236a5a66' stroke-width='1.3' stroke-linecap='round'%3E%3Cpath d='M18 43v2.6M21 43v2.6M23 43v2.6M26 43v2.6'/%3E%3C/g%3E%3C/svg%3E");
+  --vr-velvet: radial-gradient(130% 90% at 30% 0%,rgba(176,16,46,.22),transparent 55%),radial-gradient(120% 90% at 80% 100%,rgba(106,42,138,.14),transparent 60%);
+  --vr-glow: 0 0 12px rgba(204,24,56,.45);
+  --vr-silver: linear-gradient(180deg,#f2eef6,#bdb4c8 50%,#7d7389);
+}
+
+/* SECTION: the desk: damask over crushed velvet, candlelit at the centre, black at the walls
+   RULE: the dark of the desk is texture on the interface only; the page being designed is never tinted. */
+:root[data-apptheme] body{background:radial-gradient(70% 60% at 50% 45%,rgba(224,140,80,.07),transparent 60%),radial-gradient(85% 75% at 50% 40%,transparent 35%,rgba(0,0,0,.88) 100%),var(--vr-ornaments) 0 0/420px,var(--vr-damask) 0 0/140px 180px,var(--vr-velvet),#0b0509;background-attachment:fixed}
+:root[data-apptheme] ::selection{background:#b0102e;color:#fdeef2}
+
+/* SECTION: type: italic small caps for every title, with a faint red bloom */
+:root[data-apptheme] :is(.tb span,.dockhead b,.wrtabs [role=tab],.ph,.setwin h4,.thcard strong,.spalhead b){font-style:italic;font-variant:small-caps;letter-spacing:.14em;font-weight:600;text-shadow:0 0 8px rgba(204,24,56,.35)}
+
+/* SECTION: the logo: blood letters with silver between */
+:root[data-apptheme] .logo b{-webkit-text-stroke:0;font-family:var(--f-ui);font-style:italic;font-weight:900;text-shadow:0 2px 0 #000,0 0 10px rgba(204,24,56,.5)}
+:root[data-apptheme] .logo b:nth-child(odd){color:#cc1838!important}
+:root[data-apptheme] .logo b:nth-child(even){color:#e4dcea!important}
+
+/* SECTION: buttons: black with a silver rim; touched, they flush red */
+:root[data-apptheme] :is(.btn,.cmdbtn){background:linear-gradient(180deg,#1f1219,#0b0509);color:var(--ink);border:1px solid #8d8399;border-radius:3px;font-weight:500;box-shadow:inset 0 1px 0 rgba(240,228,236,.07),0 2px 0 #000}
+:root[data-apptheme] :is(.btn,.cmdbtn):hover{background:linear-gradient(180deg,#3a0a18,#170610);border-color:#e4dcea;color:#fdeef2;box-shadow:0 2px 0 #000,var(--vr-glow)}
+:root[data-apptheme] :is(.btn,.cmdbtn):active{transform:translateY(1px);box-shadow:inset 0 2px 5px #000}
+:root[data-apptheme] .btn.primary,:root[data-apptheme] .btn[aria-pressed="true"].tog-btn{background:var(--vr-velvet),linear-gradient(180deg,#b0102e,#5c0616);border-color:#e4dcea;color:#fdeef2}
+:root[data-apptheme] .btn.dyna{background:repeating-linear-gradient(-45deg,#b0102e 0 10px,#0b0509 10px 20px);color:#fdeef2;text-shadow:0 0 3px #000}
+:root[data-apptheme] :is(.cmdbtn,.cmditem) kbd{background:#0b0509;color:#e4dcea;border:1px solid #3f1a2b}
+
+/* SECTION: windows: velvet title bars edged in black lace, silver-rimmed and deep-shadowed */
+:root[data-apptheme] :is(.win,.tourcard){background:#130a10;border:1px solid #8d8399;box-shadow:0 0 0 1px #000,0 10px 34px rgba(0,0,0,.85),0 0 22px rgba(176,16,46,.18)}
+:root[data-apptheme] :is(.ddbody,.ctxmenu){background:#130a10;border:1px solid #8d8399;box-shadow:0 8px 24px rgba(0,0,0,.8)}
+:root[data-apptheme] .tb{background:var(--vr-lace) repeat-x left bottom/24px 12px,var(--vr-velvet),linear-gradient(180deg,#7a0a1f,#3a0410);border-bottom:1px solid #000;color:#fdeef2;padding-bottom:6px}
+:root[data-apptheme] .tb span{color:#fdeef2}
+:root[data-apptheme] .wclose{background:#0b0509;color:#e4dcea;border:1px solid #8d8399;border-radius:50%}
+:root[data-apptheme] .wclose:hover{background:#cc1838;color:#fdeef2;box-shadow:var(--vr-glow)}
+:root[data-apptheme] .status{background:linear-gradient(180deg,#3a0a18,#170610);color:#fdeef2;border:1px solid #8d8399;box-shadow:0 6px 18px rgba(0,0,0,.8),var(--vr-glow)}
+
+/* SECTION: the toolbar bleeds; the panels are damask under smoked glass */
+:root[data-apptheme] .topbar{background:var(--vr-velvet),linear-gradient(180deg,#1a0a12,#0b0509);border-bottom:2px solid #5c0616;box-shadow:0 2px 0 #000}
+:root[data-apptheme] .topbar::after{content:'';position:absolute;left:0;right:0;top:100%;height:12px;background:var(--vr-drip) repeat-x 0 0/94px 12px;pointer-events:none}
+:root[data-apptheme] :is(.side,.tree){background:linear-gradient(rgba(19,10,16,.93),rgba(19,10,16,.93)),var(--vr-damask) 0 0/140px 180px}
+:root[data-apptheme] #sideR{background:var(--vr-owl) no-repeat right 10px bottom 8px/38px,linear-gradient(rgba(19,10,16,.93),rgba(19,10,16,.93)),var(--vr-damask) 0 0/140px 180px}
+:root[data-apptheme] :is(.dockhead,.spalhead){background:#0b0609;border-bottom:1px solid #5c0616;box-shadow:0 1px 0 #000}
+:root[data-apptheme] .dockhead b{color:#ff7088}
+:root[data-apptheme] .trow2.on>.tlabel{box-shadow:inset 3px 0 0 #cc1838}
+
+/* SECTION: tabs */
+:root[data-apptheme] .ptab{background:#0b0609;color:#b89cae}
+:root[data-apptheme] .ptab[aria-selected="true"]{background:linear-gradient(180deg,#3a0a18,#1b0f17);color:#fdeef2;box-shadow:inset 0 -2px 0 #cc1838}
+
+/* SECTION: fields */
+:root[data-apptheme] :is(input:not([type]),input[type=text],input[type=search],input[type=number],input[type=url],input[type=email],textarea,select){background-color:#0b0509!important;color:#f0e4ec!important;border:1px solid #5a4a5a!important}
+:root[data-apptheme] :is(input,textarea,select):focus-visible{outline:2px solid #cc1838;outline-offset:1px}
+:root[data-apptheme] input[type=checkbox]{accent-color:#b0102e}
+
+/* SECTION: scrollbars: a silver bar on black velvet */
+:root[data-apptheme] ::-webkit-scrollbar{width:12px;height:12px;background:#0b0509}
+:root[data-apptheme] ::-webkit-scrollbar-thumb{background:var(--vr-silver);border:3px solid #0b0509;border-radius:6px}
+:root[data-apptheme] ::-webkit-scrollbar-thumb:hover{background:#cc1838}
+:root[data-apptheme] ::-webkit-scrollbar-corner{background:#0b0509}

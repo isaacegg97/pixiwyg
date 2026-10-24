@@ -1,0 +1,63 @@
+/* SECTION: Terminal: green phosphor on black. An example PIXIWYG interface theme.
+   Load it from Settings, or More ▾ → Settings… → Load theme file. Tokens left out come from the built-in dark palette,
+   because color-scheme below says dark. See template.css for every token and what it paints. */
+:root[data-apptheme]{
+  color-scheme: dark;
+
+  /* SECTION: Desk and panels */
+  --desk: #0a120c;
+  --desk2: #0f1a12;
+  --chrome: #0d1710;
+  --chrome2: #081009;
+  --paper: #050a06;
+  --ink: #6dff8b;
+  --muted: #3fa257;
+  --line: #1f4a2a;
+  --shadow: #000000;
+  --scrim: rgba(0,0,0,.7);
+
+  /* SECTION: Accents */
+  --hot: #ffb000;
+  --hot2: #ffc640;
+  --onhot: #050a06;
+  --sel: #6dff8b;
+  --onsel: #050a06;
+  --sun: #ffb000;
+  --onsun: #050a06;
+  --act: #6dff8b;
+  --actfg: #050a06;
+
+  /* SECTION: Status */
+  --bad: #ff4f4f;
+  --warn: #ffb000;
+  --ok: #6dff8b;
+  --lib: #1f4a2a;
+
+  /* SECTION: Canvas helpers */
+  --check-a: #0d1710;
+  --check-b: #142619;
+
+  /* SECTION: Node editors */
+  --n-head: #3fa257;
+  --n-headfg: #050a06;
+  --n-events: #ffb000;
+  --n-actions: #6dff8b;
+  --n-values: #3fa257;
+  --n-math: #b7ff6d;
+  --n-anim: #ff8a3d;
+  --n-misc: #3fa257;
+  --n-imported: #6dffd8;
+
+  /* SECTION: Logo */
+  --logo3: #6dff8b;
+  --logo4: #3fa257;
+  --logo5: #ffb000;
+  --logo6: #6dff8b;
+
+  /* SECTION: Type */
+  --f-ui: "VT323", ui-monospace, monospace;
+}
+
+/* SECTION: beyond the tokens: square corners and a faint scanline over the desk */
+:root[data-apptheme] .btn{border-radius:0}
+:root[data-apptheme] body{background-image:repeating-linear-gradient(transparent 0 2px,rgba(109,255,139,.04) 2px 3px)}

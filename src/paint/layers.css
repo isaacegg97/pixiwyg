@@ -1,0 +1,28 @@
+/* SECTION: Layers palette */
+.lyopts{display:flex;flex-direction:column;gap:6px}
+.lyopts .field{flex-direction:row;align-items:center;gap:6px;color:var(--ink)}
+.lyopts .field input[type=range]{flex:1;width:auto}
+.lylist{list-style:none;margin:0;padding:2px;display:flex;flex-direction:column;gap:2px;max-height:280px;overflow:auto;border:2px solid var(--ink);background:var(--paper)}
+.lylist:focus-visible{outline:2px solid var(--sel);outline-offset:2px}
+/* RULE: the active layer shows by a border and bold type as well as its fill; a hidden one by its eye and a "Hidden" note */
+.lyrow{display:flex;align-items:center;gap:6px;padding:3px 4px;border:2px solid transparent;cursor:pointer;font-size:12px;color:var(--ink)}
+.lyrow:hover{background:var(--chrome)}
+.lyrow.on{border-color:var(--ink);background:var(--sun);color:var(--onsun);font-weight:700}
+.lyrow.off .lythumb,.lyrow.off .lyname{opacity:.5}
+.lyrow.dragover{box-shadow:inset 0 3px 0 var(--sel)}
+.lyrow.dragging{opacity:.5}
+.lyeye{flex:none;width:26px;height:26px;padding:0;border:2px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer;font-size:14px;line-height:1}
+.lyeye[aria-pressed=false]{background:var(--chrome2)}
+.lythumb{flex:none;max-width:44px;max-height:44px;border:1px solid var(--ink);background-color:var(--check-a);background-image:conic-gradient(var(--check-b) 25%,var(--check-a) 0 50%,var(--check-b) 0 75%,var(--check-a) 0);background-size:8px 8px}
+.lytxt{display:flex;flex-direction:column;min-width:0;flex:1}
+.lyname{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lymeta{color:var(--muted);font-weight:400}
+.lyrow.on .lymeta{color:inherit}
+.lyedit{font:inherit;padding:1px 4px;border:2px solid var(--ink);min-width:0;width:100%;box-sizing:border-box}
+.lybar{display:flex;flex-wrap:wrap;gap:4px}
+.lyfx{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+.lyfx select{max-width:150px}
+.lyfxtag{font:700 10px var(--f-mono);border:1px solid currentColor;padding:0 3px;margin-left:4px}
+.nlayerprev{margin:0 0 10px;display:grid;justify-items:center;gap:4px}
+.nlayerprev canvas{max-width:100%;border:2px solid var(--ink);background-color:var(--check-a);background-image:conic-gradient(var(--check-b) 25%,var(--check-a) 0 50%,var(--check-b) 0 75%,var(--check-a) 0);background-size:12px 12px}
+.nlayerprev figcaption{font-size:12px;color:var(--muted)}
