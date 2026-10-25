@@ -1,21 +1,72 @@
-# RULE: a tag like v1.0.0-beta.2 tests and builds installers on each platform with Tauri (npm run dist) and attaches
-#   them, with SHA256SUMS, to a draft GitHub release. Each platform signs when its signing secrets are set and builds
-#   unsigned when they aren't; the release notes say which builds are unsigned and how testers open them.
+# RULE: releases are automatic and follow the one app version (tools/package.json, set by npm run set-version):
+#   a push to main whose version has no tag yet tests, builds, tags and publishes that version, then deploys the web
+#   build to GitHub Pages. "Run workflow" here bumps first (prerelease 1.0.0-beta.1 -> beta.2, patch, minor, major,
+#   or release, which drops the prerelease), commits the bump to main, and releases it. A push whose version is
+#   already tagged stops after the plan job.
+# RULE: each platform signs when its signing secrets are set and builds unsigned when they aren't; the release notes
+#   say which builds are unsigned and how testers open them.
 # FORMAT: what each platform ships:
 #   Linux    .AppImage, .deb, .rpm   (the RPM's version is 1.0.0 with Release 0.beta.2; see tools/scripts/dist.mjs)
 #   Windows  NSIS setup .exe, .msi   (the MSI's version is 1.0.0.2)
 #   macOS    .dmg, one universal app for both chips
-#   Web      PIXIWYG_<version>_web.zip: index.html, lib/, examples/ for any static host (see pages.yml)
+#   Web      PIXIWYG_<version>_web.zip: index.html, lib/, examples/ for any static host, and the same on GitHub Pages
+# HACK: a release made with GITHUB_TOKEN can't trigger another workflow, so Pages deploys from here, not on the
+#   release event (pages.yml stays for redeploying an older release by hand).
 name: Release
 on:
   push:
-    tags: ['v*']
+    branches: [main]
+    paths-ignore: ['**.md', 'docs/**']
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: Bump the version first
+        type: choice
+        options: [none, prerelease, patch, minor, major, release]
+        default: prerelease
 permissions:
   contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: release
+  cancel-in-progress: false
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      tag: ${{ steps.v.outputs.tag }}
+      sha: ${{ steps.v.outputs.sha }}
+      release: ${{ steps.v.outputs.release }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Bump the version
+        if: github.event_name == 'workflow_dispatch' && inputs.bump != 'none'
+        run: |
+          node tools/scripts/version.mjs "${{ inputs.bump }}"
+          v="$(node -p "require('./tools/package.json').version")"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Version $v"
+          git push origin HEAD:main
+      - id: v
+        run: |
+          node tools/scripts/version.mjs
+          v="$(node -p "require('./tools/package.json').version")"
+          echo "version=$v" >> "$GITHUB_OUTPUT"; echo "tag=v$v" >> "$GITHUB_OUTPUT"; echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "refs/tags/v$v" >/dev/null; then
+            echo "release=false" >> "$GITHUB_OUTPUT"; echo "::notice::v$v is already released; nothing to do."
+          else echo "release=true" >> "$GITHUB_OUTPUT"; echo "::notice::Releasing v$v"; fi
+
   # RULE: the Playwright suite runs once, in the Playwright image, before any installer is built; each platform then
   #   launches its real app in smoke mode before packaging it (see ci.yml).
   test:
+    needs: plan
+    if: needs.plan.outputs.release == 'true'
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.63.0-noble
     defaults:
@@ -23,6 +74,8 @@ jobs:
         working-directory: tools
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
       - uses: actions/cache@v4
         with:
           path: ~/.npm
@@ -31,7 +84,7 @@ jobs:
       - run: npm test
 
   build:
-    needs: test
+    needs: [plan, test]
     strategy:
       fail-fast: true
       matrix:
@@ -42,18 +95,14 @@ jobs:
         working-directory: tools
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
           cache-dependency-path: tools/package-lock.json
-      - run: npm ci
-      - name: The tag matches the app version
-        shell: bash
-        run: |
-          node scripts/version.mjs
-          v="$(node -p "require('./package.json').version")"
-          test "v$v" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME but the app says $v"; exit 1; }
+      - run: npm ci --prefer-offline --no-audit --no-fund
       - name: Build libraries (Linux)
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libsoup-3.0-dev libgtk-3-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev rpm xvfb dbus-x11
@@ -146,36 +195,38 @@ jobs:
             tools/dist/*.rpm
             tools/dist/signed-*.txt
 
-  # RULE: the web zip is the same files the desktop app serves; publishing the release deploys it to Pages.
+  # RULE: the web zip is the same files the desktop app serves; the Pages job deploys exactly this zip.
   web:
+    needs: [plan, test]
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: tools
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
-          cache-dependency-path: tools/package-lock.json
-      - run: npm ci
       - run: npm run web
       - name: Zip the web app
-        run: cd dist/web && zip -qr "../PIXIWYG_$(node -p "require('../../package.json').version")_web.zip" .
+        run: cd dist/web && zip -qr "../PIXIWYG_${{ needs.plan.outputs.version }}_web.zip" .
       - uses: actions/upload-artifact@v4
         with:
           name: dist-web
           path: tools/dist/*_web.zip
 
   publish:
-    needs: [build, web]
+    needs: [plan, build, web]
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: tools
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.plan.outputs.sha }}
       - uses: actions/download-artifact@v4
         with:
           path: tools/dist
@@ -183,10 +234,15 @@ jobs:
       - run: node scripts/checksums.mjs
       - name: Release notes
         shell: bash
+        env:
+          TAG: ${{ needs.plan.outputs.tag }}
+          PAGES: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
         run: |
           signed() { [ "$(cat "dist/signed-$1.txt" 2>/dev/null)" = true ]; }
           {
-            echo "Private beta build of PIXIWYG $GITHUB_REF_NAME. Check each download against SHA256SUMS.txt."
+            case "$TAG" in *-*) echo "Beta build of PIXIWYG $TAG. Check each download against SHA256SUMS.txt.";; *) echo "PIXIWYG $TAG. Check each download against SHA256SUMS.txt.";; esac
+            echo
+            echo "**Use it in a browser:** $PAGES"
             echo
             if signed macOS; then echo "**macOS:** signed and notarized."
             else echo "**macOS:** not signed or notarized. macOS blocks the first launch: open System Settings → Privacy & Security and click **Open Anyway** next to PIXIWYG. (Or, in Terminal: \`xattr -dr com.apple.quarantine /Applications/PIXIWYG.app\`.)"; fi
@@ -196,14 +252,35 @@ jobs:
             echo
             echo "**Linux:** the AppImage, .deb and .rpm aren't signed. AppImage: make it executable (\`chmod +x\`), then run it. Debian/Ubuntu: \`sudo apt install ./PIXIWYG_*.deb\`. Fedora: \`sudo dnf install ./PIXIWYG-*.rpm\`."
             echo
-            echo "**Web:** unzip \`PIXIWYG_*_web.zip\` onto any static web server, at any path; nothing else is needed. Publishing this release also deploys it to GitHub Pages."
+            echo "**Web:** unzip \`PIXIWYG_*_web.zip\` onto any static web server, at any path; nothing else is needed."
           } > notes.md
           cat notes.md
-      - name: Draft release
+      - name: Tag and publish the release
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.plan.outputs.tag }}
+          SHA: ${{ needs.plan.outputs.sha }}
         run: |
           shopt -s nullglob
           files=(dist/*.dmg dist/*.exe dist/*.msi dist/*.AppImage dist/*.deb dist/*.rpm dist/*_web.zip dist/SHA256SUMS.txt)
-          gh release create "$GITHUB_REF_NAME" --draft --prerelease --title "PIXIWYG $GITHUB_REF_NAME" --notes-file notes.md "${files[@]}"
+          pre=(); case "$TAG" in *-*) pre=(--prerelease);; esac
+          gh release create "$TAG" --target "$SHA" "${pre[@]}" --title "PIXIWYG $TAG" --notes-file notes.md --generate-notes "${files[@]}"
+
+  pages:
+    needs: [plan, web, publish]
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist-web
+      - run: mkdir site && unzip -q ./*_web.zip -d site && test -f site/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4

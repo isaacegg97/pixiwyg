@@ -84,10 +84,11 @@ collecting API is yours to write (`publish-sock.js` is the forwarder). A static 
 
 ## The version
 
-The version lives in four places that must agree: `tools/package.json`, `const APP_VERSION` in `../src/app/start.js`
-(built into `index.html`), `../tauri/tauri.conf.json` and `../tauri/Cargo.toml`. `npm run set-version -- <version>`
-sets all four and rebuilds `index.html`; a test fails if they differ, and the release workflow refuses a tag that
-doesn't match.
+The version lives in five places that must agree: `tools/package.json`, `const APP_VERSION` in `../src/app/start.js`
+(built into `index.html`), `../tauri/tauri.conf.json`, `../tauri/Cargo.toml` and `../tauri/Cargo.lock`.
+`npm run set-version -- <version>` sets them all and rebuilds `index.html`; so does a bump instead of a version:
+`prerelease` (1.0.0-beta.1 → 1.0.0-beta.2), `patch`, `minor`, `major`, or `release` (1.0.0-beta.4 → 1.0.0). A test
+fails if they differ.
 
 ## Installers
 
@@ -110,15 +111,22 @@ The RPM and MSI numbers are worked out from the one app version by `scripts/dist
 version builds every format as is. The RPM's app reports 1.0.0 in its menu; the page, and problem reports, still say
 the full version.
 
-## Releasing a beta build
+## Releasing
 
-1. `npm run set-version -- 1.0.0-beta.2`.
-2. Commit, then tag `v1.0.0-beta.2` and push the tag.
-3. `.github/workflows/release.yml` tests on macOS, Windows and Linux, builds, and attaches the installers and
-   `SHA256SUMS.txt` to a draft pre-release. Read it over, then publish it.
+Releases are automatic. `.github/workflows/release.yml` runs on every push to `main`: when the version has no tag yet,
+it tests once, launches the real app on macOS, Windows and Linux, builds the installers and the web zip, tags the
+commit `v<version>`, publishes the GitHub release (a pre-release for a version like `1.0.0-beta.2`) with the
+installers, the zip and `SHA256SUMS.txt`, and deploys the web build to GitHub Pages. A push whose version is already
+released stops after its first job.
+
+- **Merge a version change:** `npm run set-version -- prerelease` (or `patch`, `minor`, `major`, `release`, or an exact
+  version) in a branch; merging it to `main` releases it.
+- **Or from GitHub:** Actions → Release → Run workflow, pick the bump; it commits the bump to `main` and releases it.
+
+GitHub Pages needs one setting, once: Settings → Pages → Source: **GitHub Actions**.
 
 Signing is optional, per platform. With its secrets set, a platform signs (and on macOS, notarizes). Without them, it
-builds unsigned, the run shows a warning, and the draft release notes say which builds are unsigned and how testers
+builds unsigned, the run shows a warning, and the release notes say which builds are unsigned and how testers
 open them:
 
 - **Windows, unsigned:** keep the download if the browser flags it, then at “Windows protected your PC” click
