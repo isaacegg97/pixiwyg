@@ -1,0 +1,16 @@
+# RULE: text is checked out with LF on every platform: the page's CSP hashes its inline script, and the build and
+#   tests compare text byte for byte. Binary files are left alone.
+* text=auto eol=lf
+*.pixiwyg binary
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.icns binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.sf2 binary
+*.wsz binary
+*.mid binary

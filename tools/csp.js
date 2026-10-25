@@ -3,7 +3,9 @@
 //   into index.html as a meta tag by scripts/stamp-csp.mjs). Exactly the inline script by hash, plus 'self'.
 const crypto=require('node:crypto');
 const scriptOf=html=>{const m=html.match(/<script>([\s\S]*?)<\/script>/);if(!m)throw new Error('index.html has no inline script');return m[1]};
-const hashOf=html=>crypto.createHash('sha256').update(scriptOf(html),'utf8').digest('base64');
+// FIX: the browser hashes the script after HTML parsing has turned CRLF and lone CR into LF; hashing the raw bytes
+//   gave a Windows checkout (CRLF) a policy that blocked its own script, so the page never started there.
+const hashOf=html=>crypto.createHash('sha256').update(scriptOf(html).replace(/\r\n?/g,'\n'),'utf8').digest('base64');
 const policy=html=>[
   "default-src 'self'",
   `script-src 'self' 'sha256-${hashOf(html)}'`,
