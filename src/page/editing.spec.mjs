@@ -200,3 +200,21 @@ test('FIX: hovering traces the box a click would select (the ink, not the layout
   expect(fit).toBe(true);
   expect(errors).toEqual([]);
 });
+
+test('FIX: pasting a long text into markup with parts keeps the parts and their classes', async ({page}) => {
+  const errors = await freshPage(page);
+  await T(page, () => { const P = window.__pixiwyg, S = P.state();
+    S.els.push({id: 'kwin', tag: 'div', content: '<div class="title-bar"><div class="title-bar-text">Hello</div></div><div class="window-body"><p class="lead">Body <b>text</b> end</p></div>', x: 100, y: 100, w: 400, z: 1, fileId: null, selector: null});
+    P.renderAll(); P.select('kwin'); });
+  await page.locator('#desk').focus();
+  await page.keyboard.press('Enter');
+  const paste = (html, text) => T(page, ([html, text]) => { const t = window.__pixiwyg.hostOf('kwin')._target, s = t.getRootNode().getSelection(), r = document.createRange(), b = t.querySelector('b');
+    r.setStart(b.firstChild, 2); r.collapse(true); s.removeAllRanges(); s.addRange(r);
+    const dt = new DataTransfer(); dt.setData('text/html', html); dt.setData('text/plain', text);
+    t.dispatchEvent(new ClipboardEvent('paste', {clipboardData: dt, bubbles: true, cancelable: true})); }, [html, text]);
+  await paste('<span style="color:red">RICH</span>', 'One\r\n\r\nTwo\nlines');
+  await page.keyboard.press('Escape');
+  const html = await T(page, () => window.__pixiwyg.state().els.find(e => e.id === 'kwin').content);
+  expect(html).toBe('<div class="title-bar"><div class="title-bar-text">Hello</div></div><div class="window-body"><p class="lead">Body <b>teOne</b></p><p class="lead">Two<br>lines<b>xt</b> end</p></div>');
+  expect(errors).toEqual([]);
+});
