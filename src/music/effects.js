@@ -14,7 +14,8 @@ const FX_DEFS={
   delay:{name:'Delay',p:[['ms','Time (ms)',20,2000,5,375],['fb','Feedback',0,.95,.01,.35],['mix','Mix',0,1,.01,.3]]},
   reverb:{name:'Reverb',p:[['sec','Length (s)',.2,8,.1,2.2],['decay','Decay',.5,8,.1,3],['mix','Mix',0,1,.01,.3]]},
   pan:{name:'Pan',p:[['pan','Left ↔ right',-1,1,.01,0]]},
-  // RULE: the pump isn't in the chain: the synth ducks each note on the song's beats (see pxSynth); samples don't pump.
+  // RULE: the pump isn't in the chain: each voice ducks on the song's beats as it starts (pxSynth's duck), synth notes,
+  //   SoundFont voices and samples alike.
   pump:{name:'Sidechain pump',p:[['depth','Depth',0,1,.01,.7],['rate','Pumps a beat',.5,4,.5,1]]},
   crush:{name:'Bitcrush',p:[['bits','Bits',2,16,1,6],['mix','Mix',0,1,.01,.6]]},
 };
@@ -53,11 +54,14 @@ function pxFx(ctx,input,chain,dest){
   cur.connect(dest);return oscs;
 }
 // INVARIANT: self-contained. One sample hit: re-pitched from its root note unless pitched is off; rings out unless gated.
-function pxSample(ctx,buf,t,p,at,dur,vel,dest){
+//   syn, when given, is the synth whose clock pumps it.
+function pxSample(ctx,buf,t,p,at,dur,vel,dest,syn){
   const s=ctx.createBufferSource(),g=ctx.createGain();s.buffer=buf;
-  if(t.pitched!==false)s.playbackRate.value=Math.pow(2,(p-(t.root??60))/12);
-  g.gain.setValueAtTime((t.vol/127)*(vel/127),at);s.connect(g);g.connect(dest);s.start(at);
-  if(t.gate){g.gain.setTargetAtTime(0,at+dur,.015);s.stop(at+dur+.12)}
+  const rate=t.pitched!==false?Math.pow(2,(p-(t.root??60))/12):1;s.playbackRate.value=rate;
+  g.gain.setValueAtTime((t.vol/127)*(vel/127),at);s.connect(g);s.start(at);
+  const stop=t.gate?at+dur+.12:at+buf.duration/rate;
+  (syn&&syn.duck?syn.duck(t,at,stop,g):g).connect(dest);
+  if(t.gate){g.gain.setTargetAtTime(0,at+dur,.015);s.stop(stop)}
 }
 // SAFETY: effects from files are rebuilt from known kinds and in-range numbers.
 function cleanFx(list){
@@ -101,7 +105,7 @@ async function sampleBuf(url){
 async function samplesReady(m){audio();if(!ac||!m)return;await Promise.all((m.samples||[]).map(s=>{const c=live.bufs.get(s.url);return c instanceof Promise?c:c?null:(sampleBuf(s.url),live.bufs.get(s.url))}))}
 function samplePlay(t,p,at,dur,vel){
   const m=state.music,s=m&&(m.samples||[]).find(x=>x.id===t.smp),b=s&&live.bufs.get(s.url);if(!b||b instanceof Promise){if(s)sampleBuf(s.url);return}
-  const dest=trackIn(t);if(dest)pxSample(ac,b,t,p,at,dur,vel,dest);
+  const dest=trackIn(t);if(dest)pxSample(ac,b,t,p,at,dur,vel,dest,synth);
 }
 
 // SECTION: samples in the song

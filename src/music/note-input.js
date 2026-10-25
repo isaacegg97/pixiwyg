@@ -41,7 +41,7 @@ $('#seqMidiIn').onclick=async()=>{audio();
     $('#seqMidiIn').textContent=ins.length?`MIDI: ${ins[0].name}${ins.length>1?' +'+(ins.length-1):''}`:'MIDI: none';status(ins.length?`Listening to ${ins.map(i=>i.name).join(', ')}`:'No MIDI keyboard found. Plug one in; it’s picked up as it arrives.')};
   seqIn.midi.onstatechange=hook;hook()};
 // RULE: the wheel over a note changes how hard it's played; lighter notes draw fainter.
-$('#seqScroll').addEventListener('wheel',e=>{const t=seqTrackSel(),h=seqHit(e),n=h.zone==='grid'&&seqNoteAt(t,h);if(!n)return;e.preventDefault();
+$('#seqScroll').addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey)return;const t=seqTrackSel(),h=seqHit(e),n=h.zone==='grid'&&seqNoteAt(t,h);if(!n)return;e.preventDefault();
   seqEdit(()=>{n.v=Math.max(1,Math.min(127,n.v+(e.deltaY<0?8:-8)))});status(`Velocity ${n.v}`);seqDraw()},{passive:false});
 $('#seqRepGo').onclick=()=>{audio();const m=state.music;if(!m)return;
   const a=Math.max(1,Math.min(m.bars,+$('#seqRepA').value||1)),b=Math.max(a,Math.min(m.bars,+$('#seqRepB').value||a)),bar=barTicks(m),lo=(a-1)*bar,hi=b*bar,len=hi-lo,end=songEnd(m);

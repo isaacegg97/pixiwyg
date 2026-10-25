@@ -43,7 +43,7 @@ function cleanMusic(m){
       notes.push({t:int(n.t,0,0,SEQ_MAX_TICK),d:int(n.d,PPQ/4,1,SEQ_MAX_TICK),p:int(n.p,60,0,127),v:int(n.v,100,1,127)});
     }
     notes.sort((a,b)=>a.t-b.t||a.p-b.p);
-    const tr={name:String(t.name??'Track').replace(/[\u0000-\u001f]/g,'').slice(0,40),drums:!!t.drums,prog:int(t.prog,0,0,127),vol:int(t.vol,100,0,127),mute:!!t.mute,notes};
+    const tr={name:String(t.name??'Track').replace(/[\u0000-\u001f]/g,'').slice(0,40),drums:!!t.drums,prog:int(t.prog,0,0,127),vol:int(t.vol,100,0,127),mute:!!t.mute,notes};if(t.solo===true)tr.solo=true;
     const fx=cleanFx(t.fx);if(fx.length)tr.fx=fx;
     if(typeof t.smp==='string'){tr.smp=t.smp.replace(/[^\w-]/g,'').slice(0,20);tr.root=int(t.root,60,0,127);tr.pitched=t.pitched!==false;tr.gate=!!t.gate}
     o.tracks.push(tr);

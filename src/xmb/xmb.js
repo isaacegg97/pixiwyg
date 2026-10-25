@@ -292,7 +292,7 @@ function xmbGestures(surface,{begin,zoom,pan}){
 }
 xmbGestures(desk,{begin:()=>Z,zoom:(z,x,y)=>setZoom(z,x,y),pan:(dx,dy)=>{desk.scrollLeft-=dx;desk.scrollTop-=dy}});
 xmbGestures($('#sview'),{begin:viewScale,zoom:(z,x,y)=>sZoomTo(z,{x,y}),pan:(dx,dy)=>{const v=$('#sview');v.scrollLeft-=dx;v.scrollTop-=dy}});
-xmbGestures($('#seqScroll'),{pan:(dx,dy)=>{const v=$('#seqScroll');v.scrollLeft-=dx;v.scrollTop-=dy}});
+xmbGestures($('#seqScroll'),{begin:()=>SQ.BW,zoom:(bw,cx)=>seqZoomTo(bw,cx),pan:(dx,dy)=>{const v=$('#seqScroll');v.scrollLeft-=dx;v.scrollTop-=dy}});
 // RULE: the system Back (Android's gesture, the browser's button) backs out as Esc does: a dialog, then a sheet, then
 //   the tool to the home. From the home it leaves, as Back leaves any app. One history entry stands for "in a tool".
 addEventListener('popstate',()=>{

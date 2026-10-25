@@ -51,12 +51,16 @@ function pxSynth(ctx,out,map){
   const voiceOf=prog=>{let v='piano';for(const [p,name] of map)if(p<=prog)v=name;return VOICES[v]||VOICES.piano};
   const hz=p=>440*Math.pow(2,(p-69)/12);
   const noiseBuf=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate);{const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
+  // RULE: a hi-hat is one cymbal: a closed or pedal hat cuts off an open one still ringing, as a real kit does.
+  let openHat=null;
   function drum(p,at,g0,dest=out){
+    if((p===42||p===44)&&openHat&&openHat.at<at&&openHat.end>at){openHat.g.gain.setTargetAtTime(0,at,.006);openHat=null}
+    if(p===46){const cg=ctx.createGain();cg.connect(dest);dest=cg;openHat={g:cg,at,end:at+.35}}
     const env=(node,peak,dec,off=0)=>{const g=ctx.createGain();g.gain.setValueAtTime(peak*g0,at+off);g.gain.exponentialRampToValueAtTime(.001,at+off+dec);node.connect(g);g.connect(dest);return g};
     const osc=(type,f0,f1,dec,peak)=>{const o=ctx.createOscillator();o.type=type;o.frequency.setValueAtTime(f0,at);if(f1)o.frequency.exponentialRampToValueAtTime(f1,at+dec);env(o,peak,dec);o.start(at);o.stop(at+dec+.05)};
     const noise=(type,f,dec,peak,q=1,off=0)=>{const s=ctx.createBufferSource();s.buffer=noiseBuf;const fl=ctx.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q;s.connect(fl);env(fl,peak,dec,off);s.start(at+off);s.stop(at+off+dec+.05)};
     if(p===35||p===36){osc('sine',150,42,.42,1.1);osc('triangle',90,40,.08,.4)}
-    else if(p===38||p===40||p===37){noise('highpass',1200,.2,.6);osc('triangle',220,160,.1,.45)}
+    else if(p===38||p===40){noise('highpass',1200,.2,.6);osc('triangle',220,160,.1,.45)}
     else if(p===39){for(const k of [0,.011,.023])noise('bandpass',1500,k===.023?.18:.03,.55,2,k)}
     else if(p===42||p===44)noise('highpass',8000,.05,.4);
     else if(p===46)noise('highpass',7500,.3,.35);
@@ -74,7 +78,17 @@ function pxSynth(ctx,out,map){
     else if(p===80||p===81){osc('sine',4200,0,p===80?.25:1.2,.18);osc('sine',11340,0,p===80?.15:.8,.05)}
     else noise('bandpass',hz(p),.15,.4,3);
   }
-  const api={bpm:0,t0:0,note(t,p,at,dur,vel,dest=out){
+  const api={bpm:0,t0:0,
+  // RULE: Sidechain pump: a voice ducks on each pump of the beat and swells back over the first half of it. Synth notes,
+  //   SoundFont voices and samples all go through here; returns the node to connect onward.
+  duck(t,at,stop,node){
+    const pump=api.bpm>0&&(t.fx||[]).find(f=>f&&f.k==='pump'&&f.on!==false);if(!pump)return node;
+    const pg=ctx.createGain(),per=60/api.bpm/Math.max(.5,+pump.rate||1),lo=1-Math.max(0,Math.min(1,+pump.depth||0)),sw=per*.55,ph=((at-api.t0)/per%1+1)%1;
+    pg.gain.setValueAtTime(ph<.55?lo+(1-lo)*ph/.55:1,at);if(ph<.55)pg.gain.linearRampToValueAtTime(1,at+sw-ph*per);
+    for(let b=api.t0+Math.ceil((at-api.t0)/per)*per;b<stop;b+=per){pg.gain.setValueAtTime(lo,b);pg.gain.linearRampToValueAtTime(1,b+sw)}
+    node.connect(pg);return pg;
+  },
+  note(t,p,at,dur,vel,dest=out){
     const g0=(t.vol/127)*(vel/127);if(t.drums)return drum(p,at,g0,dest);
     const V=voiceOf(t.prog),amp=ctx.createGain(),end=at+dur;let node=amp,post=amp;
     const stop=end+V.r*2+.05,lfo=(rate,depth,into,from=at)=>{const l=ctx.createOscillator(),lg=ctx.createGain();l.frequency.value=rate;lg.gain.value=depth;l.connect(lg);for(const i of into)lg.connect(i);l.start(from);l.stop(stop)};
@@ -86,12 +100,7 @@ function pxSynth(ctx,out,map){
       f.connect(node);node=f}
     if(V.formant){const inp=ctx.createGain();for(const fq of V.formant){const b=ctx.createBiquadFilter();b.type='bandpass';b.frequency.value=fq;b.Q.value=7;const bg=ctx.createGain();bg.gain.value=2.2;inp.connect(b);b.connect(bg);bg.connect(node)}node=inp}
     if(V.trem){const tg=ctx.createGain();tg.gain.value=1-V.trem[1]/2;post.connect(tg);post=tg;lfo(V.trem[0],V.trem[1]/2,[tg.gain])}
-    // RULE: Sidechain pump: the note ducks on each pump of the beat and swells back over the first half of it.
-    const pump=api.bpm>0&&(t.fx||[]).find(f=>f&&f.k==='pump'&&f.on!==false);
-    if(pump){const pg=ctx.createGain(),per=60/api.bpm/Math.max(.5,+pump.rate||1),lo=1-Math.max(0,Math.min(1,+pump.depth||0)),sw=per*.55,ph=((at-api.t0)/per%1+1)%1;
-      pg.gain.setValueAtTime(ph<.55?lo+(1-lo)*ph/.55:1,at);if(ph<.55)pg.gain.linearRampToValueAtTime(1,at+sw-ph*per);
-      for(let b=api.t0+Math.ceil((at-api.t0)/per)*per;b<stop;b+=per){pg.gain.setValueAtTime(lo,b);pg.gain.linearRampToValueAtTime(1,b+sw)}
-      post.connect(pg);post=pg}
+    post=api.duck(t,at,stop,post);
     post.connect(dest);
     const det=[];
     for(const [type,mul,lvl] of V.o){const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=hz(p)*mul;g.gain.value=lvl;o.connect(g);g.connect(node);o.start(at);o.stop(stop);det.push(o.detune);
@@ -115,7 +124,7 @@ async function pxRender(m,map,note,tail=0){
   const syn=pxSynth(ctx,master,map);syn.bpm=m.bpm;syn.t0=0;const play=(note&&note(ctx,master,syn))||syn.note,bufs={};
   for(const s of m.samples||[])try{const b=atob(s.url.slice(s.url.indexOf(',')+1)),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);bufs[s.id]=await ctx.decodeAudioData(u.buffer)}catch(e){}
   for(const t of m.tracks){if(t.mute)continue;const tin=ctx.createGain();pxFx(ctx,tin,t.fx,master);
-    for(const n of t.notes)if(n.t<end){const at=n.t*sp,d=Math.min(n.d,end-n.t)*sp;if(t.smp!=null){if(bufs[t.smp])pxSample(ctx,bufs[t.smp],t,n.p,at,d,n.v,tin)}else play(t,n.p,at,d,n.v,tin)}}
+    for(const n of t.notes)if(n.t<end){const at=n.t*sp,d=Math.min(n.d,end-n.t)*sp;if(t.smp!=null){if(bufs[t.smp])pxSample(ctx,bufs[t.smp],t,n.p,at,d,n.v,tin,syn)}else play(t,n.p,at,d,n.v,tin)}}
   return ctx.startRendering();
 }
 // FORMAT: AudioBuffer to 16-bit PCM WAV. Self-contained.

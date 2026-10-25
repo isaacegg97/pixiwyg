@@ -154,6 +154,7 @@
     "music/player.js",
     "music/playback.js",
     "music/editor.js",
+    "music/roll-tools.js",
     "music/note-input.js",
     "music/soundfonts.js",
     "music/effects.js",

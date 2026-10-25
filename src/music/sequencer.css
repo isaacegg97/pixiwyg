@@ -16,10 +16,18 @@
 .sqtop select{flex:1;min-width:0}
 .sqtop input[type=range]{width:70px;accent-color:var(--tc)}
 .sqdot{display:none}
-.seqview{flex:1;min-width:0;position:relative}
+.seqview{flex:1;min-width:0;display:flex;flex-direction:column;container-type:inline-size}
+/* RULE: a narrow roll keeps its tools on one row: icons only (each keeps its aria-label and title) */
+@container (max-width:720px){.sqtools .sqlbl{display:none}}
+.seqroll{flex:1;min-height:0;position:relative}
+.sqtools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:5px 8px;border-bottom:2px solid var(--ink);background:var(--chrome)}
+.sqtools .grow{flex:1}
+.sqseg{display:inline-flex}.sqseg .btn+.btn{margin-left:-2px}
+.sqtools .btn[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+#seqMore .ddbody{z-index:80}
 /* PERF: the canvas covers only what shows over the scroller; the scroller carries just the scrollbars and pointer */
 .seqscroll{position:absolute;inset:0;overflow:auto;outline:none;background:var(--paper);touch-action:none;cursor:crosshair}
-.seqview canvas{position:absolute;left:0;top:0;pointer-events:none}
+.seqroll canvas{position:absolute;left:0;top:0;pointer-events:none}
 .seqspace{pointer-events:none}
 .seqfoot{padding:6px 10px;border-top:2px solid var(--ink);display:flex;gap:8px;align-items:center;margin:0;flex-wrap:nowrap}
 .seqfoot .shelp{flex:1;min-width:0}

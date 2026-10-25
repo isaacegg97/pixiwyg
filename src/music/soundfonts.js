@@ -43,15 +43,19 @@ function sfPreset(sf,t){
 }
 // FORMAT: generators a preset adds to its instrument's value instead of replacing it.
 const SF_ADD=new Set([8,9,17,34,35,36,37,38,48,51,52]);
-function sfPlay(t,p,at,dur,vel,out,ctx=ac){
+// INVARIANT: syn is the synth playing beside it (its clock pumps SoundFont voices too).
+function sfPlay(t,p,at,dur,vel,out,ctx=ac,syn=null){
   const sf=soundfont,preset=sfPreset(sf,t);if(!preset)return false;
   const inR=(g,k,x)=>!g[k]||(x>=g[k][0]&&x<=g[k][1]);let any=false;
   for(const pz of preset.zones){const pg={...preset.glob,...pz};if(!inR(pg,43,p)||!inR(pg,44,vel))continue;const ins=sf.inst[pz[41]];if(!ins)continue;
     for(const iz of ins.zones){const ig={...ins.glob,...iz};if(!inR(ig,43,p)||!inR(ig,44,vel))continue;const smp=sf.samples[iz[53]];if(!smp)continue;
-      if(sfVoice(sf,t,p,at,dur,vel,out,ig,pg,smp,ctx))any=true}}
+      if(sfVoice(sf,t,p,at,dur,vel,out,ig,pg,smp,ctx,syn))any=true}}
   return any;
 }
-function sfVoice(sf,t,p,at,dur,vel,out,ig,pg,smp,ctx){
+// RULE: an exclusive class (generator 57) is a choke group: a new voice in it cuts off the track's earlier ones still
+//   sounding, so a closed hi-hat stops an open one. Tracked per audio context and track.
+const sfChoke=new WeakMap();
+function sfVoice(sf,t,p,at,dur,vel,out,ig,pg,smp,ctx,syn){
   const G=(op,def)=>(ig[op]??def)+(SF_ADD.has(op)?(pg[op]??0):0),tc=x=>Math.pow(2,x/1200),total=sf.pcm.length;
   const s0=Math.max(0,Math.min(total,smp.start+G(0,0)+G(4,0)*32768)),s1=Math.max(0,Math.min(total,smp.end+G(1,0)+G(12,0)*32768));
   if(s1-s0<4)return false;
@@ -73,10 +77,30 @@ function sfVoice(sf,t,p,at,dur,vel,out,ig,pg,smp,ctx){
   let node=src;
   const fc=G(8,13500);if(fc<13500){const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=Math.min(20000,8.176*tc(fc));f.Q.value=Math.max(.0001,G(9,0)/10);node.connect(f);node=f}
   node.connect(g);
+  let post=g;const cls=G(57,0);
+  if(cls>0){let byT=sfChoke.get(ctx);if(!byT)sfChoke.set(ctx,byT=new WeakMap());let m=byT.get(t);if(!m)byT.set(t,m=new Map());
+    const live=(m.get(cls)||[]).filter(v=>v.end>at);for(const v of live)if(v.at<at)v.g.gain.setTargetAtTime(0,at,.005);
+    const cg=ctx.createGain();g.connect(cg);post=cg;m.set(cls,[...live.filter(v=>v.at>=at),{g:cg,at,end:end+R}])}
+  if(syn&&syn.duck)post=syn.duck(t,at,end+R+.05,post);
   const pan=Math.max(-1,Math.min(1,G(17,0)/500));
-  if(pan&&ctx.createStereoPanner){const pn=ctx.createStereoPanner();pn.pan.value=pan;g.connect(pn);pn.connect(out)}else g.connect(out);
+  if(pan&&ctx.createStereoPanner){const pn=ctx.createStereoPanner();pn.pan.value=pan;post.connect(pn);pn.connect(out)}else post.connect(out);
   src.start(at);src.stop(end+R+.05);sfStats.voices++;
   return true;
+}
+// RULE: three kinds of sound: the built-in synth, the bundled TimGM6mb (GPL-2, 6 MB, lib/TimGM6mb.sf2: fetched when
+//   picked, never stored again), or a file of the person's own, kept in the browser. The choice is the app's, not a
+//   project's: it is remembered across projects and reloads.
+// FORMAT: kv 'soundfont' = {name, blob} for a file of one's own, or {bundled: file name} for one that ships in lib/.
+const SF_BUNDLED=[{file:'TimGM6mb.sf2',label:'TimGM6mb (sampled, bundled)'}];
+async function loadBundledSF(file,{quiet}={}){
+  const b=SF_BUNDLED.find(x=>x.file===file);if(!b)return false;
+  if(!quiet)status(`Loading ${b.label}…`);
+  let sf;try{const r=await fetch(new URL('lib/'+b.file,location.href));if(!r.ok)throw new Error(String(r.status));sf=parseSF2(await r.arrayBuffer())}
+  catch(e){status(`${b.file} couldn’t be loaded here${location.protocol==='file:'?': opened as a file, the browser won’t read it. The desktop app, the web version or npm run serve can':''}.`);sfSync();return false}
+  sf.file=b.file;sf.bundled=true;soundfont=sf;sfTried=true;
+  try{await tx(['kv'],'readwrite',s=>{s.put({bundled:b.file},'soundfont')})}catch(e){}
+  sfSync();if(!$('#seqModal').hidden)seqTracks();
+  if(!quiet)status(`Using ${b.file}: ${sf.presets.length} sampled instruments and kits`);return true;
 }
 async function loadSoundFont(file){
   if(file.size>SF_MAX){status(`That SoundFont is ${(file.size/1048576).toFixed(0)} MB; the most PIXIWYG keeps is ${SF_MAX/1048576} MB.`);return false}
@@ -89,16 +113,22 @@ async function loadSoundFont(file){
 }
 async function sfRestore(){
   if(sfTried)return;sfTried=true;
-  try{const r=await tx(['kv'],'readonly',s=>s.get('soundfont'));if(r&&r.blob){soundfont=parseSF2(await r.blob.arrayBuffer());soundfont.file=r.name}}catch(e){soundfont=null}
+  try{const r=await tx(['kv'],'readonly',s=>s.get('soundfont'));if(r&&r.bundled){await loadBundledSF(r.bundled,{quiet:true});return}if(r&&r.blob){soundfont=parseSF2(await r.blob.arrayBuffer());soundfont.file=r.name}}catch(e){soundfont=null}
   sfSync();if(!$('#seqModal').hidden)seqTracks();
 }
 async function sfForget(){soundfont=null;try{await tx(['kv'],'readwrite',s=>{s.delete('soundfont')})}catch(e){}sfSync();seqTracks();status('Back to the built-in synth')}
 function sfSync(){
-  const n=$('#seqSfName');if(!n)return;
-  n.textContent=soundfont?soundfont.file:'Built-in synth';n.title=soundfont?`${soundfont.name} · ${soundfont.presets.length} instruments`:'A simple synth. Load a SoundFont (.sf2) for sampled instruments.';
-  $('#seqSfOff').hidden=!soundfont;
+  const sel=$('#seqSound');if(!sel)return;sel.replaceChildren();
+  const opt=(v,t)=>sel.append(mkEl('option',{value:v,textContent:t}));
+  opt('synth','Built-in synth');for(const b of SF_BUNDLED)opt('b:'+b.file,b.label);
+  if(soundfont&&!soundfont.bundled)opt('own',soundfont.file);
+  opt('load','Load a SoundFont (.sf2)…');
+  sel.value=!soundfont?'synth':soundfont.bundled?'b:'+soundfont.file:'own';
+  sel.title=soundfont?`${soundfont.name} · ${soundfont.presets.length} instruments`:'A simple synth. Pick a SoundFont for sampled instruments.';
 }
-$('#seqSfLoad').onclick=()=>{audio();$('#seqSfFile').click()};
+$('#seqSound').onchange=async e=>{audio();const v=e.target.value;
+  if(v==='load'){sfSync();$('#seqSfFile').click();return}
+  if(v==='synth'){await sfForget();return}
+  if(v.startsWith('b:'))await loadBundledSF(v.slice(2));else sfSync()};
 $('#seqSfFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(f)await loadSoundFont(f)};
-$('#seqSfOff').onclick=()=>{audio();sfForget()};
 

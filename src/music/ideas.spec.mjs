@@ -1,5 +1,5 @@
 // SECTION: song ideas: the theory holds for every style, and the panel adds, swaps and undoes ideas
-import {test, expect, boot, T} from '../../tools/tests/helpers.mjs';
+import {test, expect, boot, T, sq} from '../../tools/tests/helpers.mjs';
 
 test('song ideas: every style, in any meter (odd, compound, irrational), polytonal or polymetric, keeps key, chords and beat', async ({page}) => {
   const errors = await boot(page);
@@ -94,11 +94,18 @@ test('song ideas panel: Generate adds an idea and plays it, Another swaps it, Un
   expect(await names()).toEqual(['Drums · Lo-fi', 'Bass · Lo-fi', 'Melody · Lo-fi']);
   expect(await T(page, () => JSON.stringify(window.__pixiwyg.state().music.tracks.map(t => t.notes)))).not.toBe(first);
   await page.locator('#seqIdeas [data-part=drums]').click();
+  // RULE: a new idea never stacks on notes already there: playback stops and the person chooses.
   await page.click('#seqIdeasGo');
-  expect(await names()).toEqual(['Drums · Lo-fi', 'Bass · Lo-fi', 'Melody · Lo-fi', 'Bass · Lo-fi', 'Melody · Lo-fi']);
+  await expect(page.locator('#askModal')).toBeVisible();
+  await expect(page.locator('#seqPlay')).toHaveAttribute('aria-pressed', 'false');
+  await page.click('#askBtns button:has-text("Cancel")');
+  expect(await names()).toEqual(['Drums · Lo-fi', 'Bass · Lo-fi', 'Melody · Lo-fi']);
+  await page.click('#seqIdeasGo');
+  await page.click('#askBtns button:has-text("Clear and generate")');
+  expect(await names()).toEqual(['Bass · Lo-fi', 'Melody · Lo-fi']);
   await page.click('#seqPlay');
   await T(page, () => window.__pixiwyg.undo());
-  expect((await names()).length).toBe(3);
+  expect(await names()).toEqual(['Drums · Lo-fi', 'Bass · Lo-fi', 'Melody · Lo-fi']);
   await page.keyboard.press('Escape');
   await expect(page.locator('#seqIdeas')).toBeHidden();
   expect(errors).toEqual([]);
@@ -142,7 +149,7 @@ test('Save .mp3 downloads the song as a real MP3: valid frames, and it decodes t
   await page.click('#seqIdeas [data-part=chords]');
   await page.click('#seqIdeasGo');
   await page.click('#seqPlay');
-  const [dl] = await Promise.all([page.waitForEvent('download', {timeout: 60_000}), page.click('#seqMp3')]);
+  const [dl] = await Promise.all([page.waitForEvent('download', {timeout: 60_000}), sq(page, '#seqMp3')]);
   expect(dl.suggestedFilename()).toMatch(/\.mp3$/);
   const {readFileSync} = await import('node:fs');
   const bytes = readFileSync(await dl.path());
@@ -158,5 +165,46 @@ test('Save .mp3 downloads the song as a real MP3: valid frames, and it decodes t
   expect(r.sec).toBeGreaterThan(r.song + 1.5);
   expect(r.sec).toBeLessThan(r.song + 2.6);
   expect(r.peak).toBeGreaterThan(0.01);
+  expect(errors).toEqual([]);
+});
+
+test('restyle: a song keeps its notes but moves into the style: key, mode, groove, instruments, beat', async ({page}) => {
+  const errors = await boot(page);
+  await page.setViewportSize({width: 1400, height: 900});
+  await T(page, async () => { const P = window.__pixiwyg; await P.newProject('Restyle'); P.setWorkspace('music'); });
+  // FORMAT: a C major scale a quarter apart, each a little late, over a held low C: no drums.
+  const before = await T(page, () => {
+    const P = window.__pixiwyg, m = P.state().music, Q = 480;
+    m.tracks = [{id: 't1', name: 'Piano', drums: false, prog: 0, vol: 100, mute: false, notes: [60, 62, 64, 65, 67, 69, 71, 72].map((p, i) => ({t: i * Q + 37, d: Q - 40, p, v: 100}))},
+      {id: 't2', name: 'Low', drums: false, prog: 0, vol: 100, mute: false, notes: [{t: 0, d: 4 * Q, p: 36, v: 90}, {t: 4 * Q, d: 4 * Q, p: 43, v: 90}]}];
+    P.renderAll(); return P.songKey(m.tracks.flatMap(t => t.notes));
+  });
+  expect(before).toMatchObject({tonic: 0, minor: false});
+  const r = await T(page, () => { const P = window.__pixiwyg; return P.songRestyle(P.state().music, {genre: 'lofi', bpm: 82, seed: 7}); });
+  expect(r.summary).toMatchObject({from: 'C major', key: 'C Dorian', bpm: 82});
+  const [drums, lead, bass] = r.tracks;
+  expect(drums).toMatchObject({drums: true, name: 'Drums · Lo-fi'});
+  expect(drums.notes.length).toBeGreaterThan(8);
+  // RULE: degrees keep their place: the major third and seventh become Dorian's minor ones.
+  expect(lead.notes.map(n => n.p)).toEqual([60, 62, 63, 65, 67, 69, 70, 72]);
+  // RULE: starts land on Lo-fi's eighth grid, offbeats swung late.
+  expect(lead.notes.every(n => n.t % 240 === 0 || n.t % 240 === 48)).toBe(true);
+  expect(lead.prog).toBe(4);
+  expect(bass.prog).toBe(33);
+  // RULE: Restyle rewrites in place, plays, and is one undo step.
+  await page.click('#seqIdeasBtn');
+  await page.click('#seqIdeasGenres [role=radio]:has-text("Lo-fi")');
+  await page.click('#seqIdeasRestyle');
+  await expect(page.locator('#seqIdeasSays')).toContainText('Restyled as Lo-fi');
+  await expect(page.locator('#seqPlay')).toHaveAttribute('aria-pressed', 'true');
+  expect(await T(page, () => window.__pixiwyg.state().music.tracks.map(t => t.name))).toEqual(['Drums · Lo-fi', 'Piano', 'Low']);
+  await page.click('#seqPlay');
+  await T(page, () => window.__pixiwyg.undo());
+  expect(await T(page, () => window.__pixiwyg.state().music.tracks.map(t => t.name + ' ' + t.notes[1].p))).toEqual(['Piano 62', 'Low 43']);
+  expect(await T(page, () => window.__pixiwyg.state().music.tracks[0].notes[2].p)).toBe(64);
+  // RULE: Generate over notes offers the restyle too.
+  await page.click('#seqIdeasGo');
+  await page.click('#askBtns button:has-text("Restyle as Lo-fi")');
+  await expect(page.locator('#seqIdeasSays')).toContainText('Restyled as Lo-fi');
   expect(errors).toEqual([]);
 });

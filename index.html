@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-ujd7kvhaa2WOB7vQygHPXwF8YbI+K8F9VLGMpSmqlCA='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' data: blob:; media-src 'self' blob: data:; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-lniltRFYirHrl076zoMTE0U7s2La8vG5F6X53vOAs88='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' data: blob:; media-src 'self' blob: data:; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>PIXIWYG</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -397,10 +397,18 @@ body.playing .side{opacity:.55;pointer-events:none}
 .sqtop select{flex:1;min-width:0}
 .sqtop input[type=range]{width:70px;accent-color:var(--tc)}
 .sqdot{display:none}
-.seqview{flex:1;min-width:0;position:relative}
+.seqview{flex:1;min-width:0;display:flex;flex-direction:column;container-type:inline-size}
+/* RULE: a narrow roll keeps its tools on one row: icons only (each keeps its aria-label and title) */
+@container (max-width:720px){.sqtools .sqlbl{display:none}}
+.seqroll{flex:1;min-height:0;position:relative}
+.sqtools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:5px 8px;border-bottom:2px solid var(--ink);background:var(--chrome)}
+.sqtools .grow{flex:1}
+.sqseg{display:inline-flex}.sqseg .btn+.btn{margin-left:-2px}
+.sqtools .btn[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+#seqMore .ddbody{z-index:80}
 /* PERF: the canvas covers only what shows over the scroller; the scroller carries just the scrollbars and pointer */
 .seqscroll{position:absolute;inset:0;overflow:auto;outline:none;background:var(--paper);touch-action:none;cursor:crosshair}
-.seqview canvas{position:absolute;left:0;top:0;pointer-events:none}
+.seqroll canvas{position:absolute;left:0;top:0;pointer-events:none}
 .seqspace{pointer-events:none}
 .seqfoot{padding:6px 10px;border-top:2px solid var(--ink);display:flex;gap:8px;align-items:center;margin:0;flex-wrap:nowrap}
 .seqfoot .shelp{flex:1;min-width:0}
@@ -689,7 +697,7 @@ body[data-ws=paint] #w-studio>.tb{display:none}
 .fxitem{text-align:left;border:0;background:none;padding:4px 6px;font:12px var(--f-ui);color:var(--ink);cursor:pointer}.fxitem:hover{background:var(--sun);color:var(--onsun)}.fxitem.on{background:var(--act);color:var(--actfg)}
 .fxopts{flex:1;display:flex;flex-direction:column;gap:6px;overflow:auto}.fxrow{display:grid;grid-template-columns:110px 1fr 40px;align-items:center;gap:6px;font-size:12px}.fxval{font:11px var(--f-mono);text-align:right}
 /* SECTION: effects and samples panel */
-.seqfx{position:fixed;right:16px;top:calc(var(--tbh,48px) + 60px);width:min(380px,calc(100vw - 32px));max-height:calc(100vh - var(--tbh,48px) - 90px);overflow:auto;z-index:70}.seqfx[hidden]{display:none}
+.seqfx{position:fixed;right:16px;top:var(--seqTop,calc(var(--tbh,48px) + 60px));width:min(380px,calc(100vw - 32px));max-height:calc(100vh - var(--seqTop,calc(var(--tbh,48px) + 60px)) - 30px);overflow:auto;z-index:70}.seqfx[hidden]{display:none}
 .sqfx{border:2px solid var(--ink);background:var(--paper);padding:6px;margin:6px 0}.sqfx.off{opacity:.55}.sqfxh{display:flex;gap:4px;align-items:center}.sqfxh b{flex:1}.sqfxs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}.sqfxs:empty{display:none}
 /* SECTION: song ideas panel */
 .seqideas .wb{display:flex;flex-direction:column;gap:10px}
@@ -1895,8 +1903,8 @@ body.dragging .qspot{opacity:0}
       <label class="field2" for="seqIdeasKey">Key <select id="seqIdeasKey"><option value="auto">Surprise me</option></select></label>
       <label class="sqopt" for="seqIdeasTempo"><input type="checkbox" id="seqIdeasTempo"> <span id="seqIdeasTempoText">Use the style’s tempo</span></label>
     </div>
-    <div class="row"><button class="btn primary" type="button" id="seqIdeasGo">✨ Generate</button><button class="btn" type="button" id="seqIdeasAgain" disabled title="Replace the last idea with a new one">↻ Another</button></div>
-    <p class="idsays" id="seqIdeasSays" aria-live="polite">New tracks, played at the song’s tempo. Everything they make is ordinary notes to edit; Undo takes it back.</p>
+    <div class="row"><button class="btn primary" type="button" id="seqIdeasGo">✨ Generate</button><button class="btn" type="button" id="seqIdeasAgain" disabled title="Replace the last idea with a new one">↻ Another</button><button class="btn" type="button" id="seqIdeasRestyle" title="Keep your notes and move them into this style: its key, groove, instruments and beat">🎨 Restyle song</button></div>
+    <p class="idsays" id="seqIdeasSays" aria-live="polite">Generate starts a new idea; Restyle moves the song you have into the style. Everything is ordinary notes to edit; Undo takes it back.</p>
   </div>
 </div>
 <div class="modal" id="seqModal" hidden>
@@ -1915,6 +1923,7 @@ body.dragging .qspot{opacity:0}
       <span class="sqsep"></span>
       <button class="btn primary" id="seqPlay" aria-pressed="false" title="Play or stop (Space)">▶ Play</button>
       <label class="sqopt"><input type="checkbox" id="seqLoop" checked> Loop</label>
+      <label class="sqopt" title="A metronome while it plays: a high click on each bar, a lower one on the beats"><input type="checkbox" id="seqClick"> Click</label>
       <button class="btn" id="seqRec" aria-pressed="false" title="Record into the selected track from a MIDI keyboard or the computer keys (A–L play, W E T Y U the sharps, Z X change octave). While playing, notes land where you play them; stopped, each lands at the cursor and steps on (R)">● Rec</button>
       <button class="btn sqm" id="seqMidiIn" title="Play and record with a MIDI keyboard">MIDI in…</button>
       <label class="sqopt">Tempo <input type="number" id="seqBpm" min="20" max="300" step="1"> BPM</label>
@@ -1922,17 +1931,31 @@ body.dragging .qspot{opacity:0}
       <span class="sqopt sqmeter" role="group" aria-label="Meter"><label for="seqBeats">Meter</label> <input type="number" id="seqBeats" min="1" max="32" step="1" aria-label="Beats in a bar (top number)"> / <select id="seqUnit" aria-label="Beat unit (bottom number)" title="2, 4, 8, 16: half, quarter, eighth, sixteenth. 3, 6, 12: irrational meters, a third, sixth or twelfth of a whole note"><option value="2">2</option><option value="4">4</option><option value="8">8</option><option value="16">16</option><option value="3">3</option><option value="6">6</option><option value="12">12</option></select>
         <label for="seqGroups" class="sr">Accent groups</label><input type="text" id="seqGroups" class="sqgroups" inputmode="numeric" title="How the beats group, which places the accents: 7/8 as 2+2+3 or 3+2+2. Empty: worked out from the meter" aria-label="Accent groups, like 2+2+3"></span>
       <label class="sqopt">Grid <select id="seqRes"><option value="2">1/8</option><option value="3">1/8 triplets</option><option value="4">1/16</option><option value="6">1/16 triplets</option><option value="8">1/32</option></select></label>
-      <span class="sqopt">Sound <b id="seqSfName">Built-in synth</b><button class="btn sqm" id="seqSfLoad" title="Play with a SoundFont (.sf2) of sampled instruments. You can also drop one on the window.">SoundFont…</button><button class="btn sqm" id="seqSfOff" hidden title="Forget the SoundFont and use the built-in synth">Built-in</button><input type="file" id="seqSfFile" accept=".sf2" hidden></span>
+      <label class="sqopt sqsf" title="What plays the notes: the built-in synth, the bundled TimGM6mb SoundFont of sampled instruments, or a SoundFont (.sf2) of your own. You can also drop a .sf2 on the window.">Sound <select id="seqSound"></select><input type="file" id="seqSfFile" accept=".sf2" hidden></label>
       <span class="grow"></span>
       <button class="btn" id="seqSave" title="Download the song as a Standard MIDI File, for any music program">Save .mid</button>
       <button class="btn" id="seqMp3" title="Download the song as it sounds here, effects and all, as an MP3">Save .mp3</button>
+      <details class="dd" id="seqMore" hidden><summary class="btn sqm" aria-label="More song tools">More ▾</summary><div class="ddbody" id="seqOverflow"></div></details>
     </div>
     <div class="seqbody">
       <div class="seqtracks"><div id="seqTrackList"></div>
         <div class="row"><button class="btn" id="seqAddMel">+ Instrument</button><button class="btn" id="seqAddDrum">+ Drums</button></div></div>
-      <div class="seqview"><div class="seqscroll" id="seqScroll" tabindex="0" aria-label="Notes: click to add, click a note to remove"><div class="seqspace" id="seqSpace"></div></div><canvas id="seqCanvas"></canvas></div>
+      <div class="seqview">
+        <div class="sqtools" role="toolbar" aria-label="Note tools">
+          <span class="sqseg" role="group" aria-label="Mode"><button class="btn sqm" type="button" id="seqModeDraw" aria-pressed="true" aria-label="Draw" title="Draw: click for a note, click a note to remove it, drag to move. Ctrl+click or Ctrl+drag selects"><span aria-hidden="true">✎</span><span class="sqlbl"> Draw</span></button><button class="btn sqm" type="button" id="seqModeSel" aria-pressed="false" aria-label="Select" title="Select: click notes, Ctrl+click to add, drag a box around them"><span aria-hidden="true">⬚</span><span class="sqlbl"> Select</span></button></span>
+          <button class="btn sqm" type="button" id="seqCopy" disabled aria-label="Copy" title="Copy the selected notes (Ctrl+C)"><span aria-hidden="true">⧉</span><span class="sqlbl"> Copy</span></button>
+          <button class="btn sqm" type="button" id="seqCut" disabled aria-label="Cut" title="Cut the selected notes (Ctrl+X)"><span aria-hidden="true">✂</span><span class="sqlbl"> Cut</span></button>
+          <button class="btn sqm" type="button" id="seqPaste" disabled aria-label="Paste" title="Paste at the cursor, the pink marker on the ruler (Ctrl+V). Click the ruler to move it"><span aria-hidden="true">⎘</span><span class="sqlbl"> Paste</span></button>
+          <button class="btn sqm" type="button" id="seqDup" disabled aria-label="Duplicate" title="A copy of the selection right after it (Ctrl+D)"><span aria-hidden="true">⊕</span><span class="sqlbl"> Duplicate</span></button>
+          <button class="btn sqm" type="button" id="seqDel" disabled aria-label="Delete the selected notes" title="Delete the selected notes (Delete)"><span aria-hidden="true">🗑</span><span class="sqlbl"> Delete</span></button>
+          <span class="grow"></span>
+          <button class="btn sqm" type="button" id="seqLaneBtn" aria-pressed="true" aria-label="Velocity" title="The velocity lane under the notes: how hard each one plays. Drag across it to set them"><span aria-hidden="true">▁▃▆</span><span class="sqlbl"> Velocity</span></button>
+          <span class="sqseg" role="group" aria-label="Zoom"><button class="btn sqm" type="button" id="seqZoomOut" aria-label="Zoom out" title="Zoom out (−, or Ctrl+wheel)">−</button><button class="btn sqm" type="button" id="seqZoomIn" aria-label="Zoom in" title="Zoom in (=, or Ctrl+wheel)">+</button></span>
+        </div>
+        <div class="seqroll"><div class="seqscroll" id="seqScroll" tabindex="0" aria-label="Notes: click to add, click a note to remove, drag a note’s end to change its length"><div class="seqspace" id="seqSpace"></div></div><canvas id="seqCanvas"></canvas></div>
+      </div>
     </div>
-    <div class="row seqfoot"><label class="sqopt" title="The Winamp skin the page’s player wears">Player <select id="seqSkin"></select></label><button class="btn sqm" id="seqSkinLoad" title="Use your own Winamp skin (.wsz), from the Winamp Skin Museum or anywhere">Skin…</button><input type="file" id="seqSkinFile" accept=".wsz,.zip" hidden><button class="btn sqm" id="seqPlayer" title="Open the player with this song">Try the player</button><span class="shelp sqhelp" title="Click or drag to draw notes. Click a note to remove it; drag it to move it or its end to resize it. Shift-click a note for an accent; the wheel over a note sets how hard it plays. Click the keys to hear them, the ruler to choose where play starts. R records; A–L play from the computer keys, Z and X change octave.">Click: note · Drag: move · Wheel: velocity · R: record · A–L: play</span>
+    <div class="row seqfoot"><label class="sqopt" title="The Winamp skin the page’s player wears">Player <select id="seqSkin"></select></label><button class="btn sqm" id="seqSkinLoad" title="Use your own Winamp skin (.wsz), from the Winamp Skin Museum or anywhere">Skin…</button><input type="file" id="seqSkinFile" accept=".wsz,.zip" hidden><button class="btn sqm" id="seqPlayer" title="Open the player with this song">Try the player</button><span class="shelp sqhelp" title="Click or drag to draw notes. Click a note to remove it; drag it to move it or its end to resize it. Shift-click a note for an accent; the wheel over a note sets how hard it plays. Click the keys to hear them, the ruler to choose where play starts. R records; A–L play from the computer keys, Z and X change octave.">Click: note · Drag: move · Drag its end: length · Ctrl+drag: select · Ctrl+C/V: copy, paste at the cursor · Arrows: move selected · Ctrl+wheel: zoom · R: record · A–L: play</span>
       <span class="sqopt" title="Copy a run of bars over and over to the end of the song">Repeat bars <input type="number" id="seqRepA" min="1" max="64" value="1" aria-label="From bar"> – <input type="number" id="seqRepB" min="1" max="64" value="1" aria-label="To bar"></span>
       <label class="sqopt"><input type="checkbox" id="seqRepAll"> every track</label><button class="btn sqm" id="seqRepGo" title="Fill the rest of the song with copies of those bars, replacing what comes after them (undo brings it back)">Fill to the end</button>
       <button class="btn" id="seqClear">Clear track</button><button class="btn primary" id="seqDone">Done</button></div>
@@ -2889,22 +2912,67 @@ function placeElement(tag,x,y,w,content){
 }
 
 // SECTION: text editing
-function startEdit(el){
+// RULE: in markup with parts (a window's title and body, a card's heading and text), editing starts in the one
+//   part under the pointer, never the whole markup: a select-all there lets one keystroke or paste delete the
+//   elements the stylesheet styles.
+function editPart(t,at){
+  const parts=[...t.querySelectorAll('*')].filter(n=>[...n.childNodes].some(c=>c.nodeType===3&&c.nodeValue.trim()));
+  if(!parts.length||[...t.childNodes].some(c=>c.nodeType===3&&c.nodeValue.trim()))return t;
+  const hit=at&&t.getRootNode().elementFromPoint?.(at.x,at.y);
+  return parts.find(p=>hit&&p.contains(hit))||parts.find(p=>hit&&hit.contains(p))||parts[0];
+}
+function startEdit(el,at){
   const def=TAGS[el.tag];if(!el||def.void||def.noedit)return;
   const host=hostOf(el.id);const t=host&&host._target;if(!t)return;
   pushUndo();
   state.editing={id:el.id,t};t.contentEditable='true';t.focus();
-  try{const r=document.createRange();r.selectNodeContents(t);const s=getSelection();s.removeAllRanges();s.addRange(r)}catch(e){}
+  try{const r=document.createRange();r.selectNodeContents(editPart(t,at));const s=getSelection();s.removeAllRanges();s.addRange(r)}catch(e){}
   t.addEventListener('blur',finishEdit,{once:true});
+  t.addEventListener('paste',pastePlain);
   status('Editing text. Click outside or press Esc when done.');
+}
+// COMPAT: Chromium's document selection stops at a shadow root and shadowRoot.getSelection sees inside it; WebKit and
+//   Firefox give getComposedRanges; Firefox's plain selection also reaches in. Null when none lands inside t.
+const editSel=t=>{const r=t.getRootNode();return r.getSelection?r.getSelection():getSelection()};
+function editRange(t){
+  const s=editSel(t),root=t.getRootNode();let r=null;
+  if(s.getComposedRanges&&!root.getSelection){const c=s.getComposedRanges({shadowRoots:[root]})[0];if(c){r=document.createRange();r.setStart(c.startContainer,c.startOffset);r.setEnd(c.endContainer,c.endOffset)}}
+  else if(s.rangeCount)r=s.getRangeAt(0);
+  return r&&t.contains(r.commonAncestorContainer)?r:null;
+}
+const BLOCKISH=/^(block|list-item|flex|grid|table|flow-root)/;
+// RULE: a paste is plain text taking the style of where it lands. A blank line starts a new paragraph made as a copy
+//   of the block it was pasted into (same tag, same classes), so a long text stays styled in the primitive.
+//   The browser's paste would carry the source page's inline styles and split blocks into bare divs.
+function pastePlain(e){
+  const ed=state.editing,txt=e.clipboardData&&e.clipboardData.getData('text/plain');if(!ed||txt==null)return;
+  // RULE: with no selection found inside the element, the browser's own paste goes ahead: never lose the text.
+  const t=ed.t,r=editRange(t);if(!r)return;
+  e.preventDefault();
+  r.deleteContents();
+  const lines=v=>{const f=document.createDocumentFragment();v.split('\n').forEach((l,i)=>{if(i)f.append(mkEl('br'));if(l)f.append(l)});return f};
+  const paras=txt.replace(/\r\n?/g,'\n').trim().split(/\n[ \t]*\n+/);
+  let block=null;
+  for(let n=r.startContainer.nodeType===1?r.startContainer:r.startContainer.parentElement;n&&n!==t;n=n.parentElement)if(BLOCKISH.test(getComputedStyle(n).display)){block=n;break}
+  const end=document.createRange();
+  if(paras.length<2||!block){
+    const f=document.createDocumentFragment();paras.forEach((p,i)=>{if(i)f.append(mkEl('br'),mkEl('br'));f.append(lines(p))});
+    const last=f.lastChild;r.insertNode(f);if(last)end.setStartAfter(last);else end.setStart(r.startContainer,r.startOffset);
+  }else{
+    const tail=document.createRange();tail.setStart(r.startContainer,r.startOffset);tail.setEnd(block,block.childNodes.length);
+    const rest=tail.extractContents();r.insertNode(lines(paras[0]));
+    let prev=block;for(const p of paras.slice(1)){const b=block.cloneNode(false);b.removeAttribute('id');b.append(lines(p));prev.after(b);prev=b}
+    end.setStart(prev,prev.childNodes.length);prev.append(rest);
+  }
+  end.collapse(true);const s=editSel(t);s.removeAllRanges();s.addRange(end);
 }
 function finishEdit(){
   const ed=state.editing;if(!ed)return;state.editing=null;
+  ed.t.removeEventListener('paste',pastePlain);
   const el=state.els.find(e=>e.id===ed.id);
   if(el){ed.t.contentEditable='false';el.content=cleanHTML(ed.t.innerHTML)}
   updateSel();save();renderInspector();status('');
 }
-
 // SECTION: undo / save
 const undo=[],redo=[];
 const cloneBg=b=>({base:{...b.base},layers:b.layers.map(l=>({...l,a:l.a&&{...l.a},b:l.b&&{...l.b},c:l.c&&{...l.c}}))});
@@ -3140,7 +3208,7 @@ stage.addEventListener('dblclick',e=>{if(playing)return;
   if(el.md){openDoc(el.md);showText(el.mdB);return}
   const sg=songOfEl(el.id);if(sg!==undefined){askOpenSong(el,sg);return}
   if(el.tag==='img'){studioOpenImage(el.content||IMG_PH,{kind:'el',id:el.id},el.w);return}
-  startEdit(el)});
+  startEdit(el,{x:e.clientX,y:e.clientY})});
 
 // SECTION: keyboard
 document.addEventListener('keydown',e=>{
@@ -6985,7 +7053,7 @@ function cleanMusic(m){
       notes.push({t:int(n.t,0,0,SEQ_MAX_TICK),d:int(n.d,PPQ/4,1,SEQ_MAX_TICK),p:int(n.p,60,0,127),v:int(n.v,100,1,127)});
     }
     notes.sort((a,b)=>a.t-b.t||a.p-b.p);
-    const tr={name:String(t.name??'Track').replace(/[\u0000-\u001f]/g,'').slice(0,40),drums:!!t.drums,prog:int(t.prog,0,0,127),vol:int(t.vol,100,0,127),mute:!!t.mute,notes};
+    const tr={name:String(t.name??'Track').replace(/[\u0000-\u001f]/g,'').slice(0,40),drums:!!t.drums,prog:int(t.prog,0,0,127),vol:int(t.vol,100,0,127),mute:!!t.mute,notes};if(t.solo===true)tr.solo=true;
     const fx=cleanFx(t.fx);if(fx.length)tr.fx=fx;
     if(typeof t.smp==='string'){tr.smp=t.smp.replace(/[^\w-]/g,'').slice(0,20);tr.root=int(t.root,60,0,127);tr.pitched=t.pitched!==false;tr.gate=!!t.gate}
     o.tracks.push(tr);
@@ -7021,22 +7089,30 @@ const songEnd=m=>m.bars*barTicks(m);
 
 // SECTION: MIDI import
 // SAFETY: parsed by hand with every length checked; anything inconsistent is refused, never half-read.
+// RULE: a note never released is held to the end of its track; a channel's first volume (CC 7) is its track's
+//   volume. What can't come across is counted for the import's message: tempo changes (the song keeps the first) and
+//   notes past 64 bars.
+// FORMAT: midiInfo = {tempos: distinct tempos seen, cut: notes past the song's last bar}, from the last parse.
+let midiInfo={tempos:0,cut:0};
 function parseMidi(buf){
   const b=new Uint8Array(buf),N=b.length,bad=()=>{throw new Error('That isn’t a MIDI file PIXIWYG can read.')};
   let i=0;const u32=()=>{if(i+4>N)bad();const v=(b[i]<<24|b[i+1]<<16|b[i+2]<<8|b[i+3])>>>0;i+=4;return v},u16=()=>{if(i+2>N)bad();const v=b[i]<<8|b[i+1];i+=2;return v};
   const id=()=>{if(i+4>N)bad();const v=String.fromCharCode(b[i],b[i+1],b[i+2],b[i+3]);i+=4;return v};
   if(id()!=='MThd')bad();const hl=u32();if(hl<6)bad();const fmt=u16(),ntrk=u16(),div=u16();i+=hl-6;
   if(fmt>2||!ntrk||ntrk>256)bad();if(div&0x8000)throw new Error('This MIDI file counts time in SMPTE frames, which PIXIWYG doesn’t read.');
-  const k=PPQ/div;let bpm=0,beats=0,unit=4,total=0;const parts=new Map(),names=[];
+  const k=PPQ/div;let bpm=0,beats=0,unit=4,total=0;const parts=new Map(),names=[],tempos=new Set(),vols=new Map();
   for(let tr=0;tr<ntrk&&i<N;tr++){
     while(i+8<=N&&String.fromCharCode(b[i],b[i+1],b[i+2],b[i+3])!=='MTrk'){i+=4;const l=u32();i+=l}
     if(i+8>N)break;id();const len=u32(),end=i+len;if(end>N)bad();
     let t=0,run=0,name='';const on=new Map(),prog=new Map();
+    const close=(ch,p,n,tick)=>{if(!parts.has(ch))parts.set(ch,{ch,prog:prog.get(ch)??0,name:'',notes:[]});const P=parts.get(ch);
+      if(++total>20000)throw new Error('That MIDI file has more than 20,000 notes, more than PIXIWYG keeps.');
+      P.notes.push({t:n.t,d:Math.max(1,tick-n.t),p,v:Math.max(1,Math.min(127,n.v))});if(!P.name&&name)P.name=name;P.prog=prog.get(ch)??P.prog};
     const vlq=()=>{let v=0,c,n=0;do{if(i>=end||++n>4)bad();c=b[i++];v=v*128+(c&127)}while(c&128);return v};
     while(i<end){
       t+=vlq();let st=b[i];if(st&0x80){i++;if(st<0xf0)run=st}else{if(!run)bad();st=run}
       if(st===0xff){const ty=b[i++],l=vlq();if(i+l>end)bad();
-        if(ty===0x51&&l===3&&!bpm)bpm=6e7/(b[i]<<16|b[i+1]<<8|b[i+2]);
+        if(ty===0x51&&l===3){const q=6e7/(b[i]<<16|b[i+1]<<8|b[i+2]);tempos.add(Math.round(q));if(!bpm)bpm=q}
         if(ty===0x58&&l>=2&&!beats){beats=b[i];unit=2**b[i+1]}
         if(ty===0x03&&!name)name=String.fromCharCode(...b.slice(i,i+Math.min(l,40))).replace(/[^\x20-\x7e]/g,'').trim();
         i+=l;continue}
@@ -7044,18 +7120,19 @@ function parseMidi(buf){
       const hi=st&0xf0,ch=st&15,a=b[i++],c=hi===0xc0||hi===0xd0?0:b[i++];if(i>end)bad();
       const key=ch*128+a,tick=Math.round(t*k);
       if(hi===0xc0)prog.set(ch,a&127);
+      else if(hi===0xb0&&a===7&&!vols.has(ch))vols.set(ch,c&127);
       else if(hi===0x90&&c>0){if(!on.has(key))on.set(key,[]);on.get(key).push({t:tick,v:c})}
-      else if(hi===0x80||(hi===0x90&&c===0)){const q=on.get(key);if(q&&q.length){const n=q.shift();
-        if(!parts.has(ch))parts.set(ch,{ch,prog:prog.get(ch)??0,name:'',notes:[]});const p=parts.get(ch);
-        if(++total>20000)throw new Error('That MIDI file has more than 20,000 notes, more than PIXIWYG keeps.');
-        p.notes.push({t:n.t,d:Math.max(1,tick-n.t),p:a&127,v:Math.max(1,Math.min(127,n.v))});if(!p.name&&name)p.name=name;p.prog=prog.get(ch)??p.prog}}
+      else if(hi===0x80||(hi===0x90&&c===0)){const q=on.get(key);if(q&&q.length)close(ch,a&127,q.shift(),tick)}
     }
+    const tEnd=Math.round(t*k);for(const [key,q] of on)for(const n of q)close(key>>7,key&127,n,Math.max(n.t+1,tEnd));
     names.push(name);i=end;
   }
   if(!parts.size)throw new Error('That MIDI file has no notes in it.');
   const bt=Math.max(1,Math.min(32,beats||4)),un=METER_UNITS.includes(unit)?unit:4,last=Math.max(...[...parts.values()].flatMap(p=>p.notes.map(n=>n.t+n.d)));
-  const tracks=[...parts.values()].sort((a,b)=>a.ch-b.ch).slice(0,16).map(p=>({name:p.name||(p.ch===9?'Drums':GM.find(g=>g[0]===p.prog)?.[1]||'Program '+(p.prog+1)),drums:p.ch===9,prog:p.ch===9?0:p.prog,vol:100,mute:false,notes:p.notes}));
-  return cleanMusic({bpm:Math.round(bpm||120),beats:bt,unit:un,res:4,bars:Math.min(64,Math.ceil(last/(bt*PPQ*4/un))),tracks});
+  const tracks=[...parts.values()].sort((a,b)=>a.ch-b.ch).slice(0,16).map(p=>({name:p.name||(p.ch===9?'Drums':GM.find(g=>g[0]===p.prog)?.[1]||'Program '+(p.prog+1)),drums:p.ch===9,prog:p.ch===9?0:p.prog,vol:vols.get(p.ch)??100,mute:false,notes:p.notes}));
+  const m=cleanMusic({bpm:Math.round(bpm||120),beats:bt,unit:un,res:4,bars:Math.min(64,Math.ceil(last/(bt*PPQ*4/un))),tracks});
+  if(m){const e=songEnd(m);midiInfo={tempos:tempos.size,cut:m.tracks.reduce((a,t)=>a+t.notes.filter(n=>n.t>=e).length,0)}}
+  return m;
 }
 // RULE: a song reaches the page as a button that plays and stops it: a click node wired to the song's node.
 function songButton(s,at){
@@ -7072,7 +7149,8 @@ async function importMidi(file,at){
   pushUndo();const s=newSong(cleanSongName(file.name.replace(/\.midi?$/i,'')),m);
   if(at&&state.project)songButton(s,at);
   save();if(!$('#seqModal').hidden){useSong(s.id);songSync();seqControls();seqTracks();seqLayout();seqDraw()}
-  status(`Imported ${s.name}: ${m.tracks.length} track${m.tracks.length===1?'':'s'}, ${m.bars} bars at ${m.bpm} BPM.${at?' Its button plays it; double-click the button to open it in the Sequencer.':''}`);
+  const warn=(midiInfo.tempos>1?` It changes tempo ${midiInfo.tempos-1} time${midiInfo.tempos>2?'s':''}; the song keeps the first.`:'')+(midiInfo.cut?` ${midiInfo.cut} notes past bar 64 were left out.`:'');
+  status(`Imported ${s.name}: ${m.tracks.length} track${m.tracks.length===1?'':'s'}, ${m.bars} bars at ${m.bpm} BPM.${warn}${at?' Its button plays it; double-click the button to open it in the Sequencer.':''}`);
   return s;
 }
 // FORMAT: SMF format 1: a tempo track, then one track per unmuted instrument.
@@ -7154,12 +7232,16 @@ function pxSynth(ctx,out,map){
   const voiceOf=prog=>{let v='piano';for(const [p,name] of map)if(p<=prog)v=name;return VOICES[v]||VOICES.piano};
   const hz=p=>440*Math.pow(2,(p-69)/12);
   const noiseBuf=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate);{const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}
+  // RULE: a hi-hat is one cymbal: a closed or pedal hat cuts off an open one still ringing, as a real kit does.
+  let openHat=null;
   function drum(p,at,g0,dest=out){
+    if((p===42||p===44)&&openHat&&openHat.at<at&&openHat.end>at){openHat.g.gain.setTargetAtTime(0,at,.006);openHat=null}
+    if(p===46){const cg=ctx.createGain();cg.connect(dest);dest=cg;openHat={g:cg,at,end:at+.35}}
     const env=(node,peak,dec,off=0)=>{const g=ctx.createGain();g.gain.setValueAtTime(peak*g0,at+off);g.gain.exponentialRampToValueAtTime(.001,at+off+dec);node.connect(g);g.connect(dest);return g};
     const osc=(type,f0,f1,dec,peak)=>{const o=ctx.createOscillator();o.type=type;o.frequency.setValueAtTime(f0,at);if(f1)o.frequency.exponentialRampToValueAtTime(f1,at+dec);env(o,peak,dec);o.start(at);o.stop(at+dec+.05)};
     const noise=(type,f,dec,peak,q=1,off=0)=>{const s=ctx.createBufferSource();s.buffer=noiseBuf;const fl=ctx.createBiquadFilter();fl.type=type;fl.frequency.value=f;fl.Q.value=q;s.connect(fl);env(fl,peak,dec,off);s.start(at+off);s.stop(at+off+dec+.05)};
     if(p===35||p===36){osc('sine',150,42,.42,1.1);osc('triangle',90,40,.08,.4)}
-    else if(p===38||p===40||p===37){noise('highpass',1200,.2,.6);osc('triangle',220,160,.1,.45)}
+    else if(p===38||p===40){noise('highpass',1200,.2,.6);osc('triangle',220,160,.1,.45)}
     else if(p===39){for(const k of [0,.011,.023])noise('bandpass',1500,k===.023?.18:.03,.55,2,k)}
     else if(p===42||p===44)noise('highpass',8000,.05,.4);
     else if(p===46)noise('highpass',7500,.3,.35);
@@ -7177,7 +7259,17 @@ function pxSynth(ctx,out,map){
     else if(p===80||p===81){osc('sine',4200,0,p===80?.25:1.2,.18);osc('sine',11340,0,p===80?.15:.8,.05)}
     else noise('bandpass',hz(p),.15,.4,3);
   }
-  const api={bpm:0,t0:0,note(t,p,at,dur,vel,dest=out){
+  const api={bpm:0,t0:0,
+  // RULE: Sidechain pump: a voice ducks on each pump of the beat and swells back over the first half of it. Synth notes,
+  //   SoundFont voices and samples all go through here; returns the node to connect onward.
+  duck(t,at,stop,node){
+    const pump=api.bpm>0&&(t.fx||[]).find(f=>f&&f.k==='pump'&&f.on!==false);if(!pump)return node;
+    const pg=ctx.createGain(),per=60/api.bpm/Math.max(.5,+pump.rate||1),lo=1-Math.max(0,Math.min(1,+pump.depth||0)),sw=per*.55,ph=((at-api.t0)/per%1+1)%1;
+    pg.gain.setValueAtTime(ph<.55?lo+(1-lo)*ph/.55:1,at);if(ph<.55)pg.gain.linearRampToValueAtTime(1,at+sw-ph*per);
+    for(let b=api.t0+Math.ceil((at-api.t0)/per)*per;b<stop;b+=per){pg.gain.setValueAtTime(lo,b);pg.gain.linearRampToValueAtTime(1,b+sw)}
+    node.connect(pg);return pg;
+  },
+  note(t,p,at,dur,vel,dest=out){
     const g0=(t.vol/127)*(vel/127);if(t.drums)return drum(p,at,g0,dest);
     const V=voiceOf(t.prog),amp=ctx.createGain(),end=at+dur;let node=amp,post=amp;
     const stop=end+V.r*2+.05,lfo=(rate,depth,into,from=at)=>{const l=ctx.createOscillator(),lg=ctx.createGain();l.frequency.value=rate;lg.gain.value=depth;l.connect(lg);for(const i of into)lg.connect(i);l.start(from);l.stop(stop)};
@@ -7189,12 +7281,7 @@ function pxSynth(ctx,out,map){
       f.connect(node);node=f}
     if(V.formant){const inp=ctx.createGain();for(const fq of V.formant){const b=ctx.createBiquadFilter();b.type='bandpass';b.frequency.value=fq;b.Q.value=7;const bg=ctx.createGain();bg.gain.value=2.2;inp.connect(b);b.connect(bg);bg.connect(node)}node=inp}
     if(V.trem){const tg=ctx.createGain();tg.gain.value=1-V.trem[1]/2;post.connect(tg);post=tg;lfo(V.trem[0],V.trem[1]/2,[tg.gain])}
-    // RULE: Sidechain pump: the note ducks on each pump of the beat and swells back over the first half of it.
-    const pump=api.bpm>0&&(t.fx||[]).find(f=>f&&f.k==='pump'&&f.on!==false);
-    if(pump){const pg=ctx.createGain(),per=60/api.bpm/Math.max(.5,+pump.rate||1),lo=1-Math.max(0,Math.min(1,+pump.depth||0)),sw=per*.55,ph=((at-api.t0)/per%1+1)%1;
-      pg.gain.setValueAtTime(ph<.55?lo+(1-lo)*ph/.55:1,at);if(ph<.55)pg.gain.linearRampToValueAtTime(1,at+sw-ph*per);
-      for(let b=api.t0+Math.ceil((at-api.t0)/per)*per;b<stop;b+=per){pg.gain.setValueAtTime(lo,b);pg.gain.linearRampToValueAtTime(1,b+sw)}
-      post.connect(pg);post=pg}
+    post=api.duck(t,at,stop,post);
     post.connect(dest);
     const det=[];
     for(const [type,mul,lvl] of V.o){const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=hz(p)*mul;g.gain.value=lvl;o.connect(g);g.connect(node);o.start(at);o.stop(stop);det.push(o.detune);
@@ -7218,7 +7305,7 @@ async function pxRender(m,map,note,tail=0){
   const syn=pxSynth(ctx,master,map);syn.bpm=m.bpm;syn.t0=0;const play=(note&&note(ctx,master,syn))||syn.note,bufs={};
   for(const s of m.samples||[])try{const b=atob(s.url.slice(s.url.indexOf(',')+1)),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);bufs[s.id]=await ctx.decodeAudioData(u.buffer)}catch(e){}
   for(const t of m.tracks){if(t.mute)continue;const tin=ctx.createGain();pxFx(ctx,tin,t.fx,master);
-    for(const n of t.notes)if(n.t<end){const at=n.t*sp,d=Math.min(n.d,end-n.t)*sp;if(t.smp!=null){if(bufs[t.smp])pxSample(ctx,bufs[t.smp],t,n.p,at,d,n.v,tin)}else play(t,n.p,at,d,n.v,tin)}}
+    for(const n of t.notes)if(n.t<end){const at=n.t*sp,d=Math.min(n.d,end-n.t)*sp;if(t.smp!=null){if(bufs[t.smp])pxSample(ctx,bufs[t.smp],t,n.p,at,d,n.v,tin,syn)}else play(t,n.p,at,d,n.v,tin)}}
   return ctx.startRendering();
 }
 // FORMAT: AudioBuffer to 16-bit PCM WAV. Self-contained.
@@ -7282,7 +7369,7 @@ async function editorSong(id){
   const key=JSON.stringify(m)+'|'+(soundfont?soundfont.file:'');
   if(songCache&&songCache.key===key)return songCache;
   status('Rendering the song…');
-  const buf=await pxRender(m,GMV,soundfont?(ctx,out,syn)=>(t,p,at,d,v,dest)=>{if(!sfPlay(t,p,at,d,v,dest||out,ctx))syn.note(t,p,at,d,v,dest)}:null);
+  const buf=await pxRender(m,GMV,sfRender());
   songCache={key,blob:pxWav(buf),duration:buf.duration,title:m.name,artist:state.project?state.project.name:'PIXIWYG'};
   status('');return songCache;
 }
@@ -7309,11 +7396,11 @@ function playNote(track,p,at,dur,vel){
   const out=seqOut();if(!out)return;
   if(track.smp!=null){samplePlay(track,p,at,dur,vel);return}
   const dest=trackIn(track)||out;
-  if(soundfont&&sfPlay(track,p,at,dur,vel,dest))return;   // RULE: notes the SoundFont lacks fall back to the synth.
+  if(soundfont&&sfPlay(track,p,at,dur,vel,dest,ac,synth))return;   // RULE: notes the SoundFont lacks fall back to the synth.
   synth.note(track,p,at,dur,vel,dest);
 }
 // PERF: lookahead scheduler on the audio clock; timing holds when the main thread is busy.
-const seqP={on:false,t0:0,from:0,next:0,timer:0,raf:0,loop:true,cursor:0};
+const seqP={on:false,t0:0,from:0,next:0,timer:0,raf:0,loop:true,cursor:0,click:false};
 const tickSec=m=>60/m.bpm/PPQ;
 async function seqPlay(){
   audio();if(!ac||!seqOut())return;const m=state.music;if(!m)return;
@@ -7338,7 +7425,10 @@ function seqSchedule(){
   for(;;){
     const until=Math.min(end,seqP.from+Math.floor((horizon-seqP.t0)/sp));
     if(until<=seqP.next)break;
-    for(const t of m.tracks)if(!t.mute)for(const n of t.notes)if(n.t>=seqP.next&&n.t<until)
+    // RULE: while any track is soloed only soloed tracks play here; files, the player and exports play the full mix.
+    const solo=m.tracks.some(t=>t.solo);
+    if(seqP.click)seqClicks(m,seqP.next,until,sp);
+    for(const t of m.tracks)if(!t.mute&&(!solo||t.solo))for(const n of t.notes)if(n.t>=seqP.next&&n.t<until)
       playNote(t,n.p,seqP.t0+(n.t-seqP.from)*sp,Math.min(n.d,end-n.t)*sp,n.v);
     seqP.next=until;
     if(until>=end){
@@ -7347,19 +7437,38 @@ function seqSchedule(){
     }else break;
   }
 }
+// RULE: the click: a high tick on each bar, a middle one on each accent group, a low one on the other beats.
+function seqClicks(m,from,until,sp){
+  const bt=beatTicks(m),bar=barTicks(m),groups=new Set(meterGroups(m).reduce((a,g)=>(a.push(a.at(-1)+g),a),[0]).slice(0,-1).map(b=>b*bt)),out=seqOut();if(!out)return 0;
+  let n=0;
+  for(let b=Math.ceil(from/bt)*bt;b<until;b+=bt,n++){
+    const at=seqP.t0+(b-seqP.from)*sp,k=b%bar,f=k===0?1760:groups.has(k)?1320:990,o=ac.createOscillator(),g=ac.createGain();
+    o.type='square';o.frequency.value=f;g.gain.setValueAtTime(k===0?.3:.18,at);g.gain.exponentialRampToValueAtTime(.001,at+.04);o.connect(g);g.connect(out);o.start(at);o.stop(at+.05);
+  }
+  return n;
+}
 function seqNow(){const m=state.music;if(!m||!ac)return null;const t=seqP.from+(ac.currentTime-seqP.t0)/tickSec(m);return t<seqP.from?null:t}
-function seqFrame(){seqDraw();if(seqP.on)seqP.raf=requestAnimationFrame(seqFrame)}
+// RULE: the view turns the page when the playhead leaves it, unless a note is being dragged.
+function seqFrame(){
+  const now=seqP.on&&!seq.drag?seqNow():null;
+  if(now!=null){const sc=$('#seqScroll'),X=SQ.KW+now/PPQ*SQ.BW-sc.scrollLeft;if(X>sc.clientWidth-16||X<SQ.KW)sc.scrollLeft=Math.max(0,now/PPQ*SQ.BW-24)}
+  seqDraw();if(seqP.on)seqP.raf=requestAnimationFrame(seqFrame)}
 
 // SECTION: sequencer editor: the piano roll, tracks, songs, skins
 // PERF: the roll canvas covers the viewport only and follows the scroll.
-const seq={sel:0,drag:null};
-const SQ={KW:96,RH:22,BW:96};
+// RULE: the velocity lane starts hidden on short screens, where the notes need the height.
+// FORMAT: selN holds note objects of the picked track; clip is copied notes, times from the first one's start.
+const seq={sel:0,drag:null,hover:null,selN:new Set(),clip:null,mode:'draw',lane:innerHeight>=760};
+// FORMAT: KW key column, RH ruler height, BW pixels a quarter note (the zoom, 24–384), LANE the velocity lane.
+const SQ={KW:96,RH:22,BW:96,LANE:64};
+// RULE: on touch screens rows are tall enough for a fingertip.
+const SEQ_COARSE=matchMedia('(pointer:coarse)');
 const seqTrackSel=()=>state.music.tracks[Math.min(seq.sel,state.music.tracks.length-1)];
 function seqRows(t){return t.drums?DRUMS.map(k=>k[0]):Array.from({length:73},(_,i)=>96-i)}
-const rowH=t=>t.drums?26:15;
+const rowH=t=>t.drums?26:SEQ_COARSE.matches?22:15;
 function seqSize(){
   const m=state.music,t=seqTrackSel(),quarters=songEnd(m)/PPQ;
-  return{w:SQ.KW+quarters*SQ.BW,h:SQ.RH+seqRows(t).length*rowH(t)};
+  return{w:SQ.KW+quarters*SQ.BW,h:SQ.RH+seqRows(t).length*rowH(t)+(seq.lane?SQ.LANE:0)};
 }
 function songSync(){
   const sel=$('#seqSong');sel.replaceChildren();
@@ -7367,7 +7476,7 @@ function songSync(){
   if(state.music)sel.value=state.music.id;$('#seqSongName').value=state.music?state.music.name:'';$('#seqSongDel').disabled=!state.music;
   if(typeof wsSync==='function')wsSync();
 }
-function openSong(id){if(seqP.on)seqStop();useSong(id);seq.sel=0;songSync();seqControls();seqTracks();seqLayout();seqDraw()}
+function openSong(id){if(seqP.on)seqStop();seqSelClear();useSong(id);seq.sel=0;songSync();seqControls();seqTracks();seqLayout();seqDraw()}
 $('#seqSong').onchange=e=>openSong(e.target.value);
 $('#seqSongName').oninput=e=>{if(!state.music)return;seqEdit(()=>{state.music.name=cleanSongName(e.target.value)});const o=$('#seqSong').selectedOptions[0];if(o)o.textContent=state.music.name;if(typeof wsSync==='function')wsSync()};
 $('#seqSongNew').onclick=()=>{audio();pushUndo();const s=newSong();save();openSong(s.id);$('#seqSongName').select()};
@@ -7399,13 +7508,16 @@ function openSeq(){
   if(!useSong()){state.music=newSong('Song 1');save()}
   sfRestore();skinSync();songSync();
   seq.sel=Math.min(seq.sel,state.music.tracks.length-1);
-  $('#seqModal').hidden=false;seqControls();seqTracks();
-  requestAnimationFrame(()=>{seqLayout();const t=seqTrackSel();if(!t.drums){const sc=$('#seqScroll');sc.scrollTop=(96-72)*rowH(t)}seqDraw()});
+  $('#seqModal').hidden=false;seqControls();seqTracks();seqToolsSync();
+  requestAnimationFrame(()=>{seqLayout();seqShowNotes(true);seqDraw()});
   $('#seqScroll').focus();
 }
 function closeSeq(){if($('#seqModal').hidden)return;seqStop();$('#seqModal').hidden=true}
+// INVARIANT: edits made in one synchronous run share one undo step.
+// FIX: re-armed in a microtask, not a timer: Chromium runs queued input ahead of timers, so fast keys (a held arrow, a
+//   quick nudge then Delete) merged separate edits into one step.
 let seqArmed=true;
-function seqEdit(fn){if(seqArmed){pushUndo();seqArmed=false;setTimeout(()=>seqArmed=true,0)}fn();save()}
+function seqEdit(fn){if(seqArmed){pushUndo();seqArmed=false;queueMicrotask(()=>seqArmed=true)}fn();save()}
 function seqControls(){
   const m=state.music;$('#seqBpm').value=m.bpm;$('#seqBars').value=m.bars;$('#seqBeats').value=m.beats;$('#seqUnit').value=String(m.unit||4);$('#seqGroups').value=m.groups?m.groups.join('+'):'';$('#seqGroups').placeholder=meterGroups(m).join('+');$('#seqRes').value=m.res;$('#seqLoop').checked=seqP.loop;
 }
@@ -7429,6 +7541,8 @@ function seqTracks(){
       if(!t.drums&&g&&((was&&was[1]===t.name)||GM.some(x=>x[1]===t.name)||/^Track( \d+)?$/.test(t.name)))t.name=g[1].replace(/^\d+\. /,'')});seqTracks();audio();playNote(t,60,ac.currentTime+.01,.4,100)};
     const vol=mkEl('input',{type:'range',min:0,max:127,value:t.vol});vol.setAttribute('aria-label','Volume');vol.title='Volume';
     vol.onchange=()=>seqEdit(()=>{t.vol=+vol.value});
+    const solo=mkEl('button',{type:'button',className:'btn sqm'+(t.solo?' on':''),textContent:'S',title:'Solo: hear only this track (and other soloed ones) here. Files and the page still play every track'});solo.setAttribute('aria-pressed',!!t.solo);
+    solo.onclick=()=>{seqEdit(()=>{if(t.solo)delete t.solo;else t.solo=true});seqTracks();seqDraw()};
     const mute=mkEl('button',{type:'button',className:'btn sqm'+(t.mute?' on':''),textContent:'M',title:'Mute: not played, and left out of the .mid file'});mute.setAttribute('aria-pressed',t.mute);
     mute.onclick=()=>{seqEdit(()=>{t.mute=!t.mute});seqTracks();seqDraw()};
     const del=mkEl('button',{type:'button',className:'btn sqm',textContent:'×',title:'Remove this track'});del.setAttribute('aria-label','Remove track');
@@ -7436,14 +7550,30 @@ function seqTracks(){
     del.onclick=()=>{if(t.notes.length&&!confirm(`Remove “${t.name}” and its ${t.notes.length} notes?`))return;seqEdit(()=>{m.tracks.splice(i,1)});seq.sel=Math.min(seq.sel,m.tracks.length-1);seqTracks();seqLayout();seqDraw()};
     const fxb=mkEl('button',{type:'button',className:'btn sqm'+((t.fx||[]).some(f=>f.on)?' on':''),textContent:'FX'+((t.fx||[]).length?' '+t.fx.length:''),title:'Effects on this track: EQ, filter, compressor, drive, chorus, delay, reverb, pan'});
     fxb.onclick=()=>{audio();openFxPanel(t)};
-    const top=mkEl('div',{className:'sqtop'});top.append(mkEl('i',{className:'sqdot'}),name,fxb,mute,del);
+    const top=mkEl('div',{className:'sqtop'});top.append(mkEl('i',{className:'sqdot'}),name,fxb,solo,mute,del);
     const bot=mkEl('div',{className:'sqtop'});bot.append(inst,vol);
     row.append(top,bot);box.append(row);
   });
   $('#seqAddMel').disabled=$('#seqAddDrum').disabled=m.tracks.length>=16;
 }
 // RULE: picking a track keeps the list DOM (a name being typed keeps focus) and redraws only the grid.
-function seqPick(i){seq.sel=i;[...$('#seqTrackList').children].forEach((r,k)=>r.classList.toggle('on',k===i));seqLayout();seqDraw()}
+function seqPick(i){if(seq.sel!==i)seqSelClear();seq.sel=i;[...$('#seqTrackList').children].forEach((r,k)=>r.classList.toggle('on',k===i));seqLayout();seqShowNotes();seqDraw()}
+// RULE: a track's notes are never off screen when it is picked: if none show, they are centered (C5 for an empty
+//   track when asked to place it anyway).
+function seqShowNotes(always){
+  const t=seqTrackSel();if(!t||t.drums)return;const sc=$('#seqScroll'),rh=rowH(t),vh=sc.clientHeight-SQ.RH;
+  if(!t.notes.length){if(always)sc.scrollTop=(96-72)*rh;return}
+  let lo=127,hi=0;for(const n of t.notes){if(n.p<lo)lo=n.p;if(n.p>hi)hi=n.p}
+  const top=(96-Math.min(96,hi))*rh,bot=(96-Math.max(24,lo)+1)*rh;
+  if(!always&&t.notes.some(n=>{const y=(96-n.p)*rh;return y>=sc.scrollTop&&y+rh<=sc.scrollTop+vh}))return;
+  sc.scrollTop=Math.max(0,(top+bot)/2-vh/2);
+}
+// RULE: zoom keeps the moment under the pointer (or the view's left edge) where it is.
+function seqZoomTo(bw,cx){
+  const sc=$('#seqScroll'),r=sc.getBoundingClientRect(),vx=cx==null?SQ.KW:cx-r.left,tick=(vx-SQ.KW+sc.scrollLeft)*PPQ/SQ.BW;
+  const nb=Math.max(24,Math.min(384,Math.round(bw)));if(nb===SQ.BW)return;
+  SQ.BW=nb;seqLayout();sc.scrollLeft=Math.max(0,tick*nb/PPQ-vx+SQ.KW);seqDraw();
+}
 function seqChoices(t){
   if(soundfont){const list=soundfont.presets.filter(p=>t.drums?p.bank===128:p.bank!==128).sort((a,b)=>a.prog-b.prog||a.bank-b.bank),seen=new Set(),out=[];
     for(const p of list)if(!seen.has(p.prog)){seen.add(p.prog);out.push([p.prog,`${p.prog+1}. ${p.name}`])}
@@ -7459,12 +7589,16 @@ function seqColors(){const cs=getComputedStyle(document.body),v=k=>cs.getPropert
 function seqDraw(){
   if($('#seqModal').hidden||!state.music)return;
   const m=state.music,t=seqTrackSel(),rows=seqRows(t),rh=rowH(t),sc=$('#seqScroll'),cv=$('#seqCanvas'),x=cv.getContext('2d');
+  // PERF: the selection is checked against the track once per edit (save or undo bumps editGen), not every frame.
+  if(seq.selN.size&&seq.selGen!==editGen){seq.selGen=editGen;seqSelPrune()}
   const dpr=devicePixelRatio||1,vw=sc.clientWidth,vh=sc.clientHeight,L=sc.scrollLeft,T=sc.scrollTop,C=seqColors();
   x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,vw,vh);
   const {KW,RH,BW}=SQ,gt=gridTicks(m),tk=PPQ/BW,sw=gt/tk,end=songEnd(m),gx=tick=>KW+tick/tk-L,gy=r=>RH+r*rh-T;
   x.fillStyle=C.paper;x.fillRect(KW,RH,vw-KW,vh-RH);
+  const hv=!seq.drag&&seq.hover&&seq.hover.ok&&(seq.hover.zone==='grid'||seq.hover.zone==='keys')?seq.hover:null,hr=hv?rows.indexOf(hv.p):-1;
   rows.forEach((p,r)=>{const y=gy(r);if(y+rh<RH||y>vh)return;
     if(t.drums?r%2:isBlack(p)){x.fillStyle=C.chrome;x.globalAlpha=.7;x.fillRect(KW,y,vw-KW,rh);x.globalAlpha=1}
+    if(r===hr){x.fillStyle=C.sel;x.globalAlpha=.12;x.fillRect(KW,y,vw-KW,rh);x.globalAlpha=1}
     if(!t.drums&&p%12===0){x.fillStyle=C.chrome2;x.fillRect(KW,y+rh-1,vw-KW,1)}});
   const first=Math.max(0,Math.floor((L)/sw)),last=Math.ceil((L+vw)/sw);
   // RULE: lines get heavier from grid to beat to group (the meter's accents) to bar.
@@ -7481,14 +7615,27 @@ function seqDraw(){
   const ti=m.tracks.indexOf(t);
   for(const n of t.notes){const r=row.get(n.p);if(r==null)continue;const X=gx(n.t),W=Math.max(4,n.d/tk),Y=gy(r);if(X+W<KW||X>vw||Y+rh<RH||Y>vh)continue;
     x.globalAlpha=(n.t>=end?.3:t.mute?.45:1)*(.35+.65*n.v/127);x.fillStyle=col(ti);x.fillRect(X+1,Y+1,W-2,rh-2);x.globalAlpha=n.t>=end?.3:t.mute?.45:1;
-    x.strokeStyle=C.ink;x.lineWidth=n.v>110?2.5:1;x.strokeRect(X+1.5,Y+1.5,W-3,rh-3);
+    const on=seq.selN.has(n);x.strokeStyle=on?C.sel:C.ink;x.lineWidth=on?3:n.v>110?2.5:1;x.strokeRect(X+1.5,Y+1.5,W-3,rh-3);
     if(n.v>110){x.fillStyle='#fff';x.fillRect(X+3,Y+3,3,rh-6)}x.globalAlpha=1}
+  const bx=seq.drag&&seq.drag.kind==='box'?seq.drag:null;
+  if(bx){const X0=gx(Math.min(bx.t0,bx.t1)),X1=gx(Math.max(bx.t0,bx.t1)),Y0=gy(Math.min(bx.r0,bx.r1)),Y1=gy(Math.max(bx.r0,bx.r1)+1);
+    x.fillStyle=C.sel;x.globalAlpha=.12;x.fillRect(X0,Y0,X1-X0,Y1-Y0);x.globalAlpha=1;x.strokeStyle=C.sel;x.lineWidth=1.5;x.setLineDash([5,3]);x.strokeRect(X0+.5,Y0+.5,X1-X0,Y1-Y0);x.setLineDash([])}
+  // RULE: the velocity lane draws each note's start as a stem as tall as it plays hard, selected ones outlined.
+  if(seq.lane){const top=vh-SQ.LANE,H=SQ.LANE-8;x.fillStyle=C.chrome;x.fillRect(KW,top,vw-KW,SQ.LANE);x.fillStyle=C.ink;x.fillRect(KW,top,vw-KW,2);
+    for(const n of t.notes){const X=gx(n.t);if(X<KW-6||X>vw)continue;const sh=Math.max(2,H*n.v/127),on=seq.selN.has(n);
+      x.fillStyle=col(ti);x.globalAlpha=seq.selN.size&&!on?.4:1;x.fillRect(X,vh-4-sh,4,sh);x.fillRect(X-2,vh-4-sh,8,3);
+      if(on){x.strokeStyle=C.sel;x.lineWidth=2;x.strokeRect(X-3,vh-5-sh,10,sh+2)}x.globalAlpha=1}}
+  // RULE: hovering empty grid shows the note a click would make, at the length the last one was drawn.
+  if(hv&&hv.zone==='grid'&&!hv.note&&hv.snap<end){const X=gx(hv.snap),W=Math.min(t.drums?hv.step:seqLastLen,end-hv.snap)/tk,Y=gy(hr);
+    x.strokeStyle=col(ti);x.lineWidth=2;x.setLineDash([4,3]);x.strokeRect(X+1.5,Y+1.5,W-3,rh-3);x.setLineDash([])}
   x.fillStyle=C.chrome;x.fillRect(0,RH,KW,vh-RH);x.font='11px '+(getComputedStyle(document.body).getPropertyValue('--f-mono')||'monospace');x.textBaseline='middle';
   rows.forEach((p,r)=>{const y=gy(r);if(y+rh<RH||y>vh)return;
-    if(t.drums){x.fillStyle=C.ink;x.fillText(DRUMS[r][1],8,y+rh/2)}
+    if(t.drums){if(r===hr){x.fillStyle=C.sel;x.globalAlpha=.3;x.fillRect(0,y,KW,rh);x.globalAlpha=1}x.fillStyle=C.ink;x.fillText(DRUMS[r][1],8,y+rh/2)}
     else{x.fillStyle='#fdfcff';x.fillRect(0,y,KW,rh);if(isBlack(p)){x.fillStyle='#16121f';x.fillRect(0,y+1,58,rh-2)}
       if(p%12===0||p%12===5){x.fillStyle='#b9b4cc';x.fillRect(0,y+rh-1,KW,1)}
-      if(p%12===0){x.fillStyle='#16121f';x.fillText(noteName(p),KW-30,y+rh/2)}}});
+      if(r===hr){x.fillStyle=C.sel;x.globalAlpha=.45;x.fillRect(0,y,KW,rh);x.globalAlpha=1}
+      if(p%12===0||r===hr){x.fillStyle='#16121f';x.fillText(noteName(p),KW-30,y+rh/2)}}});
+  if(seq.lane){x.fillStyle=C.chrome;x.fillRect(0,vh-SQ.LANE,KW,SQ.LANE);x.fillStyle=C.ink;x.fillRect(0,vh-SQ.LANE,KW,2);x.fillText('Velocity',8,vh-SQ.LANE/2)}
   x.fillStyle=C.ink;x.fillRect(KW-2,RH,2,vh-RH);
   x.fillStyle=C.chrome;x.fillRect(0,0,vw,RH);x.fillStyle=C.ink;x.fillRect(0,RH-2,vw,2);
   for(let b=0;b<m.bars;b++){const X=gx(b*barTicks(m));if(X<KW-40||X>vw)continue;if(X>=KW){x.fillRect(Math.round(X),0,1.5,RH);x.fillText(String(b+1),X+5,RH/2)}}
@@ -7498,12 +7645,14 @@ function seqDraw(){
 }
 function seqHit(e){
   const m=state.music,t=seqTrackSel(),cv=$('#seqCanvas').getBoundingClientRect(),sc=$('#seqScroll');
-  const vx=e.clientX-cv.left,vy=e.clientY-cv.top,rows=seqRows(t),rh=rowH(t);
+  const vx=e.clientX-cv.left,vy=e.clientY-cv.top,rows=seqRows(t),rh=rowH(t),lane=seq.lane?SQ.LANE:0,vh=sc.clientHeight;
   const tick=Math.max(0,(vx-SQ.KW+sc.scrollLeft)*PPQ/SQ.BW),r=Math.floor((vy-SQ.RH+sc.scrollTop)/rh);
-  const step=gridTicks(m);
-  return{zone:vy<SQ.RH?'ruler':vx<SQ.KW?'keys':'grid',tick,snap:Math.floor(tick/step)*step,p:rows[Math.max(0,Math.min(rows.length-1,r))],ok:r>=0&&r<rows.length,step};
+  const step=gridTicks(m),vel=Math.max(1,Math.min(127,Math.round(127*(vh-4-vy)/(lane-8||1))));
+  return{zone:vy<SQ.RH?'ruler':lane&&vy>=vh-lane?(vx<SQ.KW?'lanekeys':'vel'):vx<SQ.KW?'keys':'grid',tick,snap:Math.floor(tick/step)*step,p:rows[Math.max(0,Math.min(rows.length-1,r))],row:r,ok:r>=0&&r<rows.length,step,vel,vx};
 }
 function seqNoteAt(t,h){return t.notes.find(n=>n.p===h.p&&h.tick>=n.t&&h.tick<n.t+n.d)}
+// RULE: a note's grab edge is its last 6 px, or its last third when it is drawn shorter than 18 px.
+const seqEdge=(n,h)=>h.tick>=n.t+n.d-Math.min(n.d/3,6*PPQ/SQ.BW);
 // INVARIANT: notes of one pitch never overlap; the earlier is cut where the later starts (MIDI can't represent overlap).
 function seqTidy(t){
   t.notes.sort((a,b)=>a.p-b.p||a.t-b.t);
@@ -7512,53 +7661,107 @@ function seqTidy(t){
 }
 const seqHear=(t,p)=>{audio();if(ac&&seqOut())playNote(t,p,ac.currentTime+.01,.35,100)};
 let seqLastLen=PPQ/4;
+// RULE: Draw mode (the default) draws: click empty grid for a note, drag it for its length, click a note to
+//   remove it, drag a note (or the selection it belongs to) to move, drag a note's end to resize. Select mode, or
+//   Ctrl/Cmd in Draw, selects: click a note, Ctrl/Cmd+click to add or drop one, drag empty grid for a box.
 function seqDown(e){
   if(e.button>0)return;const m=state.music,t=seqTrackSel(),h=seqHit(e);
   if(h.zone==='ruler'){seqP.cursor=Math.min(h.snap,songEnd(m)-h.step);if(seqP.on)seqPlay();seqDraw();return}
   if(h.zone==='keys'){if(h.ok)seqHear(t,h.p);return}
+  if(h.zone==='lanekeys')return;
+  const sc=$('#seqScroll');
+  if(h.zone==='vel'){sc.setPointerCapture(e.pointerId);seq.drag={kind:'vel',moved:false,last:null};seqVelPaint(h);return}
   if(!h.ok||h.snap>=songEnd(m))return;
-  $('#seqScroll').setPointerCapture(e.pointerId);
-  const n=seqNoteAt(t,h);
+  sc.setPointerCapture(e.pointerId);
+  const n=seqNoteAt(t,h),add=e.ctrlKey||e.metaKey,picking=seq.mode==='select'||add;
+  if(n&&e.shiftKey&&!picking){seqEdit(()=>{n.v=n.v>110?100:127});seqDraw();return}
   if(n){
-    if(e.shiftKey){seqEdit(()=>{n.v=n.v>110?100:127});seqDraw();return}
-    seq.drag={kind:'move',n,t0:n.t,p0:n.p,h0:h,moved:false};return;
+    if(picking){if(add){if(seq.selN.has(n)){seq.selN.delete(n);seqDraw();seqToolsSync();return}seq.selN.add(n)}else if(!seq.selN.has(n))seq.selN=new Set([n])}
+    else if(!seq.selN.has(n))seq.selN.clear();
+    const group=seq.selN.has(n)?[...seq.selN]:[n];
+    if(!t.drums&&seqEdge(n,h))seq.drag={kind:'len',n,old:true,moved:false,group:group.map(x=>({n:x,d0:x.d})),d0:n.d};
+    else seq.drag={kind:'move',n,h0:h,moved:false,pick:picking,group:group.map(x=>({n:x,t0:x.t,p0:x.p}))};
+    seqDraw();seqToolsSync();return;
   }
+  if(picking){if(!add)seq.selN.clear();seq.drag={kind:'box',t0:h.tick,r0:h.row,t1:h.tick,r1:h.row,base:new Set(seq.selN)};seqDraw();seqToolsSync();return}
+  seq.selN.clear();seqToolsSync();
   const len=t.drums?h.step:seqLastLen;
   const nn={t:h.snap,d:Math.max(h.step,Math.min(len,songEnd(m)-h.snap)),p:h.p,v:100};
   seqEdit(()=>{t.notes.push(nn);seqTidy(t)});seqHear(t,h.p);
-  seq.drag=t.drums?{kind:'paint',p:h.p,done:new Set([h.snap])}:{kind:'len',n:nn,moved:false};
+  seq.drag=t.drums?{kind:'paint',p:h.p,done:new Set([h.snap])}:{kind:'len',n:nn,moved:false,group:[{n:nn,d0:nn.d}],d0:nn.d};
   seqDraw();
 }
 function seqMove(e){
   const d=seq.drag;if(!d)return;const m=state.music,t=seqTrackSel(),h=seqHit(e),end=songEnd(m);
-  if(d.kind==='len'){const dd=Math.max(h.step,Math.ceil((h.tick-d.n.t)/h.step)*h.step);if(dd!==d.n.d){d.n.d=Math.min(dd,end-d.n.t);d.moved=true;seqDraw()}}
+  if(d.kind==='vel'){seqVelPaint(h);return}
+  if(d.kind==='box'){d.t1=h.tick;d.r1=h.row;seqDraw();return}
+  if(d.kind==='len'){
+    const dd=Math.max(h.step,Math.ceil((h.tick-d.n.t)/h.step)*h.step),delta=dd-d.d0;
+    if(dd!==d.n.d){if(d.old&&!d.moved)pushUndo();for(const g of d.group)g.n.d=Math.max(h.step,Math.min(g.d0+delta,end-g.n.t));d.moved=true;seqDraw()}}
   else if(d.kind==='paint'){if(!d.done.has(h.snap)&&h.snap<end&&!t.notes.some(n=>n.p===d.p&&n.t===h.snap)){d.done.add(h.snap);t.notes.push({t:h.snap,d:h.step,p:d.p,v:100});seqTidy(t);seqHear(t,d.p);seqDraw()}}
   else if(d.kind==='move'){
-    const dt=Math.round((h.tick-d.h0.tick)/h.step)*h.step,rows=seqRows(t),dr=rows.indexOf(h.p)-rows.indexOf(d.h0.p);
-    const nt=Math.max(0,Math.min(end-h.step,d.t0+dt)),np=rows[Math.max(0,Math.min(rows.length-1,rows.indexOf(d.p0)+dr))];
-    if(nt!==d.n.t||np!==d.n.p){if(!d.moved){pushUndo();d.moved=true}if(np!==d.n.p)seqHear(t,np);d.n.t=nt;d.n.p=np;seqDraw()}
+    // INVARIANT: a group moves as one: the shift is clamped so no note leaves the song or the rows.
+    const rows=seqRows(t),ri=p=>rows.indexOf(p),G=d.group;
+    let dt=Math.round((h.tick-d.h0.tick)/h.step)*h.step,dr=ri(h.p)-ri(d.h0.p);
+    const t0=Math.min(...G.map(g=>g.t0)),t1=Math.max(...G.map(g=>g.t0)),r0=Math.min(...G.map(g=>ri(g.p0))),r1=Math.max(...G.map(g=>ri(g.p0)));
+    dt=Math.max(-t0,Math.min(end-h.step-t1,dt));dr=Math.max(-r0,Math.min(rows.length-1-r1,dr));
+    if(G[0].n.t!==G[0].t0+dt||G[0].n.p!==rows[ri(G[0].p0)+dr]){
+      if(!d.moved){pushUndo();d.moved=true}
+      const lead=G.find(g=>g.n===d.n),np=rows[ri(lead.p0)+dr];if(np!==d.n.p)seqHear(t,np);
+      for(const g of G){g.n.t=g.t0+dt;g.n.p=rows[ri(g.p0)+dr]}seqDraw()}
   }
 }
 function seqUp(){
   const d=seq.drag;seq.drag=null;if(!d)return;const t=seqTrackSel();
-  if(d.kind==='move'&&!d.moved){seqEdit(()=>{t.notes.splice(t.notes.indexOf(d.n),1)});}
-  else if(d.kind==='len'){seqLastLen=d.n.d;seqTidy(t);save()}
+  if(d.kind==='box'){
+    const rows=seqRows(t),lo=Math.min(d.t0,d.t1),hi=Math.max(d.t0,d.t1),ra=Math.min(d.r0,d.r1),rb=Math.max(d.r0,d.r1);
+    seq.selN=new Set(d.base);for(const n of t.notes){const r=rows.indexOf(n.p);if(r>=ra&&r<=rb&&n.t<hi&&n.t+n.d>lo)seq.selN.add(n)}
+    if(seq.selN.size)status(`${seq.selN.size} note${seq.selN.size===1?'':'s'} selected. Ctrl+C copies, Ctrl+V pastes at the cursor, arrows move, Delete removes.`);
+  }
+  else if(d.kind==='vel'){if(d.moved)save()}
+  else if(d.kind==='move'&&!d.moved){if(!d.pick){seqEdit(()=>{t.notes.splice(t.notes.indexOf(d.n),1)});seq.selN.delete(d.n)}}
+  else if(d.kind==='len'){if(d.moved||!d.old)seqLastLen=d.n.d;seqTidy(t);save()}
   else{seqTidy(t);save()}
-  seqDraw();
+  seqSelPrune();seqDraw();seqToolsSync();
+}
+// INVARIANT: the selection only holds notes still in the picked track (tidying can merge notes away).
+function seqSelPrune(){const t=seqTrackSel(),have=new Set(t?t.notes:[]),k=seq.selN.size;for(const n of seq.selN)if(!have.has(n))seq.selN.delete(n);if(seq.selN.size!==k)seqToolsSync()}
+// RULE: the lane sets how hard notes play by height; a drag paints across them. With a selection only selected notes
+//   change.
+function seqVelPaint(h){
+  const d=seq.drag,t=seqTrackSel(),pool=seq.selN.size?[...seq.selN]:t.notes,px=PPQ/SQ.BW;
+  const a=d.last||{tick:h.tick,vel:h.vel},b={tick:h.tick,vel:h.vel},lo=Math.min(a.tick,b.tick)-4*px,hi=Math.max(a.tick,b.tick)+4*px;
+  const hit=pool.filter(n=>n.t>=lo&&n.t<=hi);d.last={tick:h.tick,vel:h.vel};if(!hit.length)return;
+  if(!d.moved){pushUndo();d.moved=true}
+  for(const n of hit){const f=b.tick!==a.tick?(n.t-a.tick)/(b.tick-a.tick):1;n.v=Math.max(1,Math.min(127,Math.round(a.vel+(b.vel-a.vel)*Math.max(0,Math.min(1,f)))))}
+  status(`Velocity ${hit.at(-1).v}`);seqDraw();
 }
 function saveMidi(){
   const m=state.music;if(!m)return;
   const name=slug(m.name||'song')+'.mid';
-  download(new Blob([midiBytes(m,m.name||'PIXIWYG song')],{type:'audio/midi'}),name);status('Saved '+name);
+  // RULE: MIDI has 15 channels for instruments (10 is the drums); a song with more says which didn't fit.
+  const mel=m.tracks.filter(t=>!t.mute&&!t.drums),over=mel.slice(15).map(t=>t.name);
+  download(new Blob([midiBytes(m,m.name||'PIXIWYG song')],{type:'audio/midi'}),name);
+  status(over.length?`Saved ${name}, without ${over.join(', ')}: a MIDI file holds 15 instruments besides the drums.`:'Saved '+name);
 }
 {
   const sc=$('#seqScroll');
   sc.addEventListener('scroll',seqDraw);
   sc.addEventListener('pointerdown',seqDown);sc.addEventListener('pointermove',seqMove);
   sc.addEventListener('pointerup',seqUp);sc.addEventListener('pointercancel',seqUp);
+  // PERF: hover redraws only when what it points at changes (row, grid step, or note and edge).
+  sc.addEventListener('pointermove',e=>{if(seq.drag)return;const t=seqTrackSel(),h=seqHit(e),n=h.zone==='grid'&&h.ok&&seqNoteAt(t,h),edge=!!n&&!t.drums&&seqEdge(n,h);
+    sc.style.cursor=h.zone!=='grid'?'pointer':edge?'ew-resize':n?'grab':'crosshair';
+    const v={zone:h.zone,ok:h.ok,p:h.p,snap:h.snap,step:h.step,note:!!n,edge},o=seq.hover;
+    if(!o||o.zone!==v.zone||o.ok!==v.ok||o.p!==v.p||o.snap!==v.snap||o.note!==v.note||o.edge!==v.edge){seq.hover=v;seqDraw()}});
+  sc.addEventListener('pointerleave',()=>{if(seq.hover){seq.hover=null;seqDraw()}});
+  sc.addEventListener('wheel',e=>{if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();seqZoomTo(SQ.BW*Math.pow(1.0015,-e.deltaY),e.clientX)},{passive:false});
   sc.addEventListener('contextmenu',e=>{e.preventDefault();const t=seqTrackSel(),h=seqHit(e),n=h.zone==='grid'&&seqNoteAt(t,h);if(n){seqEdit(()=>{t.notes.splice(t.notes.indexOf(n),1)});seqDraw()}});
   new ResizeObserver(()=>{if(!$('#seqModal').hidden){seqLayout();seqDraw()}}).observe(sc);
-  const num=(id,k,lo,hi)=>$(id).addEventListener('change',e=>{const v=Math.round(numIn(e.target.value,state.music[k],lo,hi));seqEdit(()=>{const was=state.music[k];state.music[k]=v;if(k==='bpm')refitSamples(state.music,was)});e.target.value=v;$('#seqBars').value=state.music.bars;seqLayout();seqDraw()});
+  // RULE: a tempo change while playing carries on from the same spot at the new speed; the cursor stays put.
+  const num=(id,k,lo,hi)=>$(id).addEventListener('change',e=>{const v=Math.round(numIn(e.target.value,state.music[k],lo,hi)),m=state.music,at=k==='bpm'&&seqP.on?seqNow():null;
+    seqEdit(()=>{const was=m[k];m[k]=v;if(k==='bpm')refitSamples(m,was)});e.target.value=v;$('#seqBars').value=m.bars;seqLayout();seqDraw();
+    if(at!=null){const c=seqP.cursor,g=gridTicks(m);seqP.cursor=Math.floor((at%songEnd(m))/g)*g;seqPlay().finally(()=>{seqP.cursor=c})}});
   num('#seqBpm','bpm',20,300);num('#seqBars','bars',1,64);
   // RULE: changing the meter keeps the notes where they are in time and drops a grouping that no longer adds up.
   const meter=()=>{const m=state.music,b=Math.round(numIn($('#seqBeats').value,m.beats,1,32)),u=+$('#seqUnit').value,g=parseGroups($('#seqGroups').value,b);
@@ -7566,6 +7769,7 @@ function saveMidi(){
   $('#seqBeats').onchange=meter;$('#seqUnit').onchange=meter;$('#seqGroups').onchange=meter;
   $('#seqRes').onchange=e=>{seqEdit(()=>{state.music.res=+e.target.value});seqLastLen=gridTicks(state.music);seqDraw()};
   $('#seqLoop').onchange=e=>{seqP.loop=e.target.checked};
+  $('#seqClick').onchange=e=>{audio();seqP.click=e.target.checked};
   $('#seqPlay').onclick=()=>{if(seqP.on)seqStop();else seqPlay()};
   $('#seqSave').onclick=()=>{audio();saveMidi()};
   const add=drums=>{const m=state.music;if(m.tracks.length>=16)return;seqEdit(()=>{const t=seqTrack(drums);if(!drums&&m.tracks.some(x=>x.name==='Piano'))t.name='Track '+(m.tracks.length+1);m.tracks.push(t)});seq.sel=m.tracks.length-1;seqTracks();seqLayout();seqDraw()};
@@ -7576,10 +7780,128 @@ function saveMidi(){
   $('#seqModal').addEventListener('keydown',e=>{
     const field=e.target.matches('input[type=text],input[type=number],select');
     if(e.key===' '&&!field){e.preventDefault();e.stopPropagation();if(seqP.on)seqStop();else seqPlay();return}
-    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!field){e.preventDefault();e.stopPropagation();e.shiftKey?doRedo():doUndo();if(!useSong())state.music=newSong('Song 1');songSync();seqControls();seqTracks();seqLayout();seqDraw()}
+    if((e.key==='-'||e.key==='='||e.key==='+')&&!field&&!e.ctrlKey&&!e.metaKey){e.preventDefault();seqZoomTo(SQ.BW*(e.key==='-'?.8:1.25));return}
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'&&!field){e.preventDefault();e.stopPropagation();e.shiftKey?doRedo():doUndo();seqSelClear();if(!useSong())state.music=newSong('Song 1');songSync();seqControls();seqTracks();seqLayout();seqDraw()}
   });
 }
 
+// SECTION: piano roll tools: draw and select modes, the clipboard, nudging, the velocity lane, zoom, the bar's More
+function seqSetMode(mode){
+  seq.mode=mode;$('#seqModeDraw').setAttribute('aria-pressed',String(mode==='draw'));$('#seqModeSel').setAttribute('aria-pressed',String(mode==='select'));
+  status(mode==='select'?'Select: click notes, or drag a box around them':'Draw: click for a note, click a note to remove it');
+}
+// PERF: runs after every selection change; touches the DOM only where a state flips.
+function seqToolsSync(){
+  const has=seq.selN.size>0;
+  for(const [id,on] of [['#seqCopy',has],['#seqCut',has],['#seqDup',has],['#seqDel',has],['#seqPaste',!!seq.clip]]){const b=$(id);if(b.disabled===on)b.disabled=!on}
+}
+function seqSelClear(){if(!seq.selN.size)return;seq.selN.clear();seqToolsSync()}
+const seqWhere=(m,at)=>{const bar=barTicks(m),bt=beatTicks(m);return`bar ${Math.floor(at/bar)+1}, beat ${Math.floor(at%bar/bt)+1}`};
+// RULE: a copy spans whole beats from its first note, or whole bars once it is over half a bar, so copies laid end
+//   to end (paste after paste, or Duplicate) keep the groove.
+function seqClipOf(notes){
+  const m=state.music,sel=[...notes].sort((a,b)=>a.t-b.t||a.p-b.p),t0=sel[0].t,len=Math.max(...sel.map(n=>n.t+n.d))-t0;
+  const unit=len>barTicks(m)/2?barTicks(m):beatTicks(m);
+  return{notes:sel.map(n=>({t:n.t-t0,d:n.d,p:n.p,v:n.v})),span:Math.max(unit,Math.ceil(len/unit)*unit),t0};
+}
+function seqCopy(cut){
+  const t=seqTrackSel();if(!seq.selN.size)return;
+  const c=seqClipOf(seq.selN);seq.clip={notes:c.notes,span:c.span};const k=c.notes.length;
+  if(cut){seqEdit(()=>{t.notes=t.notes.filter(n=>!seq.selN.has(n))});seq.selN.clear()}
+  status(`${cut?'Cut':'Copied'} ${k} note${k===1?'':'s'}. Paste puts them at the cursor (click the ruler to move it).`);
+  seqToolsSync();seqDraw();
+}
+// RULE: a paste lands at the cursor in the picked track, becomes the selection, and moves the cursor to its end, so
+//   pasting again continues the line. Notes past the song's end, or drums the kit lacks, are left out and counted.
+function seqPaste(clip=seq.clip,at=seqP.cursor){
+  const m=state.music,t=seqTrackSel();if(!clip||!m)return;
+  const end=songEnd(m),rows=new Set(seqRows(t));
+  const add=clip.notes.filter(n=>at+n.t<end&&rows.has(n.p)).map(n=>({t:at+n.t,d:Math.max(1,Math.min(n.d,end-at-n.t)),p:n.p,v:n.v}));
+  const lost=clip.notes.length-add.length;
+  if(!add.length){status(t.drums?'Nothing to paste: those notes aren’t drums in this kit.':'Nothing fits there: the cursor is at the end of the song.');return}
+  seqEdit(()=>{t.notes.push(...add);seqTidy(t)});
+  seq.selN=new Set(add);seqSelPrune();
+  seqP.cursor=Math.min(end-gridTicks(m),at+clip.span);
+  const sc=$('#seqScroll'),X=at/PPQ*SQ.BW;if(X<sc.scrollLeft||X>sc.scrollLeft+sc.clientWidth-SQ.KW-40)sc.scrollLeft=Math.max(0,X-40);
+  status(`Pasted ${add.length} note${add.length===1?'':'s'} at ${seqWhere(m,at)}${lost?`; ${lost} didn’t fit`:''}.`);
+  seqToolsSync();seqDraw();
+}
+// RULE: Duplicate copies the selection right after itself and leaves the clipboard alone.
+function seqDuplicate(){if(!seq.selN.size)return;const c=seqClipOf(seq.selN);seqPaste(c,c.t0+c.span)}
+function seqDelete(){
+  const t=seqTrackSel(),k=seq.selN.size;if(!k)return;
+  seqEdit(()=>{t.notes=t.notes.filter(n=>!seq.selN.has(n))});seq.selN.clear();
+  status(`Deleted ${k} note${k===1?'':'s'}. Undo brings them back.`);seqToolsSync();seqDraw();
+}
+// INVARIANT: a nudge moves the selection as one and stops at the song's edges and the outer rows.
+function seqNudge(dt,dr){
+  const m=state.music,t=seqTrackSel(),rows=seqRows(t),G=[...seq.selN];if(!G.length)return;
+  const ri=p=>rows.indexOf(p),end=songEnd(m),step=gridTicks(m);
+  dt=Math.max(-Math.min(...G.map(n=>n.t)),Math.min(end-step-Math.max(...G.map(n=>n.t)),dt));
+  dr=Math.max(-Math.min(...G.map(n=>ri(n.p))),Math.min(rows.length-1-Math.max(...G.map(n=>ri(n.p))),dr));
+  if(!dt&&!dr)return;
+  seqEdit(()=>{for(const n of G){n.t+=dt;n.p=rows[ri(n.p)+dr]}seqTidy(t)});seqSelPrune();
+  if(dr&&G.length===1)seqHear(t,G[0].p);seqDraw();
+}
+$('#seqModeDraw').onclick=()=>{audio();seqSetMode('draw')};
+$('#seqModeSel').onclick=()=>{audio();seqSetMode('select')};
+$('#seqCopy').onclick=()=>{audio();seqCopy(false)};
+$('#seqCut').onclick=()=>{audio();seqCopy(true)};
+$('#seqPaste').onclick=()=>{audio();seqPaste()};
+$('#seqDup').onclick=()=>{audio();seqDuplicate()};
+$('#seqDel').onclick=()=>{audio();seqDelete()};
+$('#seqZoomOut').onclick=()=>seqZoomTo(SQ.BW*.8);
+$('#seqZoomIn').onclick=()=>seqZoomTo(SQ.BW*1.25);
+$('#seqLaneBtn').setAttribute('aria-pressed',String(seq.lane));
+$('#seqLaneBtn').onclick=()=>{audio();seq.lane=!seq.lane;$('#seqLaneBtn').setAttribute('aria-pressed',String(seq.lane));seqLayout();seqDraw()};
+// RULE: the roll's editing keys: Ctrl/Cmd+A C X V D, Delete, arrows (Shift: a bar, or an octave), Esc drops the
+//   selection before it stops playback.
+$('#seqModal').addEventListener('keydown',e=>{
+  if(e.target.matches('input,select,textarea')||e.altKey||!state.music)return;
+  const mod=e.ctrlKey||e.metaKey,k=e.key,kl=k.toLowerCase(),t=seqTrackSel(),done=()=>{e.preventDefault();e.stopPropagation()};
+  if(mod&&!e.shiftKey){
+    if(kl==='a'){done();seq.selN=new Set(t.notes);seqToolsSync();seqDraw();status(`${t.notes.length} notes selected`);return}
+    if(kl==='c'){if(seq.selN.size){done();seqCopy(false)}return}
+    if(kl==='x'){if(seq.selN.size){done();seqCopy(true)}return}
+    if(kl==='v'){if(seq.clip){done();seqPaste()}return}
+    if(kl==='d'){done();seqDuplicate();return}
+    return;
+  }
+  if(mod)return;
+  if((k==='Delete'||k==='Backspace')&&seq.selN.size){done();seqDelete();return}
+  if(k==='Escape'&&seq.selN.size){done();seqSelClear();seqDraw();return}
+  if(!seq.selN.size)return;
+  const m=state.music,oct=t.drums?1:12;
+  if(k==='ArrowLeft'||k==='ArrowRight'){done();seqNudge((k==='ArrowLeft'?-1:1)*(e.shiftKey?barTicks(m):gridTicks(m)),0)}
+  else if(k==='ArrowUp'||k==='ArrowDown'){done();seqNudge(0,(k==='ArrowUp'?-1:1)*(e.shiftKey?oct:1))}
+});
+
+// SECTION: the song bar's More
+// RULE: the song bar keeps to two rows: the least used tools move into More ▾ (keeping their handlers) and come back
+//   in their own places when there is room. The XMB shows the bar as a sheet of its own, so it keeps everything.
+const SQ_STEPS=['#seqSongImport','#seqMidiIn','.sqsf','label[for=seqSampleIn]','#seqMasterFx','#seqToPage','#seqSave','#seqMp3'];
+const sqHome=new Map();
+// FORMAT: items share a row when their tops are within 12 px (a row's items are centered, not top-aligned); spacers
+//   and visually hidden inputs don't count.
+function seqBarRows(bar){
+  const tops=[...bar.children].filter(c=>c.offsetParent!==null&&c.offsetHeight>2).map(c=>c.offsetTop).sort((a,b)=>a-b);let n=0,last=-1e9;
+  for(const y of tops)if(y>last+12){n++;last=y}return n;
+}
+function fitSeqBar(){
+  const bar=$('#seqModal .seqbar'),ov=$('#seqOverflow'),more=$('#seqMore');
+  for(const [el,mark] of sqHome)mark.replaceWith(el);sqHome.clear();more.hidden=true;
+  const B=document.body.style;
+  if(document.body.classList.contains('xmb')||$('#seqModal').hidden){B.removeProperty('--seqTop');return}
+  for(const sel of SQ_STEPS){
+    if(seqBarRows(bar)<=2)break;const el=bar.querySelector(sel);if(!el)continue;
+    const mark=document.createComment('sq');el.replaceWith(mark);sqHome.set(el,mark);ov.append(el);more.hidden=false;
+  }
+  // RULE: the floating Ideas and FX panels open below the song bar and the note tools, never over them.
+  B.setProperty('--seqTop',Math.round($('#seqModal .sqtools').getBoundingClientRect().bottom+8)+'px');
+}
+new ResizeObserver(()=>requestAnimationFrame(fitSeqBar)).observe($('#seqModal .seqbar'));
+document.addEventListener('pointerdown',e=>{const m=$('#seqMore');if(m.open&&!m.contains(e.target))m.open=false});
+$('#seqOverflow').addEventListener('click',e=>{if(e.target.closest('button,label'))$('#seqMore').open=false});
 // SECTION: note input (MIDI keyboards, the computer keys) and recording
 // RULE: live notes sound for a fixed .35s on the way in; what is recorded keeps the real length from note-off.
 // RULE: playing + Rec: notes land at the playhead, snapped to the grid. Stopped + Rec: step entry at the cursor,
@@ -7623,7 +7945,7 @@ $('#seqMidiIn').onclick=async()=>{audio();
     $('#seqMidiIn').textContent=ins.length?`MIDI: ${ins[0].name}${ins.length>1?' +'+(ins.length-1):''}`:'MIDI: none';status(ins.length?`Listening to ${ins.map(i=>i.name).join(', ')}`:'No MIDI keyboard found. Plug one in; it’s picked up as it arrives.')};
   seqIn.midi.onstatechange=hook;hook()};
 // RULE: the wheel over a note changes how hard it's played; lighter notes draw fainter.
-$('#seqScroll').addEventListener('wheel',e=>{const t=seqTrackSel(),h=seqHit(e),n=h.zone==='grid'&&seqNoteAt(t,h);if(!n)return;e.preventDefault();
+$('#seqScroll').addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey)return;const t=seqTrackSel(),h=seqHit(e),n=h.zone==='grid'&&seqNoteAt(t,h);if(!n)return;e.preventDefault();
   seqEdit(()=>{n.v=Math.max(1,Math.min(127,n.v+(e.deltaY<0?8:-8)))});status(`Velocity ${n.v}`);seqDraw()},{passive:false});
 $('#seqRepGo').onclick=()=>{audio();const m=state.music;if(!m)return;
   const a=Math.max(1,Math.min(m.bars,+$('#seqRepA').value||1)),b=Math.max(a,Math.min(m.bars,+$('#seqRepB').value||a)),bar=barTicks(m),lo=(a-1)*bar,hi=b*bar,len=hi-lo,end=songEnd(m);
@@ -7677,15 +7999,19 @@ function sfPreset(sf,t){
 }
 // FORMAT: generators a preset adds to its instrument's value instead of replacing it.
 const SF_ADD=new Set([8,9,17,34,35,36,37,38,48,51,52]);
-function sfPlay(t,p,at,dur,vel,out,ctx=ac){
+// INVARIANT: syn is the synth playing beside it (its clock pumps SoundFont voices too).
+function sfPlay(t,p,at,dur,vel,out,ctx=ac,syn=null){
   const sf=soundfont,preset=sfPreset(sf,t);if(!preset)return false;
   const inR=(g,k,x)=>!g[k]||(x>=g[k][0]&&x<=g[k][1]);let any=false;
   for(const pz of preset.zones){const pg={...preset.glob,...pz};if(!inR(pg,43,p)||!inR(pg,44,vel))continue;const ins=sf.inst[pz[41]];if(!ins)continue;
     for(const iz of ins.zones){const ig={...ins.glob,...iz};if(!inR(ig,43,p)||!inR(ig,44,vel))continue;const smp=sf.samples[iz[53]];if(!smp)continue;
-      if(sfVoice(sf,t,p,at,dur,vel,out,ig,pg,smp,ctx))any=true}}
+      if(sfVoice(sf,t,p,at,dur,vel,out,ig,pg,smp,ctx,syn))any=true}}
   return any;
 }
-function sfVoice(sf,t,p,at,dur,vel,out,ig,pg,smp,ctx){
+// RULE: an exclusive class (generator 57) is a choke group: a new voice in it cuts off the track's earlier ones still
+//   sounding, so a closed hi-hat stops an open one. Tracked per audio context and track.
+const sfChoke=new WeakMap();
+function sfVoice(sf,t,p,at,dur,vel,out,ig,pg,smp,ctx,syn){
   const G=(op,def)=>(ig[op]??def)+(SF_ADD.has(op)?(pg[op]??0):0),tc=x=>Math.pow(2,x/1200),total=sf.pcm.length;
   const s0=Math.max(0,Math.min(total,smp.start+G(0,0)+G(4,0)*32768)),s1=Math.max(0,Math.min(total,smp.end+G(1,0)+G(12,0)*32768));
   if(s1-s0<4)return false;
@@ -7707,10 +8033,30 @@ function sfVoice(sf,t,p,at,dur,vel,out,ig,pg,smp,ctx){
   let node=src;
   const fc=G(8,13500);if(fc<13500){const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=Math.min(20000,8.176*tc(fc));f.Q.value=Math.max(.0001,G(9,0)/10);node.connect(f);node=f}
   node.connect(g);
+  let post=g;const cls=G(57,0);
+  if(cls>0){let byT=sfChoke.get(ctx);if(!byT)sfChoke.set(ctx,byT=new WeakMap());let m=byT.get(t);if(!m)byT.set(t,m=new Map());
+    const live=(m.get(cls)||[]).filter(v=>v.end>at);for(const v of live)if(v.at<at)v.g.gain.setTargetAtTime(0,at,.005);
+    const cg=ctx.createGain();g.connect(cg);post=cg;m.set(cls,[...live.filter(v=>v.at>=at),{g:cg,at,end:end+R}])}
+  if(syn&&syn.duck)post=syn.duck(t,at,end+R+.05,post);
   const pan=Math.max(-1,Math.min(1,G(17,0)/500));
-  if(pan&&ctx.createStereoPanner){const pn=ctx.createStereoPanner();pn.pan.value=pan;g.connect(pn);pn.connect(out)}else g.connect(out);
+  if(pan&&ctx.createStereoPanner){const pn=ctx.createStereoPanner();pn.pan.value=pan;post.connect(pn);pn.connect(out)}else post.connect(out);
   src.start(at);src.stop(end+R+.05);sfStats.voices++;
   return true;
+}
+// RULE: three kinds of sound: the built-in synth, the bundled TimGM6mb (GPL-2, 6 MB, lib/TimGM6mb.sf2: fetched when
+//   picked, never stored again), or a file of the person's own, kept in the browser. The choice is the app's, not a
+//   project's: it is remembered across projects and reloads.
+// FORMAT: kv 'soundfont' = {name, blob} for a file of one's own, or {bundled: file name} for one that ships in lib/.
+const SF_BUNDLED=[{file:'TimGM6mb.sf2',label:'TimGM6mb (sampled, bundled)'}];
+async function loadBundledSF(file,{quiet}={}){
+  const b=SF_BUNDLED.find(x=>x.file===file);if(!b)return false;
+  if(!quiet)status(`Loading ${b.label}…`);
+  let sf;try{const r=await fetch(new URL('lib/'+b.file,location.href));if(!r.ok)throw new Error(String(r.status));sf=parseSF2(await r.arrayBuffer())}
+  catch(e){status(`${b.file} couldn’t be loaded here${location.protocol==='file:'?': opened as a file, the browser won’t read it. The desktop app, the web version or npm run serve can':''}.`);sfSync();return false}
+  sf.file=b.file;sf.bundled=true;soundfont=sf;sfTried=true;
+  try{await tx(['kv'],'readwrite',s=>{s.put({bundled:b.file},'soundfont')})}catch(e){}
+  sfSync();if(!$('#seqModal').hidden)seqTracks();
+  if(!quiet)status(`Using ${b.file}: ${sf.presets.length} sampled instruments and kits`);return true;
 }
 async function loadSoundFont(file){
   if(file.size>SF_MAX){status(`That SoundFont is ${(file.size/1048576).toFixed(0)} MB; the most PIXIWYG keeps is ${SF_MAX/1048576} MB.`);return false}
@@ -7723,18 +8069,24 @@ async function loadSoundFont(file){
 }
 async function sfRestore(){
   if(sfTried)return;sfTried=true;
-  try{const r=await tx(['kv'],'readonly',s=>s.get('soundfont'));if(r&&r.blob){soundfont=parseSF2(await r.blob.arrayBuffer());soundfont.file=r.name}}catch(e){soundfont=null}
+  try{const r=await tx(['kv'],'readonly',s=>s.get('soundfont'));if(r&&r.bundled){await loadBundledSF(r.bundled,{quiet:true});return}if(r&&r.blob){soundfont=parseSF2(await r.blob.arrayBuffer());soundfont.file=r.name}}catch(e){soundfont=null}
   sfSync();if(!$('#seqModal').hidden)seqTracks();
 }
 async function sfForget(){soundfont=null;try{await tx(['kv'],'readwrite',s=>{s.delete('soundfont')})}catch(e){}sfSync();seqTracks();status('Back to the built-in synth')}
 function sfSync(){
-  const n=$('#seqSfName');if(!n)return;
-  n.textContent=soundfont?soundfont.file:'Built-in synth';n.title=soundfont?`${soundfont.name} · ${soundfont.presets.length} instruments`:'A simple synth. Load a SoundFont (.sf2) for sampled instruments.';
-  $('#seqSfOff').hidden=!soundfont;
+  const sel=$('#seqSound');if(!sel)return;sel.replaceChildren();
+  const opt=(v,t)=>sel.append(mkEl('option',{value:v,textContent:t}));
+  opt('synth','Built-in synth');for(const b of SF_BUNDLED)opt('b:'+b.file,b.label);
+  if(soundfont&&!soundfont.bundled)opt('own',soundfont.file);
+  opt('load','Load a SoundFont (.sf2)…');
+  sel.value=!soundfont?'synth':soundfont.bundled?'b:'+soundfont.file:'own';
+  sel.title=soundfont?`${soundfont.name} · ${soundfont.presets.length} instruments`:'A simple synth. Pick a SoundFont for sampled instruments.';
 }
-$('#seqSfLoad').onclick=()=>{audio();$('#seqSfFile').click()};
+$('#seqSound').onchange=async e=>{audio();const v=e.target.value;
+  if(v==='load'){sfSync();$('#seqSfFile').click();return}
+  if(v==='synth'){await sfForget();return}
+  if(v.startsWith('b:'))await loadBundledSF(v.slice(2));else sfSync()};
 $('#seqSfFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(f)await loadSoundFont(f)};
-$('#seqSfOff').onclick=()=>{audio();sfForget()};
 
 // SECTION: sequencer effects and samples
 // RULE: native Web Audio only (see the research report): every effect is built from the browser's own nodes, and
@@ -7752,7 +8104,8 @@ const FX_DEFS={
   delay:{name:'Delay',p:[['ms','Time (ms)',20,2000,5,375],['fb','Feedback',0,.95,.01,.35],['mix','Mix',0,1,.01,.3]]},
   reverb:{name:'Reverb',p:[['sec','Length (s)',.2,8,.1,2.2],['decay','Decay',.5,8,.1,3],['mix','Mix',0,1,.01,.3]]},
   pan:{name:'Pan',p:[['pan','Left ↔ right',-1,1,.01,0]]},
-  // RULE: the pump isn't in the chain: the synth ducks each note on the song's beats (see pxSynth); samples don't pump.
+  // RULE: the pump isn't in the chain: each voice ducks on the song's beats as it starts (pxSynth's duck), synth notes,
+  //   SoundFont voices and samples alike.
   pump:{name:'Sidechain pump',p:[['depth','Depth',0,1,.01,.7],['rate','Pumps a beat',.5,4,.5,1]]},
   crush:{name:'Bitcrush',p:[['bits','Bits',2,16,1,6],['mix','Mix',0,1,.01,.6]]},
 };
@@ -7791,11 +8144,14 @@ function pxFx(ctx,input,chain,dest){
   cur.connect(dest);return oscs;
 }
 // INVARIANT: self-contained. One sample hit: re-pitched from its root note unless pitched is off; rings out unless gated.
-function pxSample(ctx,buf,t,p,at,dur,vel,dest){
+//   syn, when given, is the synth whose clock pumps it.
+function pxSample(ctx,buf,t,p,at,dur,vel,dest,syn){
   const s=ctx.createBufferSource(),g=ctx.createGain();s.buffer=buf;
-  if(t.pitched!==false)s.playbackRate.value=Math.pow(2,(p-(t.root??60))/12);
-  g.gain.setValueAtTime((t.vol/127)*(vel/127),at);s.connect(g);g.connect(dest);s.start(at);
-  if(t.gate){g.gain.setTargetAtTime(0,at+dur,.015);s.stop(at+dur+.12)}
+  const rate=t.pitched!==false?Math.pow(2,(p-(t.root??60))/12):1;s.playbackRate.value=rate;
+  g.gain.setValueAtTime((t.vol/127)*(vel/127),at);s.connect(g);s.start(at);
+  const stop=t.gate?at+dur+.12:at+buf.duration/rate;
+  (syn&&syn.duck?syn.duck(t,at,stop,g):g).connect(dest);
+  if(t.gate){g.gain.setTargetAtTime(0,at+dur,.015);s.stop(stop)}
 }
 // SAFETY: effects from files are rebuilt from known kinds and in-range numbers.
 function cleanFx(list){
@@ -7839,7 +8195,7 @@ async function sampleBuf(url){
 async function samplesReady(m){audio();if(!ac||!m)return;await Promise.all((m.samples||[]).map(s=>{const c=live.bufs.get(s.url);return c instanceof Promise?c:c?null:(sampleBuf(s.url),live.bufs.get(s.url))}))}
 function samplePlay(t,p,at,dur,vel){
   const m=state.music,s=m&&(m.samples||[]).find(x=>x.id===t.smp),b=s&&live.bufs.get(s.url);if(!b||b instanceof Promise){if(s)sampleBuf(s.url);return}
-  const dest=trackIn(t);if(dest)pxSample(ac,b,t,p,at,dur,vel,dest);
+  const dest=trackIn(t);if(dest)pxSample(ac,b,t,p,at,dur,vel,dest,synth);
 }
 
 // SECTION: samples in the song
@@ -8194,9 +8550,74 @@ function songIdeas(m,{genre='pop',parts={melody:true,bass:true,drums:true},key='
     melScale:(g.melScale||scale).map(i=>(i+melTonic)%12),melodyKey:shift?NOTE_NAMES[melTonic]+' '+IDEA_MODE_NAMES[mode]:null,cycle:melCycle||0,meter,prog:prog.map(d=>ideaRoman(mode,d)).join(' – '),bpm,bars}};
 }
 
+// SECTION: song ideas: restyle (fit an existing song to a style)
+// RULE: a restyle keeps the song's notes and moves them into the style: the key is found from the notes, each
+//   note keeps its scale degree in the style's mode (a major third becomes the Dorian minor third), a style's
+//   melody scale (a pentatonic) narrows the lead, starts snap to the style's grid with its swing, staccato
+//   styles shorten notes, each track takes the instrument and effects of its part (bass, chords or lead, read
+//   from register and how often notes stack), and the drums become the style's beat in the song's own meter.
+// FORMAT: Krumhansl-Kessler key profiles, C first.
+const KEY_MAJOR=[6.35,2.23,3.48,2.33,4.38,4.09,2.52,5.19,2.39,3.66,2.29,2.88],KEY_MINOR=[6.33,2.68,3.52,5.38,2.60,3.53,2.54,4.75,3.98,2.69,3.34,3.17];
+function songKey(notes){
+  const h=new Array(12).fill(0);for(const n of notes)h[n.p%12]+=n.d;
+  const corr=(prof,k)=>{let sx=0,sy=0,sxy=0,sxx=0,syy=0;for(let i=0;i<12;i++){const x=h[(i+k)%12],y=prof[i];sx+=x;sy+=y;sxy+=x*y;sxx+=x*x;syy+=y*y}const d=Math.sqrt((12*sxx-sx*sx)*(12*syy-sy*sy));return d?(12*sxy-sx*sy)/d:0};
+  let best={tonic:0,minor:false,r:-2};
+  for(let k=0;k<12;k++)for(const minor of [false,true]){const c=corr(minor?KEY_MINOR:KEY_MAJOR,k);if(c>best.r)best={tonic:k,minor,r:c}}
+  return best;
+}
+function trackPart(t){
+  if(!t.notes.length)return'melody';
+  const avg=t.notes.reduce((a,n)=>a+n.p,0)/t.notes.length;if(avg<52)return'bass';
+  let stacked=0;for(let i=1;i<t.notes.length;i++)if(t.notes[i].t===t.notes[i-1].t)stacked++;
+  return stacked/t.notes.length>.3?'chords':'melody';
+}
+function songRestyle(m,{genre='pop',bpm,seed=1}={}){
+  const g=IDEA_GENRES[genre]||IDEA_GENRES.pop,r=ideaRng(seed),inst=v=>Array.isArray(v)?ideaPick(r,v):v;
+  const pitched=m.tracks.filter(t=>!t.drums&&!(t.smp&&t.pitched===false));
+  const key=songKey(pitched.flatMap(t=>t.notes)),tonic=key.tonic,src=IDEA_MODES[key.minor?'minor':'major'];
+  const mode=g.modes.find(x=>(IDEA_MODES[x][2]===3)===key.minor)||g.modes[0],dst=IDEA_MODES[mode];
+  const tempo=bpm||m.bpm,fast=tempo>=150,beatT=beatTicks(m),barT=barTicks(m),step=irrational(m)?beatT/4:PPQ/4,end=songEnd(m);
+  const unit=(g.grid===4&&!fast?1:2)*step,swingT=Math.round(step*.33*(g.swing||0))*(unit===step?1:2);
+  const melPcs=g.melScale&&g.melScale.map(i=>(i+tonic)%12);
+  const move=(p,lead)=>{
+    const rel=((p-tonic)%12+12)%12,d=src.indexOf(rel);
+    if(d>=0)p+=dst[d]-src[d];
+    if(lead&&melPcs&&!melPcs.includes(p%12)){let best=p;for(let k=1;k<7;k++){if(melPcs.includes((p-k+120)%12)){best=p-k;break}if(melPcs.includes((p+k)%12)){best=p+k;break}}p=best}
+    return Math.max(0,Math.min(127,p));
+  };
+  // INVARIANT: the grid counts from each bar line, so meters whose bar is not a whole number of grid units stay
+  //   aligned bar to bar.
+  const snap=t=>{const b0=Math.floor(t/barT)*barT,k=Math.round((t-b0)/unit),q=b0+k*unit;return Math.min(end-1,(q>=b0+barT?b0+barT:q)+(k%2&&q<b0+barT?swingT:0))};
+  const fxFor=part=>((g.fx||{})[part]||[]).map(f=>({...f,on:true,...(f.ms==='dot'?{ms:Math.round(60000/tempo*.75)}:{})}));
+  const rename=n=>{const i=n.lastIndexOf(' · ');return i>0&&Object.values(IDEA_GENRES).some(x=>x.name===n.slice(i+3))?`${n.slice(0,i)} · ${g.name}`:n};
+  let moved=0;const out=[];
+  const beat=songIdeas({...m,bpm:tempo},{genre,parts:{drums:true},key:tonic,seed}).tracks[0];
+  let drumsAt=-1;
+  for(const t of m.tracks){
+    // RULE: every drum track folds into one: the style's beat, where the first drum track was.
+    if(t.drums){if(drumsAt<0){drumsAt=out.length;const d={...t,name:t.name==='Drums'?beat.name:rename(t.name),notes:beat.notes};if(beat.fx)d.fx=beat.fx;out.push(d)}continue}
+    if(!pitched.includes(t)){out.push(t);continue}
+    const part=trackPart(t),seen=new Map();
+    for(const n of t.notes){
+      const s=snap(n.t),p=move(n.p,part==='melody'),len=Math.max(unit,Math.round(n.d/unit)*unit)*(g.gate<.9?g.gate:1);
+      if(s!==n.t||p!==n.p)moved++;
+      const k=s*128+p,had=seen.get(k);if(had){had.v=Math.max(had.v,n.v);continue}
+      seen.set(k,{t:s,d:Math.max(1,Math.min(end-s,Math.round(len))),p,v:n.v});
+    }
+    const nt={...t,name:rename(t.name),notes:[...seen.values()].sort((a,b)=>a.t-b.t||a.p-b.p)};
+    if(!t.smp)nt.prog=inst(part==='bass'?g.bassProg:part==='chords'?g.chordProg:g.lead);
+    const fx=fxFor(part);if(fx.length)nt.fx=fx;
+    out.push(nt);
+  }
+  if(drumsAt<0&&out.length<16)out.unshift({...seqTrack(true),...beat,mute:false});
+  return{tracks:out,summary:{genre:g.name,from:NOTE_NAMES[tonic]+' '+(key.minor?'minor':'major'),key:NOTE_NAMES[tonic]+' '+IDEA_MODE_NAMES[mode],mode,tonic,moved,bpm:tempo}};
+}
+
 // SECTION: song ideas panel
-// RULE: Generate adds the idea as new tracks (clearing out empty tracks first, so a new song's blank Piano and Drums
+// RULE: Generate makes the idea as new tracks (clearing out empty tracks first, so a new song's blank Piano and Drums
 //   don't linger) and plays it at once; Another swaps the last idea for a fresh one. Each is one undo step.
+// RULE: an idea never lands on top of notes already there: playback stops at once and the person picks clear and
+//   generate, restyle what is there instead, or cancel. Two songs at once is noise, not a starting point.
 const IDEAS={genre:'pop',parts:{melody:true,bass:true,drums:true,chords:false},last:null};
 // FORMAT: meter quick picks: [label, beats, unit, groups]; the first keeps the song's own meter.
 const IDEA_METERS=[['The song’s'],['The style’s own'],['4/4',4,4],['3/4',3,4],['5/4',5,4],['6/8',6,8],['7/8 (2+2+3)',7,8,[2,2,3]],['7/8 (3+2+2)',7,8,[3,2,2]],
@@ -8216,17 +8637,27 @@ function ideasDraw(){
   $('#seqIdeasAgain').disabled=!IDEAS.last;
 }
 function openIdeas(){if(!$('#seqFx').hidden)$('#seqFx').hidden=true;ideasDraw();$('#seqIdeas').hidden=false;$('#seqIdeasGenres [aria-checked=true]')?.focus()}
-function ideasGenerate(again){
+async function ideasGenerate(again){
   const m=state.music;if(!m)return;
   if(!Object.values(IDEAS.parts).some(Boolean)){status('Pick at least one part to make.');return}
-  if($('#seqIdeasTempo').checked&&m.bpm!==IDEA_GENRES[IDEAS.genre].bpm)seqEdit(()=>{m.bpm=IDEA_GENRES[IDEAS.genre].bpm});
+  const keep=new Set(again&&IDEAS.last||[]),g=IDEA_GENRES[IDEAS.genre];
+  if(m.tracks.some(t=>!keep.has(t)&&t.notes.length)){
+    if(seqP.on)seqStop();
+    const a=await ask('Start over?',`This song already has notes. A new ${g.name} idea clears them first; Undo brings them back. Restyle keeps your notes and moves them into ${g.name} instead.`,
+      [{id:'clear',label:'Clear and generate',primary:true},{id:'fit',label:`Restyle as ${g.name}`},{id:null,label:'Cancel'}]);
+    if(a==='fit'){ideasRestyle();return}
+    if(a!=='clear'){status('Nothing changed.');return}
+    again=false;keep.clear();
+    // INVARIANT: the ask spans ticks; everything from here is one synchronous run, so seqEdit makes one undo step.
+    seqEdit(()=>{m.tracks=[]});
+  }
+  if($('#seqIdeasTempo').checked&&m.bpm!==g.bpm)seqEdit(()=>{m.bpm=g.bpm});
   // RULE: a meter picked here becomes the song's (undoable), so the sequencer's bar lines match the idea.
-  const pick=+$('#seqIdeasMeter').value,gm=IDEA_GENRES[IDEAS.genre].meter,mt=pick===1?['',...(gm||[4,4])]:IDEA_METERS[pick];
+  const pick=+$('#seqIdeasMeter').value,gm=g.meter,mt=pick===1?['',...(gm||[4,4])]:IDEA_METERS[pick];
   if(mt&&mt[1])seqEdit(()=>{m.beats=mt[1];m.unit=mt[2];if(mt[3])m.groups=[...mt[3]];else delete m.groups});
   const r=songIdeas(m,{genre:IDEAS.genre,parts:IDEAS.parts,key:$('#seqIdeasKey').value,second:+$('#seqIdeasSecond').value,cycle:+$('#seqIdeasCycle').value,seed:Math.floor(Math.random()*2**32)});
   seqEdit(()=>{
-    const drop=new Set(again&&IDEAS.last||[]);
-    m.tracks=m.tracks.filter(t=>!drop.has(t)&&(t.notes.length||t.smp));
+    m.tracks=m.tracks.filter(t=>!keep.has(t)&&(t.notes.length||t.smp));
     const add=r.tracks.slice(0,16-m.tracks.length).map(t=>({...seqTrack(t.drums),...t,mute:false}));
     m.tracks.push(...add);IDEAS.last=add;
   });
@@ -8235,10 +8666,25 @@ function ideasGenerate(again){
   status(`✨ ${s.genre} idea in ${s.key}. Another tries a new one; Undo takes it back.`);
   if(!seqP.on)seqPlay();
 }
+// RULE: Restyle rewrites the song in place as one undo step and plays it; the meter stays the song's, since moving
+//   bar lines under written notes would scramble them.
+function ideasRestyle(){
+  const m=state.music;if(!m)return;
+  if(!m.tracks.some(t=>t.notes.length)){status('Nothing to restyle yet. Generate makes a new idea.');return}
+  if(seqP.on)seqStop();
+  const g=IDEA_GENRES[IDEAS.genre],bpm=$('#seqIdeasTempo').checked?g.bpm:m.bpm;
+  const r=songRestyle(m,{genre:IDEAS.genre,bpm,seed:Math.floor(Math.random()*2**32)});
+  seqEdit(()=>{m.bpm=bpm;m.tracks=r.tracks});IDEAS.last=null;
+  seq.sel=Math.min(seq.sel,m.tracks.length-1);seqControls();seqTracks();seqLayout();seqDraw();ideasDraw();
+  const s=r.summary;$('#seqIdeasSays').textContent=`Restyled as ${s.genre}: ${s.from} became ${s.key}, ${s.moved} note${s.moved===1?'':'s'} moved to the groove, the drums are its beat, at ${s.bpm} BPM.`;
+  status(`🎨 Restyled as ${s.genre}. Undo puts your song back.`);
+  seqPlay();
+}
 $('#seqIdeasBtn').onclick=()=>{audio();sfx('click');if($('#seqIdeas').hidden)openIdeas();else $('#seqIdeas').hidden=true};
 $('#seqIdeasClose').onclick=()=>{$('#seqIdeas').hidden=true};
 $('#seqIdeasGo').onclick=()=>{audio();ideasGenerate(false)};
 $('#seqIdeasAgain').onclick=()=>{audio();ideasGenerate(true)};
+$('#seqIdeasRestyle').onclick=()=>{audio();ideasRestyle()};
 for(const b of document.querySelectorAll('#seqIdeas [data-part]'))b.onclick=()=>{audio();sfx('click');IDEAS.parts[b.dataset.part]=!IDEAS.parts[b.dataset.part];ideasDraw()};
 $('#seqIdeasTempo').onchange=()=>ideasDraw();
 {const k=$('#seqIdeasKey');NOTE_NAMES.forEach((n,i)=>k.append(mkEl('option',{value:String(i),textContent:n})));
@@ -8256,7 +8702,7 @@ $('#seqIdeas').addEventListener('keydown',e=>{
 //   a time, yielding between slices, so the page keeps responding and the status line counts up.
 let lameP=null;
 function needLame(){return window.lamejs?Promise.resolve():(lameP||(lameP=new Promise((res,rej)=>{const s=document.createElement('script');s.src='lib/lame.min.js';s.onload=()=>res();s.onerror=()=>{lameP=null;rej(new Error('The MP3 encoder couldn’t be loaded.'))};document.head.append(s)})))}
-const sfRender=()=>soundfont?(ctx,out,syn)=>(t,p,at,d,v,dest)=>{if(!sfPlay(t,p,at,d,v,dest||out,ctx))syn.note(t,p,at,d,v,dest)}:null;
+const sfRender=()=>soundfont?(ctx,out,syn)=>(t,p,at,d,v,dest)=>{if(!sfPlay(t,p,at,d,v,dest||out,ctx,syn))syn.note(t,p,at,d,v,dest)}:null;
 async function songMp3(m,{kbps=192,tail=2,onProgress}={}){
   await needLame();
   const buf=await pxRender(m,GMV,sfRender(),tail),sr=buf.sampleRate,L=buf.getChannelData(0),R=buf.numberOfChannels>1?buf.getChannelData(1):L;
@@ -13158,7 +13604,7 @@ const PROFILES={
        keys:[K('Space','Play or stop'),K('Right-click','Remove a note'),K(M+'+Z','Undo')]},
       {ws:'music',target:'#seqRec',spot:['#seqRec','#seqMidiIn'],title:'Playing it in',body:'● Rec, then play: a MIDI keyboard (MIDI in…) or the computer keys, A to L, with Z and X for octaves. Playing, notes land where you hit them; stopped, each lands at the cursor and steps on, chords included. The wheel over a note sets how hard it’s played.',
        keys:[K('R','Record on or off'),K('A – L','Play notes'),K('Z X','Octave down, up')]},
-      {ws:'music',target:'#seqSfLoad',spot:['#seqSfName','#seqSfLoad','#seqSave','#seqSkin'],title:'Better sounds, the file, the player',body:'The built-in synth is honest about being a synth. Load a SoundFont (.sf2) and the sequencer plays real sampled instruments instead. Save .mid writes the song as a standard MIDI file. Player picks the Winamp skin the page’s player wears.',
+      {ws:'music',target:'#seqSound',spot:['#seqSound','#seqSave','#seqSkin'],title:'Better sounds, the file, the player',body:'The built-in synth is honest about being a synth. Sound switches to TimGM6mb, a SoundFont of real sampled instruments that comes with PIXIWYG, or to a SoundFont (.sf2) of your own. Save .mid writes the song as a standard MIDI file. Player picks the Winamp skin the page’s player wears.',
       },
       {target:'#playBtn',spot:['#playBtn','#logicBtn'],title:'The player on the page',body:'The ▶ on this page is wired to Play the song in Logic, and the song plays in Webamp: a real Winamp, skins and all. Press ▶ Play up here (or Space), then the page’s ▶. The Sequencer picks the skin; bring your own .wsz from the Winamp Skin Museum.',
        keys:[K(M+'+Enter','Play the page'),K('Esc','Stop')],enter:()=>select(null)},
@@ -13575,7 +14021,7 @@ function xmbGestures(surface,{begin,zoom,pan}){
 }
 xmbGestures(desk,{begin:()=>Z,zoom:(z,x,y)=>setZoom(z,x,y),pan:(dx,dy)=>{desk.scrollLeft-=dx;desk.scrollTop-=dy}});
 xmbGestures($('#sview'),{begin:viewScale,zoom:(z,x,y)=>sZoomTo(z,{x,y}),pan:(dx,dy)=>{const v=$('#sview');v.scrollLeft-=dx;v.scrollTop-=dy}});
-xmbGestures($('#seqScroll'),{pan:(dx,dy)=>{const v=$('#seqScroll');v.scrollLeft-=dx;v.scrollTop-=dy}});
+xmbGestures($('#seqScroll'),{begin:()=>SQ.BW,zoom:(bw,cx)=>seqZoomTo(bw,cx),pan:(dx,dy)=>{const v=$('#seqScroll');v.scrollLeft-=dx;v.scrollTop-=dy}});
 // RULE: the system Back (Android's gesture, the browser's button) backs out as Esc does: a dialog, then a sheet, then
 //   the tool to the home. From the home it leaves, as Back leaves any app. One history entry stands for "in a tool".
 addEventListener('popstate',()=>{
@@ -13826,7 +14272,7 @@ if(/[?&]test(=|&|$)/.test(location.search))window.__pixiwyg={APP_VERSION,ERRS,st
   addLayer,dupLayer,delLayer,mergeDown,movePaintLayer,setActiveLayer,setLayerProp,toggleLayer:i=>toggleLayer(studio.layers[i]),flatURL,layerBlank,sUndo,sRedo,
   layers:()=>studio.layers.map(L=>({id:L.id,name:L.name,opacity:L.opacity,blend:L.blend,hidden:L.hidden,active:L===activeLayer()})),movePal:(k,to,at)=>movePal(document.querySelector(`.spal[data-pal=${k}]`),to,at),togglePalettes,sZoomTo,sZoomFit,viewScale,
   curBrush,selectBrush,newBrush,editBrush,openBrushEditor,closeBrushEditor,allBrushes,cleanBrush,brushPreview,BUILTIN_BRUSHES,brushStylesChanged,tipCache,styleClasses,
-  fxApply,layerFxOn,openLayerStyle,studioLayer:i=>studio.layers[i],studioOutputs,fxPartner,m3dScene:()=>m3d.scene,m3dSceneFromSrc,cleanScene,m3dSceneMesh,m3dStartScene,m3dFlush,m3dSceneSTL,textSolid,vp:()=>vp,setUi,ui:()=>({mode:ui.mode,on:ui.on,home:!$('#xmb').hidden}),xmbOpen,xmbClose,xmbCat:()=>XMB.cats()[XMB.c].id,xmbItems:()=>XMB.items.map(i=>i.name),zoom:()=>Z,songIdeas,IDEA_GENRES,IDEA_MODES,openIdeas,meterGroups,barTicks,beatTicks,gridTicks,pxRender,GM,GMV,DRUMS,songMp3};
+  fxApply,layerFxOn,openLayerStyle,studioLayer:i=>studio.layers[i],studioOutputs,fxPartner,m3dScene:()=>m3d.scene,m3dSceneFromSrc,cleanScene,m3dSceneMesh,m3dStartScene,m3dFlush,m3dSceneSTL,textSolid,vp:()=>vp,setUi,ui:()=>({mode:ui.mode,on:ui.on,home:!$('#xmb').hidden}),xmbOpen,xmbClose,xmbCat:()=>XMB.cats()[XMB.c].id,xmbItems:()=>XMB.items.map(i=>i.name),zoom:()=>Z,songIdeas,songRestyle,renderSongSF:m=>pxRender(m,GMV,sfRender()),seqClicks,loadBundledSF,midiInfo:()=>midiInfo,seqSel:()=>[...seq.selN].map(n=>[n.t,n.p]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]),seqCursor:()=>seqP.cursor,songKey,IDEA_GENRES,IDEA_MODES,openIdeas,meterGroups,barTicks,beatTicks,gridTicks,pxRender,GM,GMV,DRUMS,songMp3};
 (async()=>{
   checkEnvironment();
   initPanels();fitStage();

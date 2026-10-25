@@ -290,9 +290,74 @@ function songIdeas(m,{genre='pop',parts={melody:true,bass:true,drums:true},key='
     melScale:(g.melScale||scale).map(i=>(i+melTonic)%12),melodyKey:shift?NOTE_NAMES[melTonic]+' '+IDEA_MODE_NAMES[mode]:null,cycle:melCycle||0,meter,prog:prog.map(d=>ideaRoman(mode,d)).join(' – '),bpm,bars}};
 }
 
+// SECTION: song ideas: restyle (fit an existing song to a style)
+// RULE: a restyle keeps the song's notes and moves them into the style: the key is found from the notes, each
+//   note keeps its scale degree in the style's mode (a major third becomes the Dorian minor third), a style's
+//   melody scale (a pentatonic) narrows the lead, starts snap to the style's grid with its swing, staccato
+//   styles shorten notes, each track takes the instrument and effects of its part (bass, chords or lead, read
+//   from register and how often notes stack), and the drums become the style's beat in the song's own meter.
+// FORMAT: Krumhansl-Kessler key profiles, C first.
+const KEY_MAJOR=[6.35,2.23,3.48,2.33,4.38,4.09,2.52,5.19,2.39,3.66,2.29,2.88],KEY_MINOR=[6.33,2.68,3.52,5.38,2.60,3.53,2.54,4.75,3.98,2.69,3.34,3.17];
+function songKey(notes){
+  const h=new Array(12).fill(0);for(const n of notes)h[n.p%12]+=n.d;
+  const corr=(prof,k)=>{let sx=0,sy=0,sxy=0,sxx=0,syy=0;for(let i=0;i<12;i++){const x=h[(i+k)%12],y=prof[i];sx+=x;sy+=y;sxy+=x*y;sxx+=x*x;syy+=y*y}const d=Math.sqrt((12*sxx-sx*sx)*(12*syy-sy*sy));return d?(12*sxy-sx*sy)/d:0};
+  let best={tonic:0,minor:false,r:-2};
+  for(let k=0;k<12;k++)for(const minor of [false,true]){const c=corr(minor?KEY_MINOR:KEY_MAJOR,k);if(c>best.r)best={tonic:k,minor,r:c}}
+  return best;
+}
+function trackPart(t){
+  if(!t.notes.length)return'melody';
+  const avg=t.notes.reduce((a,n)=>a+n.p,0)/t.notes.length;if(avg<52)return'bass';
+  let stacked=0;for(let i=1;i<t.notes.length;i++)if(t.notes[i].t===t.notes[i-1].t)stacked++;
+  return stacked/t.notes.length>.3?'chords':'melody';
+}
+function songRestyle(m,{genre='pop',bpm,seed=1}={}){
+  const g=IDEA_GENRES[genre]||IDEA_GENRES.pop,r=ideaRng(seed),inst=v=>Array.isArray(v)?ideaPick(r,v):v;
+  const pitched=m.tracks.filter(t=>!t.drums&&!(t.smp&&t.pitched===false));
+  const key=songKey(pitched.flatMap(t=>t.notes)),tonic=key.tonic,src=IDEA_MODES[key.minor?'minor':'major'];
+  const mode=g.modes.find(x=>(IDEA_MODES[x][2]===3)===key.minor)||g.modes[0],dst=IDEA_MODES[mode];
+  const tempo=bpm||m.bpm,fast=tempo>=150,beatT=beatTicks(m),barT=barTicks(m),step=irrational(m)?beatT/4:PPQ/4,end=songEnd(m);
+  const unit=(g.grid===4&&!fast?1:2)*step,swingT=Math.round(step*.33*(g.swing||0))*(unit===step?1:2);
+  const melPcs=g.melScale&&g.melScale.map(i=>(i+tonic)%12);
+  const move=(p,lead)=>{
+    const rel=((p-tonic)%12+12)%12,d=src.indexOf(rel);
+    if(d>=0)p+=dst[d]-src[d];
+    if(lead&&melPcs&&!melPcs.includes(p%12)){let best=p;for(let k=1;k<7;k++){if(melPcs.includes((p-k+120)%12)){best=p-k;break}if(melPcs.includes((p+k)%12)){best=p+k;break}}p=best}
+    return Math.max(0,Math.min(127,p));
+  };
+  // INVARIANT: the grid counts from each bar line, so meters whose bar is not a whole number of grid units stay
+  //   aligned bar to bar.
+  const snap=t=>{const b0=Math.floor(t/barT)*barT,k=Math.round((t-b0)/unit),q=b0+k*unit;return Math.min(end-1,(q>=b0+barT?b0+barT:q)+(k%2&&q<b0+barT?swingT:0))};
+  const fxFor=part=>((g.fx||{})[part]||[]).map(f=>({...f,on:true,...(f.ms==='dot'?{ms:Math.round(60000/tempo*.75)}:{})}));
+  const rename=n=>{const i=n.lastIndexOf(' · ');return i>0&&Object.values(IDEA_GENRES).some(x=>x.name===n.slice(i+3))?`${n.slice(0,i)} · ${g.name}`:n};
+  let moved=0;const out=[];
+  const beat=songIdeas({...m,bpm:tempo},{genre,parts:{drums:true},key:tonic,seed}).tracks[0];
+  let drumsAt=-1;
+  for(const t of m.tracks){
+    // RULE: every drum track folds into one: the style's beat, where the first drum track was.
+    if(t.drums){if(drumsAt<0){drumsAt=out.length;const d={...t,name:t.name==='Drums'?beat.name:rename(t.name),notes:beat.notes};if(beat.fx)d.fx=beat.fx;out.push(d)}continue}
+    if(!pitched.includes(t)){out.push(t);continue}
+    const part=trackPart(t),seen=new Map();
+    for(const n of t.notes){
+      const s=snap(n.t),p=move(n.p,part==='melody'),len=Math.max(unit,Math.round(n.d/unit)*unit)*(g.gate<.9?g.gate:1);
+      if(s!==n.t||p!==n.p)moved++;
+      const k=s*128+p,had=seen.get(k);if(had){had.v=Math.max(had.v,n.v);continue}
+      seen.set(k,{t:s,d:Math.max(1,Math.min(end-s,Math.round(len))),p,v:n.v});
+    }
+    const nt={...t,name:rename(t.name),notes:[...seen.values()].sort((a,b)=>a.t-b.t||a.p-b.p)};
+    if(!t.smp)nt.prog=inst(part==='bass'?g.bassProg:part==='chords'?g.chordProg:g.lead);
+    const fx=fxFor(part);if(fx.length)nt.fx=fx;
+    out.push(nt);
+  }
+  if(drumsAt<0&&out.length<16)out.unshift({...seqTrack(true),...beat,mute:false});
+  return{tracks:out,summary:{genre:g.name,from:NOTE_NAMES[tonic]+' '+(key.minor?'minor':'major'),key:NOTE_NAMES[tonic]+' '+IDEA_MODE_NAMES[mode],mode,tonic,moved,bpm:tempo}};
+}
+
 // SECTION: song ideas panel
-// RULE: Generate adds the idea as new tracks (clearing out empty tracks first, so a new song's blank Piano and Drums
+// RULE: Generate makes the idea as new tracks (clearing out empty tracks first, so a new song's blank Piano and Drums
 //   don't linger) and plays it at once; Another swaps the last idea for a fresh one. Each is one undo step.
+// RULE: an idea never lands on top of notes already there: playback stops at once and the person picks clear and
+//   generate, restyle what is there instead, or cancel. Two songs at once is noise, not a starting point.
 const IDEAS={genre:'pop',parts:{melody:true,bass:true,drums:true,chords:false},last:null};
 // FORMAT: meter quick picks: [label, beats, unit, groups]; the first keeps the song's own meter.
 const IDEA_METERS=[['The song’s'],['The style’s own'],['4/4',4,4],['3/4',3,4],['5/4',5,4],['6/8',6,8],['7/8 (2+2+3)',7,8,[2,2,3]],['7/8 (3+2+2)',7,8,[3,2,2]],
@@ -312,17 +377,27 @@ function ideasDraw(){
   $('#seqIdeasAgain').disabled=!IDEAS.last;
 }
 function openIdeas(){if(!$('#seqFx').hidden)$('#seqFx').hidden=true;ideasDraw();$('#seqIdeas').hidden=false;$('#seqIdeasGenres [aria-checked=true]')?.focus()}
-function ideasGenerate(again){
+async function ideasGenerate(again){
   const m=state.music;if(!m)return;
   if(!Object.values(IDEAS.parts).some(Boolean)){status('Pick at least one part to make.');return}
-  if($('#seqIdeasTempo').checked&&m.bpm!==IDEA_GENRES[IDEAS.genre].bpm)seqEdit(()=>{m.bpm=IDEA_GENRES[IDEAS.genre].bpm});
+  const keep=new Set(again&&IDEAS.last||[]),g=IDEA_GENRES[IDEAS.genre];
+  if(m.tracks.some(t=>!keep.has(t)&&t.notes.length)){
+    if(seqP.on)seqStop();
+    const a=await ask('Start over?',`This song already has notes. A new ${g.name} idea clears them first; Undo brings them back. Restyle keeps your notes and moves them into ${g.name} instead.`,
+      [{id:'clear',label:'Clear and generate',primary:true},{id:'fit',label:`Restyle as ${g.name}`},{id:null,label:'Cancel'}]);
+    if(a==='fit'){ideasRestyle();return}
+    if(a!=='clear'){status('Nothing changed.');return}
+    again=false;keep.clear();
+    // INVARIANT: the ask spans ticks; everything from here is one synchronous run, so seqEdit makes one undo step.
+    seqEdit(()=>{m.tracks=[]});
+  }
+  if($('#seqIdeasTempo').checked&&m.bpm!==g.bpm)seqEdit(()=>{m.bpm=g.bpm});
   // RULE: a meter picked here becomes the song's (undoable), so the sequencer's bar lines match the idea.
-  const pick=+$('#seqIdeasMeter').value,gm=IDEA_GENRES[IDEAS.genre].meter,mt=pick===1?['',...(gm||[4,4])]:IDEA_METERS[pick];
+  const pick=+$('#seqIdeasMeter').value,gm=g.meter,mt=pick===1?['',...(gm||[4,4])]:IDEA_METERS[pick];
   if(mt&&mt[1])seqEdit(()=>{m.beats=mt[1];m.unit=mt[2];if(mt[3])m.groups=[...mt[3]];else delete m.groups});
   const r=songIdeas(m,{genre:IDEAS.genre,parts:IDEAS.parts,key:$('#seqIdeasKey').value,second:+$('#seqIdeasSecond').value,cycle:+$('#seqIdeasCycle').value,seed:Math.floor(Math.random()*2**32)});
   seqEdit(()=>{
-    const drop=new Set(again&&IDEAS.last||[]);
-    m.tracks=m.tracks.filter(t=>!drop.has(t)&&(t.notes.length||t.smp));
+    m.tracks=m.tracks.filter(t=>!keep.has(t)&&(t.notes.length||t.smp));
     const add=r.tracks.slice(0,16-m.tracks.length).map(t=>({...seqTrack(t.drums),...t,mute:false}));
     m.tracks.push(...add);IDEAS.last=add;
   });
@@ -331,10 +406,25 @@ function ideasGenerate(again){
   status(`✨ ${s.genre} idea in ${s.key}. Another tries a new one; Undo takes it back.`);
   if(!seqP.on)seqPlay();
 }
+// RULE: Restyle rewrites the song in place as one undo step and plays it; the meter stays the song's, since moving
+//   bar lines under written notes would scramble them.
+function ideasRestyle(){
+  const m=state.music;if(!m)return;
+  if(!m.tracks.some(t=>t.notes.length)){status('Nothing to restyle yet. Generate makes a new idea.');return}
+  if(seqP.on)seqStop();
+  const g=IDEA_GENRES[IDEAS.genre],bpm=$('#seqIdeasTempo').checked?g.bpm:m.bpm;
+  const r=songRestyle(m,{genre:IDEAS.genre,bpm,seed:Math.floor(Math.random()*2**32)});
+  seqEdit(()=>{m.bpm=bpm;m.tracks=r.tracks});IDEAS.last=null;
+  seq.sel=Math.min(seq.sel,m.tracks.length-1);seqControls();seqTracks();seqLayout();seqDraw();ideasDraw();
+  const s=r.summary;$('#seqIdeasSays').textContent=`Restyled as ${s.genre}: ${s.from} became ${s.key}, ${s.moved} note${s.moved===1?'':'s'} moved to the groove, the drums are its beat, at ${s.bpm} BPM.`;
+  status(`🎨 Restyled as ${s.genre}. Undo puts your song back.`);
+  seqPlay();
+}
 $('#seqIdeasBtn').onclick=()=>{audio();sfx('click');if($('#seqIdeas').hidden)openIdeas();else $('#seqIdeas').hidden=true};
 $('#seqIdeasClose').onclick=()=>{$('#seqIdeas').hidden=true};
 $('#seqIdeasGo').onclick=()=>{audio();ideasGenerate(false)};
 $('#seqIdeasAgain').onclick=()=>{audio();ideasGenerate(true)};
+$('#seqIdeasRestyle').onclick=()=>{audio();ideasRestyle()};
 for(const b of document.querySelectorAll('#seqIdeas [data-part]'))b.onclick=()=>{audio();sfx('click');IDEAS.parts[b.dataset.part]=!IDEAS.parts[b.dataset.part];ideasDraw()};
 $('#seqIdeasTempo').onchange=()=>ideasDraw();
 {const k=$('#seqIdeasKey');NOTE_NAMES.forEach((n,i)=>k.append(mkEl('option',{value:String(i),textContent:n})));

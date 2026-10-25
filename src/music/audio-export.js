@@ -5,7 +5,7 @@
 //   a time, yielding between slices, so the page keeps responding and the status line counts up.
 let lameP=null;
 function needLame(){return window.lamejs?Promise.resolve():(lameP||(lameP=new Promise((res,rej)=>{const s=document.createElement('script');s.src='lib/lame.min.js';s.onload=()=>res();s.onerror=()=>{lameP=null;rej(new Error('The MP3 encoder couldn’t be loaded.'))};document.head.append(s)})))}
-const sfRender=()=>soundfont?(ctx,out,syn)=>(t,p,at,d,v,dest)=>{if(!sfPlay(t,p,at,d,v,dest||out,ctx))syn.note(t,p,at,d,v,dest)}:null;
+const sfRender=()=>soundfont?(ctx,out,syn)=>(t,p,at,d,v,dest)=>{if(!sfPlay(t,p,at,d,v,dest||out,ctx,syn))syn.note(t,p,at,d,v,dest)}:null;
 async function songMp3(m,{kbps=192,tail=2,onProgress}={}){
   await needLame();
   const buf=await pxRender(m,GMV,sfRender(),tail),sr=buf.sampleRate,L=buf.getChannelData(0),R=buf.numberOfChannels>1?buf.getChannelData(1):L;
