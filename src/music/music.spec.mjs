@@ -54,7 +54,10 @@ test('notes drawn on the grid save as a MIDI file a player can read', async ({pa
   expect(await page.evaluate(() => window.__pixiwyg.state().music.tracks[0].notes.length)).toBe(1);
   await page.mouse.click(b.x, b.y);
   await page.locator('.sqtrack').nth(1).click({position: {x: 4, y: 4}});
-  const k = await cell(page, 0, 11);
+  // RULE: the kick is the kit's bottom row, wherever the hand percussion pushed it; scroll it into view.
+  const kick = await page.evaluate(() => { const i = window.__pixiwyg.DRUMS.findIndex(d => d[0] === 36), sc = document.getElementById('seqScroll'); sc.scrollTop = Math.max(0, 22 + i * 26 - sc.clientHeight / 2); return i; });
+  await page.waitForTimeout(100);
+  const k = await cell(page, 0, kick);
   await page.mouse.move(k.x, k.y); await page.mouse.down();
   for (let s = 1; s < 4; s++) await page.mouse.move(k.x + s * 24, k.y);
   await page.mouse.up();

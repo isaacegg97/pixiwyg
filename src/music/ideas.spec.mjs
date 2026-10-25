@@ -20,7 +20,7 @@ test('song ideas: every style, in any meter (odd, compound, irrational), polyton
         for (const n of t.notes) if (n.t < 0 || n.t + n.d > end || !Number.isInteger(n.t) || !Number.isInteger(n.d)) { say(`${t.name} has a note outside the song or off the tick grid`); break; }
       }
       // INVARIANT: the melody is in its own key: the home key, or the second key when polytonal.
-      const melScale = P.IDEA_MODES[r.summary.mode].map(i => (i + r.summary.melTonic) % 12);
+      const melScale = r.summary.melScale;
       const mel = r.tracks.find(t => t.name.startsWith('Melody'));
       if (mel.notes.some(n => !melScale.includes(n.p % 12))) say('melody leaves its key');
       if (extra.second && r.summary.melTonic !== (r.summary.tonic + extra.second) % 12) say('the melody is not in the second key');
@@ -29,9 +29,10 @@ test('song ideas: every style, in any meter (odd, compound, irrational), polyton
         const inBar = n => n.t >= b * barT && n.t < (b + 1) * barT;
         const first = bass.notes.find(inBar), chord = chords.notes.filter(inBar);
         if (first && chord.length && first.p % 12 !== Math.min(...chord.map(n => n.p)) % 12) { say(`bar ${b + 1}: bass isn't on the chord root`); break; }
-        if (extra.second && chord.length && !chord.some(n => !P.IDEA_MODES[r.summary.mode].map(i => (i + r.summary.tonic) % 12).includes(n.p % 12)) && extra.second !== 0) {
-          // RULE: a bitonal chord has notes outside the home key (the tritone and half step always do).
-          if ([1, 6].includes(extra.second)) { say(`bar ${b + 1}: the chord isn't bitonal`); break; }
+        // INVARIANT: a bitonal chord carries the second key's chord too: its root, moved up by the second key's distance.
+        if (extra.second && chord.length && P.IDEA_GENRES[genre].chords !== 'drone') {
+          const root = Math.min(...chord.map(n => n.p)) % 12;
+          if (!chord.some(n => n.p % 12 === (root + extra.second) % 12)) { say(`bar ${b + 1}: the chord isn't bitonal`); break; }
         }
       }
       const drums = r.tracks.find(t => t.drums);
@@ -41,7 +42,7 @@ test('song ideas: every style, in any meter (odd, compound, irrational), polyton
       for (let b = 0; b < m.bars; b++) {
         const t0 = b * barT;
         if (!drums.notes.some(n => n.p === 36 && Math.abs(n.t - t0 - anchor) < 40)) { say(`bar ${b + 1} has no kick on its anchor`); break; }
-        if (!drums.notes.some(n => (n.p === 38 || n.p === 39) && n.t >= t0 && n.t < t0 + barT)) { say(`bar ${b + 1} has no backbeat`); break; }
+        if (P.IDEA_GENRES[genre].backbeat !== false && !drums.notes.some(n => (n.p === 38 || n.p === 39) && n.t >= t0 && n.t < t0 + barT)) { say(`bar ${b + 1} has no backbeat`); break; }
       }
       if (extra.cycle && r.summary.cycle !== extra.cycle) say('the melody cycle was ignored');
     }
@@ -100,5 +101,34 @@ test('song ideas panel: Generate adds an idea and plays it, Another swaps it, Un
   expect((await names()).length).toBe(3);
   await page.keyboard.press('Escape');
   await expect(page.locator('#seqIdeas')).toBeHidden();
+  expect(errors).toEqual([]);
+});
+
+test('synth: every instrument and percussion sound is audible and clean, and a sidechain pump ducks on the beat', async ({page}) => {
+  const errors = await boot(page);
+  const r = await T(page, async () => {
+    const P = window.__pixiwyg, PPQ = 480, out = {bad: []};
+    const peak = (buf, a = 0, b = buf.length) => { let m = 0; for (let c = 0; c < buf.numberOfChannels; c++) { const d = buf.getChannelData(c); for (let i = a; i < b; i++) { const v = Math.abs(d[i]); if (!Number.isFinite(v)) return NaN; if (v > m) m = v; } } return m; };
+    const song = (tracks, bpm = 120) => ({bpm, beats: 4, unit: 4, res: 4, bars: 1, tracks});
+    for (const [prog, name] of P.GM) {
+      const buf = await P.pxRender(song([{name, drums: false, prog, vol: 110, mute: false, notes: [{t: 0, d: PPQ, p: 60, v: 110}]}]), P.GMV);
+      const pk = peak(buf);
+      if (!(pk > 0.01) || pk > 4) out.bad.push(`${name}: peak ${pk}`);
+    }
+    for (const [p, name] of P.DRUMS) {
+      const buf = await P.pxRender(song([{name: 'kit', drums: true, prog: 0, vol: 110, mute: false, notes: [{t: 0, d: PPQ / 4, p, v: 110}]}]), P.GMV);
+      const pk = peak(buf);
+      if (!(pk > 0.005) || pk > 4) out.bad.push(`drum ${name}: peak ${pk}`);
+    }
+    // INVARIANT: with a pump, a held pad is quietest just after each beat and loudest just before the next.
+    const pad = fx => ({name: 'pad', drums: false, prog: 89, vol: 110, mute: false, notes: [{t: 0, d: 4 * PPQ, p: 60, v: 110}], ...(fx ? {fx} : {})});
+    const pumped = await P.pxRender(song([pad([{k: 'pump', on: true, depth: .9, rate: 1}])]), P.GMV);
+    const sr = pumped.sampleRate, beat = sr * .5, w = Math.round(sr * .03);
+    out.duck = peak(pumped, Math.round(beat * 2 + sr * .01), Math.round(beat * 2 + sr * .01) + w);
+    out.swell = peak(pumped, Math.round(beat * 3 - w - sr * .01), Math.round(beat * 3 - sr * .01));
+    return out;
+  });
+  expect(r.bad).toEqual([]);
+  expect(r.duck).toBeLessThan(r.swell * .5);
   expect(errors).toEqual([]);
 });

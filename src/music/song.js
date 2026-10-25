@@ -3,12 +3,19 @@
 //   instrument or the drum kit. The .mid is generated on demand, not stored.
 // INVARIANT: room for 64 bars of the longest meter (32/2, 64 quarters a bar).
 const PPQ=480,SEQ_MAX_TICK=64*64*PPQ;
-const GM=[[0,'Piano','piano'],[4,'Electric piano','epiano'],[11,'Vibraphone','mallet'],[13,'Xylophone','mallet'],[16,'Organ','organ'],
-  [24,'Nylon guitar','pluck'],[29,'Overdriven guitar','drive'],[33,'Electric bass','bass'],[38,'Synth bass','synbass'],[40,'Violin','strings'],
-  [48,'Strings','strings'],[56,'Trumpet','brass'],[61,'Brass section','brass'],[65,'Alto sax','reed'],[73,'Flute','flute'],
-  [80,'Square lead','square'],[81,'Saw lead','saw'],[89,'Warm pad','pad'],[98,'Crystal','mallet'],[114,'Steel drums','mallet']];
+// INVARIANT: sorted by program: a program plays the voice of the last entry at or below it (pxSynth's map).
+const GM=[[0,'Piano','piano'],[4,'Electric piano','epiano'],[5,'Tape keys','tapekeys'],[6,'Harpsichord','harpsi'],[9,'Glockenspiel','glock'],[11,'Vibraphone','vibes'],
+  [12,'Marimba','marimba'],[13,'Xylophone','mallet'],[16,'Organ','organ'],[21,'Accordion','accordion'],[24,'Nylon guitar','pluck'],
+  [29,'Overdriven guitar','drive'],[33,'Electric bass','bass'],[35,'Fretless bass','fretless'],[38,'Synth bass','synbass'],[39,'Wobble bass','wobble'],
+  [40,'Violin','strings'],[48,'Strings','strings'],[52,'Choir aahs','choir'],[55,'Orchestra hit','orchhit'],[56,'Trumpet','brass'],
+  [61,'Brass section','brass'],[62,'Synth stab','stab'],[65,'Alto sax','reed'],[66,'Tenor sax','sax'],[73,'Flute','flute'],
+  [75,'Pan flute','panflute'],[77,'Shakuhachi','shakuhachi'],[80,'Square lead','square'],[81,'Saw lead','saw'],[87,'Reese bass','reese'],
+  [89,'Warm pad','pad'],[90,'Supersaw','supersaw'],[98,'Crystal','mallet'],[104,'Sitar','sitar'],[105,'Oud','oud'],[107,'Koto','koto'],
+  [108,'Kalimba','kalimba'],[109,'Bagpipe','bagpipe'],[110,'Fiddle','fiddle'],[114,'Steel drums','mallet']];
 // FORMAT: General MIDI drum notes, top to bottom as rows.
-const DRUMS=[[49,'Crash'],[51,'Ride'],[46,'Open hat'],[42,'Closed hat'],[54,'Tambourine'],[56,'Cowbell'],[50,'High tom'],[47,'Mid tom'],[45,'Low tom'],[39,'Clap'],[38,'Snare'],[36,'Kick']];
+const DRUMS=[[49,'Crash'],[52,'Gong'],[51,'Ride'],[46,'Open hat'],[42,'Closed hat'],[81,'Triangle'],[54,'Tambourine'],[70,'Maracas'],[69,'Cabasa'],[56,'Cowbell'],
+  [75,'Claves'],[76,'Wood block'],[60,'High bongo'],[61,'Low bongo'],[63,'Open conga'],[64,'Low conga'],[50,'High tom'],[47,'Mid tom'],[45,'Low tom'],[41,'Floor tom'],
+  [39,'Clap'],[37,'Side stick'],[38,'Snare'],[36,'Kick']];
 const SEQ_COLORS=['#ff2e88','#2e5bff','#1d9a5b','#d97a00','#7a3ff0','#00a3b4','#c2185b','#5d7a00'];
 const NOTE_NAMES=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
 const noteName=p=>NOTE_NAMES[p%12]+(Math.floor(p/12)-1);

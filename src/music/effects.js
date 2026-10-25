@@ -14,6 +14,9 @@ const FX_DEFS={
   delay:{name:'Delay',p:[['ms','Time (ms)',20,2000,5,375],['fb','Feedback',0,.95,.01,.35],['mix','Mix',0,1,.01,.3]]},
   reverb:{name:'Reverb',p:[['sec','Length (s)',.2,8,.1,2.2],['decay','Decay',.5,8,.1,3],['mix','Mix',0,1,.01,.3]]},
   pan:{name:'Pan',p:[['pan','Left ↔ right',-1,1,.01,0]]},
+  // RULE: the pump isn't in the chain: the synth ducks each note on the song's beats (see pxSynth); samples don't pump.
+  pump:{name:'Sidechain pump',p:[['depth','Depth',0,1,.01,.7],['rate','Pumps a beat',.5,4,.5,1]]},
+  crush:{name:'Bitcrush',p:[['bits','Bits',2,16,1,6],['mix','Mix',0,1,.01,.6]]},
 };
 const FX_MAX=8,SMP_MAX=24,SMP_BYTES=24*1024*1024;
 // INVARIANT: self-contained (exports carry its source). Connects input through the chain to dest; returns the
@@ -39,6 +42,9 @@ function pxFx(ctx,input,chain,dest){
         const sr=ctx.sampleRate,len=Math.max(1,Math.round(sr*Math.min(8,+f.sec||2))),ir=ctx.createBuffer(2,len,sr);let s=1234567;
         for(let c=0;c<2;c++){const dd=ir.getChannelData(c);for(let i=0;i<len;i++){s=(s*1103515245+12345)&0x7fffffff;dd[i]=(s/0x3fffffff-1)*Math.pow(1-i/len,+f.decay||3)}}
         const cv=ctx.createConvolver();cv.buffer=ir;wetDry(cv,cv,+f.mix,out);break}
+      case'crush':{const w=ctx.createWaveShaper(),n=4096,cv=new Float32Array(n),lv=Math.pow(2,Math.round(+f.bits||6)-1);for(let i=0;i<n;i++){const x=i/(n-1)*2-1;cv[i]=Math.round(x*lv)/lv}
+        w.curve=cv;wetDry(w,w,+f.mix,out);break}
+      case'pump':cur.connect(out);break;
       case'pan':{const p=ctx.createStereoPanner();p.pan.value=Math.max(-1,Math.min(1,+f.pan||0));cur.connect(p);p.connect(out);break}
       default:cur.connect(out);
     }

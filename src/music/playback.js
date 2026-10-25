@@ -19,6 +19,8 @@ async function seqPlay(){
   audio();if(!ac||!seqOut())return;const m=state.music;if(!m)return;
   if((m.samples||[]).length){status('Loading samples…');await samplesReady(m);status('')}
   seqStop(true);seqP.on=true;seqP.from=Math.min(seqP.cursor,songEnd(m)-1);seqP.next=seqP.from;seqP.t0=ac.currentTime+.06;
+  // INVARIANT: the synth's song zero, so a Sidechain pump lands on the song's beats wherever playback starts.
+  synth.bpm=m.bpm;synth.t0=seqP.t0-seqP.from*tickSec(m);
   seqSchedule();seqP.timer=setInterval(seqSchedule,25);seqP.raf=requestAnimationFrame(seqFrame);
   $('#seqPlay').textContent='■ Stop';$('#seqPlay').setAttribute('aria-pressed','true');
 }
@@ -41,7 +43,7 @@ function seqSchedule(){
     seqP.next=until;
     if(until>=end){
       if(!seqP.loop){clearInterval(seqP.timer);setTimeout(()=>{if(seqP.on)seqStop(true)},Math.max(0,(seqP.t0+(end-seqP.from)*sp-ac.currentTime)*1000)+300);break}
-      seqP.t0+=(end-seqP.from)*sp;seqP.from=0;seqP.next=0;
+      seqP.t0+=(end-seqP.from)*sp;seqP.from=0;seqP.next=0;synth.t0=seqP.t0;
     }else break;
   }
 }
