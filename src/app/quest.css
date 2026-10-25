@@ -101,3 +101,7 @@ body.dragging .qspot{opacity:0}
 .qendacts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .qgo.ghost{background:var(--paper);color:var(--ink)}
 @media (prefers-reduced-motion:reduce){.qpixi,.qspot::after,.qspot span,.qdraw,.qdot,.qroll i.on,.qbounce,.qtype,.qcube,.qhop,.qspin{animation:none}.qdraw{stroke-dashoffset:0}.qtype{width:auto}.qgrown.holding i{transition:none}}
+/* SECTION: the grown-up question before the quest */
+.qaskwin{width:min(520px,100%)}
+.qasklist{margin:0 0 12px;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.qaskwin p{max-width:none;margin:0 0 10px}

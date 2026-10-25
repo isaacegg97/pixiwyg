@@ -158,6 +158,7 @@
     "music/soundfonts.js",
     "music/effects.js",
     "music/ideas.js",
+    "music/audio-export.js",
     "app/workspaces.js",
     "writing/write-workspace.js",
     "logic/timeline.js",

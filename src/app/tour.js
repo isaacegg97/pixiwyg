@@ -5,7 +5,7 @@ const pickEl=sel=>{const el=byStyle(sel);select(el?el.id:null)};
 const K=(k,d)=>[k,d];
 const FULL_TOUR=[
   // RULE: the tour opens on the title screen; Next builds the demo and continues inside it.
-  {onTitle:true,target:'#tKinds',spot:['#tKinds','#tKindOpts','#tBlank'],title:'Start with a canvas',body:'Every project begins here, with what you’re making: a web page, a printed flyer or poster, a folded zine, an eight-page mini zine, or a fixed screen size. Click one to see its sizes; Create makes a blank one. Next opens the zine fair demo, a web page, to show everything working.',
+  {onTitle:true,enter:()=>{$('#tMore').open=true},target:'#tKinds',spot:['#tKinds','#tKindOpts','#tBlank'],title:'Start with a canvas',body:'Every project begins here, with what you’re making: a web page, a printed flyer or poster, a folded zine, an eight-page mini zine, or a fixed screen size. Click one to see its sizes; Create makes a blank one. Next opens the zine fair demo, a web page, to show everything working.',
    keys:[K('Esc','Leave the tour at any step')]},
   {title:'Welcome to PIXIWYG',body:'This is the zine fair demo, already saved as your own project. The tour shows you around and ends right here, so nothing you try along the way is lost or wasted.',
    keys:[K('Esc','Leave the tour at any step')],enter:()=>select(null)},

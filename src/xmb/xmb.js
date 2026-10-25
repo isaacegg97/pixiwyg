@@ -36,6 +36,8 @@ function xmbItemsFor(cat){
   const out=[],has=!!state.project;
   if(cat.id==='project'){
     if(has)out.push({icon:'▸',name:`Back to ${state.project.name}`,note:'Pick up where you left off',badge:'Open',run:()=>{}});
+    // RULE: the home screen's starts that open past the page come first; the plain canvases follow.
+    for(const st of STARTS)if(st.ws!=='page')out.push({icon:st.icon,name:'Start '+st.name.replace(/^./,c=>c.toLowerCase()),note:st.note,run:()=>startWork(st)});
     for(const [k,v] of Object.entries(KINDS))out.push({icon:'＋',name:'New: '+v.name,note:v.note,run:()=>newProject('',false,kindCanvas(k))});
     out.push({icon:'⇩',name:'Open a .pixiwyg file…',note:'A project saved on this device',stay:true,run:xmbPickFile});
     for(const p of XMB.projects)if(!has||p.id!==state.project.id)out.push({icon:'▤',name:p.name,

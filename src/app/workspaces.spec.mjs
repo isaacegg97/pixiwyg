@@ -31,6 +31,7 @@ test('workspaces reshape the editor, and a project opens in the one it was left 
   await T(page, async () => { await window.__pixiwyg.newProject('Zine', false, {type: 'booklet', pages: 8}); });
   expect(await ws(page)).toBe('write');
   await T(page, () => window.__pixiwyg.showTitle());
+  await page.click('#tMore > summary');
   await page.selectOption('#tStart', 'animate');
   await page.fill('#tName', 'Moving');
   await page.click('#tBlank');

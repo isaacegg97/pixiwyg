@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-gNOG7BWaMOCasA+ERK7MPuGji1V1eq2+5pzzGGGfo80='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' data: blob:; media-src 'self' blob: data:; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-ujd7kvhaa2WOB7vQygHPXwF8YbI+K8F9VLGMpSmqlCA='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' data: blob:; media-src 'self' blob: data:; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>PIXIWYG</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -230,7 +230,7 @@ body.dragging,body.dragging *{cursor:copy!important}
 .modal p{margin:0 0 8px;font-size:13px;max-width:65ch}
 /* SECTION: title screen and the new-project canvas picker */
 .title{position:fixed;inset:0;z-index:90000;display:grid;place-items:center;padding:16px;overflow:auto;background-color:var(--desk);background-image:repeating-conic-gradient(var(--desk2) 0 25%,transparent 0 50%);background-size:4px 4px}
-.tpanel{width:min(640px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column}
+.tpanel{width:min(980px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column}
 .tbody{display:flex;flex-direction:column;gap:14px;overflow:auto}
 .tagline{margin:-6px 0 0;text-align:center;color:var(--muted)}
 #tContinue{align-self:center;font-size:15px;padding:6px 16px}
@@ -260,6 +260,28 @@ body.dragging,body.dragging *{cursor:copy!important}
 .kicon.minizine::before{left:2px;width:34px;top:3px;height:20px;background:repeating-linear-gradient(90deg,transparent 0 7px,currentColor 7px 9px)}
 .kicon.screen::before{left:4px;width:30px;top:2px;height:18px}.kicon.screen::after{left:14px;width:10px;top:22px;height:0;border-width:2px 0 0}
 #tKindOpts .cvfields{flex-direction:row;flex-wrap:wrap;gap:6px 14px;align-items:center}
+/* SECTION: home: two columns (one on a phone), start cards, tour buttons */
+.thead{display:flex;flex-direction:column;align-items:center;gap:8px}
+.tcols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.tcol{display:flex;flex-direction:column;gap:18px;min-width:0}
+@media (max-width:760px){.tcols{grid-template-columns:minmax(0,1fr)}}
+.tstarts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.tstarts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* RULE: seven starts, the web page twice as wide: the grid fills evenly at four columns and at two. */
+.tstart:first-child{grid-column:span 2}
+.tstart{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:44px;padding:10px;text-align:left;border:2px solid var(--ink);background:var(--paper);color:var(--ink);box-shadow:3px 3px 0 var(--shadow);cursor:pointer;font:inherit}
+.tstart:hover,.tstart:focus-visible{background:var(--sun);color:var(--onsun);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--shadow);outline:none}
+.tstart:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+.ticon{font-size:22px;line-height:1.1}
+.tstart b{font-size:14px}
+.tstart small{font-size:12px;opacity:.75}
+.tmore>summary{cursor:pointer;font-size:13px;padding:4px 0;min-height:24px}
+.tmore[open]{display:flex;flex-direction:column;gap:8px}
+.ttours{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.ttours .ttour{white-space:normal;min-width:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:1px;padding:6px 10px;min-height:44px}
+.ttour small{font-size:11px;opacity:.75;font-weight:400}
+.ttour.kid{grid-column:1/-1}
+@media (prefers-reduced-motion:reduce){.tstart,.tstart:hover,.tstart:active{transform:none}}
 /* SECTION: shared controls: buttons, toggles, fields, segmented choices, their one size */
 .btn.ico{padding:4px 8px;font-size:16px;line-height:1}
 .tog[hidden]{display:none}
@@ -1337,6 +1359,10 @@ body.dragging .qspot{opacity:0}
 .qendacts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .qgo.ghost{background:var(--paper);color:var(--ink)}
 @media (prefers-reduced-motion:reduce){.qpixi,.qspot::after,.qspot span,.qdraw,.qdot,.qroll i.on,.qbounce,.qtype,.qcube,.qhop,.qspin{animation:none}.qdraw{stroke-dashoffset:0}.qtype{width:auto}.qgrown.holding i{transition:none}}
+/* SECTION: the grown-up question before the quest */
+.qaskwin{width:min(520px,100%)}
+.qasklist{margin:0 0 12px;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.qaskwin p{max-width:none;margin:0 0 10px}
 </style>
 
 <section class="writer" id="writer" hidden aria-label="Writer">
@@ -1755,35 +1781,46 @@ body.dragging .qspot{opacity:0}
   </div>
 </section>
 <div class="title" id="title" hidden>
-  <div class="win tpanel" role="dialog" aria-modal="true" aria-label="PIXIWYG projects">
-    <div class="tb"><span>Projects</span></div>
+  <div class="win tpanel" role="dialog" aria-modal="true" aria-label="PIXIWYG home">
+    <div class="tb"><span>Home</span></div>
     <div class="wb tbody">
-      <div class="logo biglogo" aria-hidden="true"><b>P</b><b>I</b><b>X</b><b>I</b><b>W</b><b>Y</b><b>G</b></div>
-      <p class="tagline">Paint under it. Style on top of it.</p>
-      <button class="btn primary" id="tContinue" hidden>Back</button>
-      <section class="tsec"><h3>New project</h3>
-        <div class="kinds" id="tKinds" role="group" aria-label="Canvas"></div>
-        <div id="tKindOpts"></div>
-        <div class="row"><input id="tName" type="text" placeholder="Name it, or don't" aria-label="New project name" maxlength="80">
-          <select id="tStart" aria-label="Start in" title="The workspace it opens in; every project has them all"><option value="">Start in: what suits the canvas</option><option value="page">Start in Page</option><option value="write">Start in Write</option><option value="paint">Start in Paint</option><option value="music">Start in Music</option><option value="animate">Start in Animate</option></select>
-          <button class="btn primary" id="tBlank" title="Start it with no stylesheets yet">Create</button>
-</div>
-      </section>
-      <section class="tsec"><h3>New here?</h3>
-        <div class="row"><button class="btn primary" id="tTour">Show me around</button>
-          <small class="credit">Tell it roughly who you are and get a short tour on an example page, or take the full tour, or learn to build components.</small></div>
-      </section>
-      <section class="tsec"><h3>Open a file</h3>
-        <div class="row"><label class="btn" for="tFile">Open project file…</label><input class="sr" type="file" id="tFile" accept=".pixiwyg,.zip,.json,application/zip">
-          <small class="credit">A .pixiwyg file or a backup zip, or drop one anywhere on this screen.</small></div>
-      </section>
-      <section class="tsec"><h3>In this browser</h3><div class="tlist" id="tList"></div>
-        <div class="row"><button class="btn" id="tBackup" title="Download every project and the primitives library as one zip">Back up everything</button><small class="credit" id="tStorage"></small></div>
-        <small class="credit">Projects save themselves here as you work. Save file downloads a copy you can keep, share or open somewhere else.</small></section>
+      <header class="thead">
+        <div class="logo biglogo" aria-hidden="true"><b>P</b><b>I</b><b>X</b><b>I</b><b>W</b><b>Y</b><b>G</b></div>
+        <p class="tagline">Paint under it. Style on top of it.</p>
+        <button class="btn primary" id="tContinue" hidden>Back</button>
+      </header>
+      <div class="tcols">
+        <div class="tcol">
+          <section class="tsec" aria-labelledby="tStartH"><h3 id="tStartH">Start something</h3>
+            <div class="row"><input id="tName" type="text" placeholder="Name it, or don't" aria-label="New project name" maxlength="80"></div>
+            <div class="tstarts" id="tStarts" role="group" aria-labelledby="tStartH"></div>
+            <details class="tmore" id="tMore"><summary>Choose a canvas and size…</summary>
+              <div class="kinds" id="tKinds" role="group" aria-label="Canvas"></div>
+              <div id="tKindOpts"></div>
+              <div class="row">
+                <select id="tStart" aria-label="Start in" title="The workspace it opens in; every project has them all"><option value="">Start in: what suits the canvas</option><option value="page">Start in Page</option><option value="write">Start in Write</option><option value="paint">Start in Paint</option><option value="music">Start in Music</option><option value="animate">Start in Animate</option><option value="model">Start in 3D</option></select>
+                <button class="btn primary" id="tBlank" title="Start it with no stylesheets yet">Create</button>
+              </div>
+            </details>
+          </section>
+          <section class="tsec" aria-labelledby="tLearnH"><h3 id="tLearnH">Learn</h3>
+            <div class="ttours" id="tTours" role="group" aria-labelledby="tLearnH"></div>
+            <div class="row"><button class="btn" id="tTour">Pick a tour for me…</button><small class="credit">Say roughly who you are, pick a look, and get the tour that fits.</small></div>
+          </section>
+        </div>
+        <div class="tcol">
+          <section class="tsec" aria-labelledby="tGoH"><h3 id="tGoH">Continue</h3>
+            <div class="tlist" id="tList"></div>
+            <div class="row"><label class="btn" for="tFile">Open project file…</label><input class="sr" type="file" id="tFile" accept=".pixiwyg,.zip,.json,application/zip">
+              <button class="btn" id="tBackup" title="Download every project and the primitives library as one zip">Back up everything</button></div>
+            <small class="credit">A .pixiwyg file or a backup zip opens here, or drop one anywhere on this screen. Projects save themselves in this browser as you work; Save file keeps a copy.</small>
+            <small class="credit" id="tStorage"></small>
+          </section>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-
 <div class="tour" id="tour" hidden>
   <svg class="tourdim" id="tourDim" aria-hidden="true"><path fill-rule="evenodd"></path></svg>
   <div id="tourSpots"></div>
@@ -1888,6 +1925,7 @@ body.dragging .qspot{opacity:0}
       <span class="sqopt">Sound <b id="seqSfName">Built-in synth</b><button class="btn sqm" id="seqSfLoad" title="Play with a SoundFont (.sf2) of sampled instruments. You can also drop one on the window.">SoundFont…</button><button class="btn sqm" id="seqSfOff" hidden title="Forget the SoundFont and use the built-in synth">Built-in</button><input type="file" id="seqSfFile" accept=".sf2" hidden></span>
       <span class="grow"></span>
       <button class="btn" id="seqSave" title="Download the song as a Standard MIDI File, for any music program">Save .mid</button>
+      <button class="btn" id="seqMp3" title="Download the song as it sounds here, effects and all, as an MP3">Save .mp3</button>
     </div>
     <div class="seqbody">
       <div class="seqtracks"><div id="seqTrackList"></div>
@@ -2400,6 +2438,21 @@ body.dragging .qspot{opacity:0}
     <h3>Ideas to try next</h3>
     <ul class="qideas" id="qIdeas"></ul>
     <div class="qendacts"><button class="qgo ghost" id="qWatch" type="button">▶ Watch my site</button><button class="qgo" id="qDone" type="button">Start creating! ✨</button></div>
+  </div>
+</div>
+<!-- RULE: the quest asks first, in grown-up words: it is for kids, it changes the interface, and only a grown-up ends it. -->
+<div class="modal" id="qAsk" hidden>
+  <div class="win qaskwin" role="dialog" aria-modal="true" aria-labelledby="qAskH">
+    <div class="tb"><span id="qAskH">Start the Creative Quest?</span><button class="wclose" id="qAskClose" aria-label="Not now" title="Not now (Esc)">×</button></div>
+    <div class="wb">
+      <p>A guided tour for kids, about eight and up: seven hands-on missions that build a little website with a drawing, a tune, a story, a 3D shape and something that moves.</p>
+      <ul class="qasklist">
+        <li>It starts a new project, <b>My Creative Quest</b>. Whatever is open now stays saved.</li>
+        <li>It switches to the <b>touch interface</b>, made for tablets. Settings switches back.</li>
+        <li>Kids can’t skip it by accident: a grown-up ends it by <b>holding the button in the corner for 3 seconds</b>.</li>
+      </ul>
+      <div class="row"><span class="grow"></span><button class="btn" id="qAskNo" type="button">Not now</button><button class="btn primary" id="qAskGo" type="button">Start the quest</button></div>
+    </div>
   </div>
 </div>
 <style id="fontfaces"></style>
@@ -7156,8 +7209,9 @@ function pxSynth(ctx,out,map){
 }
 // PERF: one OfflineAudioContext pass, exactly the song's length. Self-contained.
 // INVARIANT: note(ctx,out,synth) may return a player (the editor's SoundFont); otherwise the synth plays.
-async function pxRender(m,map,note){
-  const PPQ=480,sp=60/m.bpm/PPQ,end=m.bars*m.beats*PPQ*4/(m.unit||4),sr=44100,len=Math.max(1,Math.ceil(end*sp*sr));
+// FORMAT: tail is seconds rendered past the song's end, for reverbs and releases to ring out (exports); 0 for loops.
+async function pxRender(m,map,note,tail=0){
+  const PPQ=480,sp=60/m.bpm/PPQ,end=m.bars*m.beats*PPQ*4/(m.unit||4),sr=44100,len=Math.max(1,Math.ceil((end*sp+tail)*sr));
   const ctx=new OfflineAudioContext(2,len,sr),comp=ctx.createDynamicsCompressor(),bus=ctx.createGain();bus.gain.value=.45;bus.connect(comp);comp.connect(ctx.destination);
   // INVARIANT: notes go into their track's input, through the track's effects, then the song's, then the bus.
   const master=ctx.createGain();pxFx(ctx,master,m.fx,bus);
@@ -8195,6 +8249,38 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#seqIdeas').hid
 $('#seqIdeas').addEventListener('keydown',e=>{
   const cards=[...$('#seqIdeasGenres').querySelectorAll('.idgenre')],i=cards.indexOf(document.activeElement);if(i<0)return;
   const d={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key];if(!d)return;e.preventDefault();e.stopPropagation();cards[(i+d+cards.length)%cards.length].click();$('#seqIdeasGenres [aria-checked=true]')?.focus()});
+// SECTION: songs as audio files (MP3)
+// RULE: a song exports as it plays: rendered offline by the same synth (or the loaded SoundFont) through every track's
+//   effects, with two seconds more for reverbs and releases to ring out, then encoded at 192 kbps stereo by the
+//   vendored lamejs (LGPL, lib/lame.min.js), which loads only when a song is first exported. Encoding goes a slice at
+//   a time, yielding between slices, so the page keeps responding and the status line counts up.
+let lameP=null;
+function needLame(){return window.lamejs?Promise.resolve():(lameP||(lameP=new Promise((res,rej)=>{const s=document.createElement('script');s.src='lib/lame.min.js';s.onload=()=>res();s.onerror=()=>{lameP=null;rej(new Error('The MP3 encoder couldn’t be loaded.'))};document.head.append(s)})))}
+const sfRender=()=>soundfont?(ctx,out,syn)=>(t,p,at,d,v,dest)=>{if(!sfPlay(t,p,at,d,v,dest||out,ctx))syn.note(t,p,at,d,v,dest)}:null;
+async function songMp3(m,{kbps=192,tail=2,onProgress}={}){
+  await needLame();
+  const buf=await pxRender(m,GMV,sfRender(),tail),sr=buf.sampleRate,L=buf.getChannelData(0),R=buf.numberOfChannels>1?buf.getChannelData(1):L;
+  const enc=new lamejs.Mp3Encoder(2,sr,kbps),parts=[],block=1152*16,l16=new Int16Array(block),r16=new Int16Array(block);
+  // PERF: one pair of Int16 buffers reused for every slice; samples clamp to ±1 before scaling.
+  const fill=(src,dst,i,n)=>{for(let k=0;k<n;k++){const v=src[i+k];dst[k]=v<-1?-32768:v>1?32767:v<0?v*32768:v*32767}};
+  for(let i=0,n=0;i<L.length;i+=block,n++){const c=Math.min(block,L.length-i);fill(L,l16,i,c);fill(R,r16,i,c);
+    const d=enc.encodeBuffer(l16.subarray(0,c),r16.subarray(0,c));if(d.length)parts.push(d);
+    if(n%8===7){if(onProgress)onProgress(i/L.length);await new Promise(r=>setTimeout(r))}}
+  const f=enc.flush();if(f.length)parts.push(f);
+  return new Blob(parts,{type:'audio/mpeg'});
+}
+async function saveMp3(){
+  const m=state.music;if(!m)return;
+  if(!m.tracks.some(t=>t.notes.length)){status(`“${m.name}” has no notes yet.`);return}
+  const btn=$('#seqMp3');btn.disabled=true;status('Rendering the song…');
+  try{
+    if((m.samples||[]).length)await samplesReady(m);
+    const blob=await songMp3(m,{onProgress:p=>status(`Encoding MP3… ${Math.round(p*100)}%`)}),name=slug(m.name||'song')+'.mp3';
+    download(blob,name);status(`Saved ${name} (${(blob.size/1048576).toFixed(1)} MB)`);
+  }catch(e){logErr('mp3',e.message,e.stack);status(e.message||'The song couldn’t be exported.')}
+  finally{btn.disabled=false}
+}
+$('#seqMp3').onclick=()=>{audio();saveMp3()};
 // SECTION: workspaces
 // RULE: one project, five workspaces; the canvas picks the first, the project remembers the last.
 //     page     the page
@@ -11173,7 +11259,7 @@ async function showTitle(){
   await flushSave();if(more.open)more.open=false;
   const cur=state.project,list=await listProjects(),box=$('#tList');box.replaceChildren();
   $('#tContinue').hidden=!cur;if(cur)$('#tContinue').textContent=`Back to ${cur.name}`;
-  if(!list.length)box.append(mkEl('p',{className:'empty',textContent:'No projects in this browser yet. Start one above, or open a .pixiwyg file.'}));
+  if(!list.length)box.append(mkEl('p',{className:'empty',textContent:'No projects in this browser yet. Start one, or open a .pixiwyg file.'}));
   for(const p of list){
     const row=mkEl('div',{className:'trow'+(cur&&cur.id===p.id?' on':'')}),info=mkEl('div');
     const sh=(p.sheets||[]).slice(0,3).join(', ')+((p.sheets||[]).length>3?` +${p.sheets.length-3}`:'');
@@ -11188,12 +11274,42 @@ async function showTitle(){
     open.addEventListener('dblclick',e=>e.stopPropagation());row.ondblclick=()=>open.click();
     row.append(info,mkEl('div',{className:'tacts'}));row.lastChild.append(open,dl,del);box.append(row);
   }
-  renderKindPicker();storageLine().then(t=>{$('#tStorage').textContent=t});
+  renderStarts();renderTours();renderKindPicker();storageLine().then(t=>{$('#tStorage').textContent=t});
   $('#title').hidden=false;document.body.classList.add('titled');
-  (!$('#tContinue').hidden?$('#tContinue'):list.length?$('#tName'):$('#tTour')).focus();
+  (!$('#tContinue').hidden?$('#tContinue'):list.length?$('#tName'):$('#tStarts .tstart')).focus();
 }
 function hideTitle(){if(!state.project)return;$('#title').hidden=true;document.body.classList.remove('titled')}
 $('#tContinue').onclick=()=>{audio();hideTitle()};
+// SECTION: home: start something (a workflow: a canvas, the workspace it opens in, and a first push)
+// RULE: each start is one tap to a blank project already where that kind of work happens; the canvas picker under it
+//   is for choosing sizes first.
+const STARTS=[
+  {icon:'🌐',name:'A web page',note:'Grows with the window',kind:'web',ws:'page'},
+  {icon:'✒',name:'A story',note:'Write on printed pages',kind:'page',ws:'write'},
+  {icon:'📖',name:'A zine',note:'Folded, stapled, printed',kind:'booklet',ws:'page'},
+  {icon:'🎨',name:'A picture',note:'Paint on a square',kind:'screen',ws:'paint'},
+  {icon:'♫',name:'A song',note:'Starts with ideas to play with',kind:'web',ws:'music',then:()=>openIdeas()},
+  {icon:'◷',name:'An animation',note:'Things that move on a screen',kind:'screen',ws:'animate'},
+  {icon:'◆',name:'Something in 3D',note:'Shapes for the page',kind:'web',ws:'model'},
+];
+function renderStarts(){
+  $('#tStarts').replaceChildren(...STARTS.map(s=>{const b=mkEl('button',{type:'button',className:'tstart'});
+    b.append(mkEl('span',{className:'ticon',textContent:s.icon,ariaHidden:'true'}),mkEl('b',{textContent:s.name}),mkEl('small',{textContent:s.note}));
+    b.onclick=()=>{audio();startWork(s,$('#tName').value)};return b}));
+}
+async function startWork(s,name){await newProject(name||'',false,kindCanvas(s.kind),s.ws);if(s.then)s.then()}
+// SECTION: home: learn (every tour, one tap each)
+// FIX: built when drawn: the profiles and tours are defined after this file.
+const tours=()=>[
+  ...Object.entries(PROFILES).map(([p,v])=>({name:`${v.name} tour`,note:v.gets,run:()=>chooseProfile(p)})),
+  {name:'Components',note:'Animation, logic and parts to reuse',run:async()=>{await newProject('Component workshop',true);runTour('Components',COMPONENTS)}},
+  {name:'The full tour',note:'Everything, in order',run:()=>startTour()},
+  {name:'⭐ Creative Quest',note:'For kids: seven missions with stars',run:()=>startQuest(),kid:true},
+];
+function renderTours(){
+  $('#tTours').replaceChildren(...tours().map(t=>{const b=mkEl('button',{type:'button',className:'btn ttour'+(t.kid?' kid':''),title:t.note});
+    b.append(mkEl('b',{textContent:t.name}),mkEl('small',{textContent:t.note}));b.onclick=()=>{audio();t.run()};return b}));
+}
 $('#tBlank').onclick=()=>{audio();newProject($('#tName').value,false,newKind,$('#tStart').value)};
 $('#tName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#tBlank').click()}});
 $('#tFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(f)openProjectFile(f)};
@@ -12781,6 +12897,7 @@ const CMD_ITEMS=[
   {cat:'Tools',name:'Styles node editor…',xmb:'page',hint:'Fills, shapes, outlines, filters',keys:'',run:()=>openStyleEditor()},
   {cat:'Tools',name:'Page logic node editor…',xmb:'page',hint:'Clicks, timers, state variables',keys:'',run:()=>openLogicEditor()},
   {cat:'Tools',name:'Song ideas…',hint:'Melody, bassline, drums and chords in a style you pick, at the song’s tempo',keys:'',xmb:'music',run:()=>{setWorkspace('music');openIdeas()}},
+  {cat:'Output',name:'Save the song as MP3',hint:'The open song as it sounds, effects and all',keys:'',xmb:'music',run:()=>{setWorkspace('music');saveMp3()}},
   {cat:'Output',name:'Export HTML…',xmb:'output',hint:'Self-contained HTML export',keys:'Ctrl+Shift+S',run:()=>openExport()},
   {cat:'Tools',name:'Load style set…',xmb:'page',hint:'Preview stylesheets, then append or replace',keys:'Ctrl+Shift+O',run:()=>openSset()},
   {cat:'Output',name:'Publish site',xmb:'output',hint:'Send the export to the local publish API',keys:'',run:()=>publishSite()},
@@ -12882,7 +12999,7 @@ const pickEl=sel=>{const el=byStyle(sel);select(el?el.id:null)};
 const K=(k,d)=>[k,d];
 const FULL_TOUR=[
   // RULE: the tour opens on the title screen; Next builds the demo and continues inside it.
-  {onTitle:true,target:'#tKinds',spot:['#tKinds','#tKindOpts','#tBlank'],title:'Start with a canvas',body:'Every project begins here, with what you’re making: a web page, a printed flyer or poster, a folded zine, an eight-page mini zine, or a fixed screen size. Click one to see its sizes; Create makes a blank one. Next opens the zine fair demo, a web page, to show everything working.',
+  {onTitle:true,enter:()=>{$('#tMore').open=true},target:'#tKinds',spot:['#tKinds','#tKindOpts','#tBlank'],title:'Start with a canvas',body:'Every project begins here, with what you’re making: a web page, a printed flyer or poster, a folded zine, an eight-page mini zine, or a fixed screen size. Click one to see its sizes; Create makes a blank one. Next opens the zine fair demo, a web page, to show everything working.',
    keys:[K('Esc','Leave the tour at any step')]},
   {title:'Welcome to PIXIWYG',body:'This is the zine fair demo, already saved as your own project. The tour shows you around and ends right here, so nothing you try along the way is lost or wasted.',
    keys:[K('Esc','Leave the tour at any step')],enter:()=>select(null)},
@@ -13202,6 +13319,8 @@ function xmbItemsFor(cat){
   const out=[],has=!!state.project;
   if(cat.id==='project'){
     if(has)out.push({icon:'▸',name:`Back to ${state.project.name}`,note:'Pick up where you left off',badge:'Open',run:()=>{}});
+    // RULE: the home screen's starts that open past the page come first; the plain canvases follow.
+    for(const st of STARTS)if(st.ws!=='page')out.push({icon:st.icon,name:'Start '+st.name.replace(/^./,c=>c.toLowerCase()),note:st.note,run:()=>startWork(st)});
     for(const [k,v] of Object.entries(KINDS))out.push({icon:'＋',name:'New: '+v.name,note:v.note,run:()=>newProject('',false,kindCanvas(k))});
     out.push({icon:'⇩',name:'Open a .pixiwyg file…',note:'A project saved on this device',stay:true,run:xmbPickFile});
     for(const p of XMB.projects)if(!has||p.id!==state.project.id)out.push({icon:'▤',name:p.name,
@@ -13549,7 +13668,12 @@ function qTidy(){if(state.els.length>1)try{autoformat()}catch(e){logErr('quest',
 const qFrame=()=>requestAnimationFrame(()=>xmbFitContent(true));
 
 // SECTION: Creative Quest flow
-function startQuest(){
+function startQuest(){$('#qAsk').hidden=false;$('#qAskGo').focus()}
+function qAskClose(){$('#qAsk').hidden=true}
+$('#qAskGo').onclick=()=>{qAskClose();audio();qIntro()};
+$('#qAskNo').onclick=$('#qAskClose').onclick=()=>{qAskClose();audio();sfx('whoosh')};
+$('#qAsk').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();$('#qAskNo').click()}});
+function qIntro(){
   if(!ui.on)setUi('xmb');
   $('#qIntroStars').replaceChildren(...QUEST_MISSIONS.map(([n])=>mkEl('span',{textContent:'☆',title:n})));
   $('#qIntro').hidden=false;$('#qGo').focus();
@@ -13702,7 +13826,7 @@ if(/[?&]test(=|&|$)/.test(location.search))window.__pixiwyg={APP_VERSION,ERRS,st
   addLayer,dupLayer,delLayer,mergeDown,movePaintLayer,setActiveLayer,setLayerProp,toggleLayer:i=>toggleLayer(studio.layers[i]),flatURL,layerBlank,sUndo,sRedo,
   layers:()=>studio.layers.map(L=>({id:L.id,name:L.name,opacity:L.opacity,blend:L.blend,hidden:L.hidden,active:L===activeLayer()})),movePal:(k,to,at)=>movePal(document.querySelector(`.spal[data-pal=${k}]`),to,at),togglePalettes,sZoomTo,sZoomFit,viewScale,
   curBrush,selectBrush,newBrush,editBrush,openBrushEditor,closeBrushEditor,allBrushes,cleanBrush,brushPreview,BUILTIN_BRUSHES,brushStylesChanged,tipCache,styleClasses,
-  fxApply,layerFxOn,openLayerStyle,studioLayer:i=>studio.layers[i],studioOutputs,fxPartner,m3dScene:()=>m3d.scene,m3dSceneFromSrc,cleanScene,m3dSceneMesh,m3dStartScene,m3dFlush,m3dSceneSTL,textSolid,vp:()=>vp,setUi,ui:()=>({mode:ui.mode,on:ui.on,home:!$('#xmb').hidden}),xmbOpen,xmbClose,xmbCat:()=>XMB.cats()[XMB.c].id,xmbItems:()=>XMB.items.map(i=>i.name),zoom:()=>Z,songIdeas,IDEA_GENRES,IDEA_MODES,openIdeas,meterGroups,barTicks,beatTicks,gridTicks,pxRender,GM,GMV,DRUMS};
+  fxApply,layerFxOn,openLayerStyle,studioLayer:i=>studio.layers[i],studioOutputs,fxPartner,m3dScene:()=>m3d.scene,m3dSceneFromSrc,cleanScene,m3dSceneMesh,m3dStartScene,m3dFlush,m3dSceneSTL,textSolid,vp:()=>vp,setUi,ui:()=>({mode:ui.mode,on:ui.on,home:!$('#xmb').hidden}),xmbOpen,xmbClose,xmbCat:()=>XMB.cats()[XMB.c].id,xmbItems:()=>XMB.items.map(i=>i.name),zoom:()=>Z,songIdeas,IDEA_GENRES,IDEA_MODES,openIdeas,meterGroups,barTicks,beatTicks,gridTicks,pxRender,GM,GMV,DRUMS,songMp3};
 (async()=>{
   checkEnvironment();
   initPanels();fitStage();

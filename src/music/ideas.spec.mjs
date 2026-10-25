@@ -132,3 +132,31 @@ test('synth: every instrument and percussion sound is audible and clean, and a s
   expect(r.duck).toBeLessThan(r.swell * .5);
   expect(errors).toEqual([]);
 });
+
+test('Save .mp3 downloads the song as a real MP3: valid frames, and it decodes to the song plus its ring-out', async ({page}) => {
+  const errors = await boot(page);
+  await page.setViewportSize({width: 1400, height: 900});
+  await T(page, async () => { const P = window.__pixiwyg; await P.newProject('Dungeon'); P.setWorkspace('music'); });
+  await page.click('#seqIdeasBtn');
+  await page.click('#seqIdeasGenres [role=radio]:has-text("Dungeon synth")');
+  await page.click('#seqIdeas [data-part=chords]');
+  await page.click('#seqIdeasGo');
+  await page.click('#seqPlay');
+  const [dl] = await Promise.all([page.waitForEvent('download', {timeout: 60_000}), page.click('#seqMp3')]);
+  expect(dl.suggestedFilename()).toMatch(/\.mp3$/);
+  const {readFileSync} = await import('node:fs');
+  const bytes = readFileSync(await dl.path());
+  // FORMAT: an MPEG-1 Layer III frame starts with the 11-bit sync and 0xFB (no CRC) or 0xFA.
+  expect(bytes[0]).toBe(0xFF);
+  expect([0xFB, 0xFA]).toContain(bytes[1]);
+  const r = await page.evaluate(async b64 => {
+    const u = Uint8Array.from(atob(b64), c => c.charCodeAt(0)), m = window.__pixiwyg.state().music;
+    const buf = await new OfflineAudioContext(2, 44100, 44100).decodeAudioData(u.buffer);
+    let peak = 0; const d = buf.getChannelData(0); for (let i = 0; i < d.length; i++) peak = Math.max(peak, Math.abs(d[i]));
+    return {sec: buf.duration, song: m.bars * m.beats * (4 / (m.unit || 4)) * 60 / m.bpm, peak};
+  }, bytes.toString('base64'));
+  expect(r.sec).toBeGreaterThan(r.song + 1.5);
+  expect(r.sec).toBeLessThan(r.song + 2.6);
+  expect(r.peak).toBeGreaterThan(0.01);
+  expect(errors).toEqual([]);
+});
