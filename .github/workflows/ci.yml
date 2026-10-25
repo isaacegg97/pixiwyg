@@ -6,11 +6,15 @@
 #   the app's own web engine, and the smoke launch checks the page really starts in each one (PIXIWYG_SMOKE in
 #   tauri/src/main.rs). A newer push to the same branch cancels the run before it; docs-only changes don't run.
 name: CI
+# RULE: pushes to main run it, and a branch runs it through its pull request; a branch push with a PR open no longer
+#   runs it twice (once as the push, once as the pull request).
 on:
   push:
+    branches: [main]
     paths-ignore: ['**.md', 'docs/**']
   pull_request:
     paths-ignore: ['**.md', 'docs/**']
+  workflow_dispatch:
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
