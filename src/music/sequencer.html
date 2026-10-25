@@ -7,6 +7,7 @@
       <input id="seqSongName" class="sqname" type="text" maxlength="60" aria-label="Song name" title="The song’s name: it names the .mid file and shows in the player">
       <button class="btn sqm" id="seqSongNew" title="Start another song in this project">+ Song</button>
       <button class="btn sqm" id="seqToPage" title="Add a button to the page that plays this song">Put on page</button>
+      <button class="btn sqm" id="seqIdeasBtn" title="Melody, bassline, drums and chords in a style you pick, at this song's tempo">✨ Ideas</button>
       <button class="btn sqm" id="seqSongImport" title="Open a .mid file as a new song (or drop one on the page)">Open .mid…</button><input type="file" id="seqMidiFile" accept=".mid,.midi,audio/midi" hidden>
       <button class="btn sqm" id="seqSongDel" title="Remove this song from the project">×</button>
       <button class="btn sqm" id="seqMasterFx" title="Effects on the whole song, after every track's own">Master FX</button>
@@ -18,7 +19,8 @@
       <button class="btn sqm" id="seqMidiIn" title="Play and record with a MIDI keyboard">MIDI in…</button>
       <label class="sqopt">Tempo <input type="number" id="seqBpm" min="20" max="300" step="1"> BPM</label>
       <label class="sqopt">Bars <input type="number" id="seqBars" min="1" max="64" step="1"></label>
-      <label class="sqopt">Beats per bar <select id="seqBeats"><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label>
+      <span class="sqopt sqmeter" role="group" aria-label="Meter"><label for="seqBeats">Meter</label> <input type="number" id="seqBeats" min="1" max="32" step="1" aria-label="Beats in a bar (top number)"> / <select id="seqUnit" aria-label="Beat unit (bottom number)" title="2, 4, 8, 16: half, quarter, eighth, sixteenth. 3, 6, 12: irrational meters, a third, sixth or twelfth of a whole note"><option value="2">2</option><option value="4">4</option><option value="8">8</option><option value="16">16</option><option value="3">3</option><option value="6">6</option><option value="12">12</option></select>
+        <label for="seqGroups" class="sr">Accent groups</label><input type="text" id="seqGroups" class="sqgroups" inputmode="numeric" title="How the beats group, which places the accents: 7/8 as 2+2+3 or 3+2+2. Empty: worked out from the meter" aria-label="Accent groups, like 2+2+3"></span>
       <label class="sqopt">Grid <select id="seqRes"><option value="2">1/8</option><option value="3">1/8 triplets</option><option value="4">1/16</option><option value="6">1/16 triplets</option><option value="8">1/32</option></select></label>
       <span class="sqopt">Sound <b id="seqSfName">Built-in synth</b><button class="btn sqm" id="seqSfLoad" title="Play with a SoundFont (.sf2) of sampled instruments. You can also drop one on the window.">SoundFont…</button><button class="btn sqm" id="seqSfOff" hidden title="Forget the SoundFont and use the built-in synth">Built-in</button><input type="file" id="seqSfFile" accept=".sf2" hidden></span>
       <span class="grow"></span>

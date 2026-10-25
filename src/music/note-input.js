@@ -8,7 +8,7 @@ function seqNoteOn(p,v=100){
   const m=state.music;if(!m||p<0||p>127)return;const t=seqTrackSel();if(t.drums&&!DRUMS.some(d=>d[0]===p))return;
   audio();if(ac&&seqOut())playNote(t,p,ac.currentTime+.005,.35,v);
   if(!seqIn.rec||seqIn.held.has(p))return;
-  const step=PPQ/m.res,end=songEnd(m);
+  const step=gridTicks(m),end=songEnd(m);
   if(!seqIn.take){pushUndo();seqIn.take=true}
   let at;
   if(seqP.on){const now=seqNow();if(now==null)return;at=Math.round((now%end)/step)*step%end}
@@ -17,7 +17,7 @@ function seqNoteOn(p,v=100){
 }
 function seqNoteOff(p){
   const h=seqIn.held.get(p);if(!h)return;seqIn.held.delete(p);const m=state.music;if(!m)return;
-  const step=PPQ/m.res,end=songEnd(m);
+  const step=gridTicks(m),end=songEnd(m);
   const d=seqP.on?Math.max(step,Math.round(((ac?ac.currentTime:0)-h.t0)/tickSec(m)/step)*step):h.track.drums?step:seqLastLen;
   h.track.notes.push({t:h.at,p,d:Math.min(d,end-h.at),v:h.v});seqTidy(h.track);
   if(!seqP.on&&!seqIn.held.size){seqP.cursor=(seqIn.step+(h.track.drums?step:seqLastLen))%end;seqIn.step=null}
@@ -44,7 +44,7 @@ $('#seqMidiIn').onclick=async()=>{audio();
 $('#seqScroll').addEventListener('wheel',e=>{const t=seqTrackSel(),h=seqHit(e),n=h.zone==='grid'&&seqNoteAt(t,h);if(!n)return;e.preventDefault();
   seqEdit(()=>{n.v=Math.max(1,Math.min(127,n.v+(e.deltaY<0?8:-8)))});status(`Velocity ${n.v}`);seqDraw()},{passive:false});
 $('#seqRepGo').onclick=()=>{audio();const m=state.music;if(!m)return;
-  const a=Math.max(1,Math.min(m.bars,+$('#seqRepA').value||1)),b=Math.max(a,Math.min(m.bars,+$('#seqRepB').value||a)),bar=m.beats*PPQ,lo=(a-1)*bar,hi=b*bar,len=hi-lo,end=songEnd(m);
+  const a=Math.max(1,Math.min(m.bars,+$('#seqRepA').value||1)),b=Math.max(a,Math.min(m.bars,+$('#seqRepB').value||a)),bar=barTicks(m),lo=(a-1)*bar,hi=b*bar,len=hi-lo,end=songEnd(m);
   if(hi>=end){status('Those bars already run to the end of the song');return}
   seqEdit(()=>{for(const t of $('#seqRepAll').checked?m.tracks:[seqTrackSel()]){const src=t.notes.filter(n=>n.t>=lo&&n.t<hi);
     t.notes=t.notes.filter(n=>n.t<hi);for(let o=hi;o<end;o+=len)for(const n of src){const at=n.t-lo+o;if(at<end)t.notes.push({...n,t:at,d:Math.min(n.d,end-at)})}seqTidy(t)}});

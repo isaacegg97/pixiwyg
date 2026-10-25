@@ -52,7 +52,7 @@ function pxSynth(ctx,out,map){
 // PERF: one OfflineAudioContext pass, exactly the song's length. Self-contained.
 // INVARIANT: note(ctx,out,synth) may return a player (the editor's SoundFont); otherwise the synth plays.
 async function pxRender(m,map,note){
-  const PPQ=480,sp=60/m.bpm/PPQ,end=m.bars*m.beats*PPQ,sr=44100,len=Math.max(1,Math.ceil(end*sp*sr));
+  const PPQ=480,sp=60/m.bpm/PPQ,end=m.bars*m.beats*PPQ*4/(m.unit||4),sr=44100,len=Math.max(1,Math.ceil(end*sp*sr));
   const ctx=new OfflineAudioContext(2,len,sr),comp=ctx.createDynamicsCompressor(),bus=ctx.createGain();bus.gain.value=.45;bus.connect(comp);comp.connect(ctx.destination);
   // INVARIANT: notes go into their track's input, through the track's effects, then the song's, then the bus.
   const master=ctx.createGain();pxFx(ctx,master,m.fx,bus);

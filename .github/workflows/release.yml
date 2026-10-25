@@ -36,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.v.outputs.version }}
+      name: ${{ steps.v.outputs.name }}
       tag: ${{ steps.v.outputs.tag }}
       sha: ${{ steps.v.outputs.sha }}
       release: ${{ steps.v.outputs.release }}
@@ -57,6 +58,8 @@ jobs:
         run: |
           node tools/scripts/version.mjs
           v="$(node -p "require('./tools/package.json').version")"
+          # FORMAT: releaseName in tools/package.json titles the release (beta 1.1 · RC 1); without it, the version.
+          echo "name=$(node -p "require('./tools/package.json').releaseName||''")" >> "$GITHUB_OUTPUT"
           echo "version=$v" >> "$GITHUB_OUTPUT"; echo "tag=v$v" >> "$GITHUB_OUTPUT"; echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           if git ls-remote --exit-code --tags origin "refs/tags/v$v" >/dev/null; then
             echo "release=false" >> "$GITHUB_OUTPUT"; echo "::notice::v$v is already released; nothing to do."
@@ -236,11 +239,12 @@ jobs:
         shell: bash
         env:
           TAG: ${{ needs.plan.outputs.tag }}
+          NAME: ${{ needs.plan.outputs.name }}
           PAGES: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
         run: |
           signed() { [ "$(cat "dist/signed-$1.txt" 2>/dev/null)" = true ]; }
           {
-            case "$TAG" in *-*) echo "Beta build of PIXIWYG $TAG. Check each download against SHA256SUMS.txt.";; *) echo "PIXIWYG $TAG. Check each download against SHA256SUMS.txt.";; esac
+            case "$TAG" in *-*) echo "Pre-release build of PIXIWYG $TAG${NAME:+ ($NAME)}. Check each download against SHA256SUMS.txt.";; *) echo "PIXIWYG $TAG${NAME:+ ($NAME)}. Check each download against SHA256SUMS.txt.";; esac
             echo
             echo "**Use it in a browser:** $PAGES"
             echo
@@ -261,11 +265,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ needs.plan.outputs.tag }}
           SHA: ${{ needs.plan.outputs.sha }}
+          NAME: ${{ needs.plan.outputs.name }}
         run: |
           shopt -s nullglob
           files=(dist/*.dmg dist/*.exe dist/*.msi dist/*.AppImage dist/*.deb dist/*.rpm dist/*_web.zip dist/SHA256SUMS.txt)
           pre=(); case "$TAG" in *-*) pre=(--prerelease);; esac
-          gh release create "$TAG" --target "$SHA" "${pre[@]}" --title "PIXIWYG $TAG" --notes-file notes.md --generate-notes "${files[@]}"
+          gh release create "$TAG" --target "$SHA" "${pre[@]}" --title "PIXIWYG ${NAME:-$TAG}" --notes-file notes.md --generate-notes "${files[@]}"
 
   pages:
     needs: [plan, web, publish]

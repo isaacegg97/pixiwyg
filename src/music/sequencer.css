@@ -30,3 +30,4 @@ body[data-ws=music] #seqModal .seqwin>.tb,body[data-ws=music] #seqDone{display:n
 
 #seqModal .sqhelp{flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #seqRec.rec{background:var(--bad);color:var(--onbad);border-color:var(--ink)}#seqRepA,#seqRepB{width:3.4em}
+.sqmeter input[type=number]{width:46px}.sqmeter .sqgroups{width:70px;font:12px var(--f-mono);border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:2px 5px}

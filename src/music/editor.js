@@ -6,8 +6,8 @@ const seqTrackSel=()=>state.music.tracks[Math.min(seq.sel,state.music.tracks.len
 function seqRows(t){return t.drums?DRUMS.map(k=>k[0]):Array.from({length:73},(_,i)=>96-i)}
 const rowH=t=>t.drums?26:15;
 function seqSize(){
-  const m=state.music,t=seqTrackSel(),beats=m.bars*m.beats;
-  return{w:SQ.KW+beats*SQ.BW,h:SQ.RH+seqRows(t).length*rowH(t)};
+  const m=state.music,t=seqTrackSel(),quarters=songEnd(m)/PPQ;
+  return{w:SQ.KW+quarters*SQ.BW,h:SQ.RH+seqRows(t).length*rowH(t)};
 }
 function songSync(){
   const sel=$('#seqSong');sel.replaceChildren();
@@ -55,7 +55,7 @@ function closeSeq(){if($('#seqModal').hidden)return;seqStop();$('#seqModal').hid
 let seqArmed=true;
 function seqEdit(fn){if(seqArmed){pushUndo();seqArmed=false;setTimeout(()=>seqArmed=true,0)}fn();save()}
 function seqControls(){
-  const m=state.music;$('#seqBpm').value=m.bpm;$('#seqBars').value=m.bars;$('#seqBeats').value=m.beats;$('#seqRes').value=m.res;$('#seqLoop').checked=seqP.loop;
+  const m=state.music;$('#seqBpm').value=m.bpm;$('#seqBars').value=m.bars;$('#seqBeats').value=m.beats;$('#seqUnit').value=String(m.unit||4);$('#seqGroups').value=m.groups?m.groups.join('+'):'';$('#seqGroups').placeholder=meterGroups(m).join('+');$('#seqRes').value=m.res;$('#seqLoop').checked=seqP.loop;
 }
 function seqTracks(){
   const box=$('#seqTrackList'),m=state.music;box.replaceChildren();
@@ -109,15 +109,17 @@ function seqDraw(){
   const m=state.music,t=seqTrackSel(),rows=seqRows(t),rh=rowH(t),sc=$('#seqScroll'),cv=$('#seqCanvas'),x=cv.getContext('2d');
   const dpr=devicePixelRatio||1,vw=sc.clientWidth,vh=sc.clientHeight,L=sc.scrollLeft,T=sc.scrollTop,C=seqColors();
   x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,vw,vh);
-  const {KW,RH,BW}=SQ,sw=BW/m.res,tk=PPQ/BW,end=songEnd(m),gx=tick=>KW+tick/tk-L,gy=r=>RH+r*rh-T;
+  const {KW,RH,BW}=SQ,gt=gridTicks(m),tk=PPQ/BW,sw=gt/tk,end=songEnd(m),gx=tick=>KW+tick/tk-L,gy=r=>RH+r*rh-T;
   x.fillStyle=C.paper;x.fillRect(KW,RH,vw-KW,vh-RH);
   rows.forEach((p,r)=>{const y=gy(r);if(y+rh<RH||y>vh)return;
     if(t.drums?r%2:isBlack(p)){x.fillStyle=C.chrome;x.globalAlpha=.7;x.fillRect(KW,y,vw-KW,rh);x.globalAlpha=1}
     if(!t.drums&&p%12===0){x.fillStyle=C.chrome2;x.fillRect(KW,y+rh-1,vw-KW,1)}});
   const first=Math.max(0,Math.floor((L)/sw)),last=Math.ceil((L+vw)/sw);
-  for(let s=first;s<=last;s++){const tick=s*PPQ/m.res;if(tick>end)break;const X=Math.round(gx(tick))+.5;if(X<KW)continue;
-    const bar=tick%(m.beats*PPQ)===0,beat=tick%PPQ===0;
-    x.strokeStyle=bar?C.ink:beat?C.muted:C.chrome2;x.globalAlpha=bar?.9:beat?.45:.6;x.lineWidth=bar?1.5:1;
+  // RULE: lines get heavier from grid to beat to group (the meter's accents) to bar.
+  const bt=beatTicks(m),barT=barTicks(m),starts=new Set(meterGroups(m).reduce((a,g)=>(a.push(a.at(-1)+g),a),[0]).slice(0,-1).map(b=>b*bt));
+  for(let s=first;s<=last;s++){const tick=s*gt;if(tick>end)break;const X=Math.round(gx(tick))+.5;if(X<KW)continue;
+    const bar=tick%barT===0,group=!bar&&starts.has(tick%barT),beat=tick%bt===0;
+    x.strokeStyle=bar||group?C.ink:beat?C.muted:C.chrome2;x.globalAlpha=bar?.9:group?.6:beat?.45:.6;x.lineWidth=bar?1.5:group?1.25:1;
     x.beginPath();x.moveTo(X,RH);x.lineTo(X,vh);x.stroke();x.globalAlpha=1}
   const ex=gx(end);if(ex<vw){x.fillStyle=C.ink;x.globalAlpha=.12;x.fillRect(Math.max(KW,ex),RH,vw,vh);x.globalAlpha=1}
   // RULE: other melodic tracks draw faintly so parts can be written against each other.
@@ -137,7 +139,7 @@ function seqDraw(){
       if(p%12===0){x.fillStyle='#16121f';x.fillText(noteName(p),KW-30,y+rh/2)}}});
   x.fillStyle=C.ink;x.fillRect(KW-2,RH,2,vh-RH);
   x.fillStyle=C.chrome;x.fillRect(0,0,vw,RH);x.fillStyle=C.ink;x.fillRect(0,RH-2,vw,2);
-  for(let b=0;b<m.bars;b++){const X=gx(b*m.beats*PPQ);if(X<KW-40||X>vw)continue;if(X>=KW){x.fillRect(Math.round(X),0,1.5,RH);x.fillText(String(b+1),X+5,RH/2)}}
+  for(let b=0;b<m.bars;b++){const X=gx(b*barTicks(m));if(X<KW-40||X>vw)continue;if(X>=KW){x.fillRect(Math.round(X),0,1.5,RH);x.fillText(String(b+1),X+5,RH/2)}}
   const cx=gx(seqP.cursor);if(cx>=KW){x.fillStyle=C.hot;x.beginPath();x.moveTo(cx-6,0);x.lineTo(cx+6,0);x.lineTo(cx,10);x.fill()}
   const now=seqP.on?seqNow():null;if(now!=null){const X=gx(now);if(X>=KW&&X<=vw){x.fillStyle=C.hot;x.fillRect(X-1,RH,2,vh-RH)}}
   x.fillStyle=C.chrome;x.fillRect(0,0,KW,RH);
@@ -146,7 +148,7 @@ function seqHit(e){
   const m=state.music,t=seqTrackSel(),cv=$('#seqCanvas').getBoundingClientRect(),sc=$('#seqScroll');
   const vx=e.clientX-cv.left,vy=e.clientY-cv.top,rows=seqRows(t),rh=rowH(t);
   const tick=Math.max(0,(vx-SQ.KW+sc.scrollLeft)*PPQ/SQ.BW),r=Math.floor((vy-SQ.RH+sc.scrollTop)/rh);
-  const step=PPQ/m.res;
+  const step=gridTicks(m);
   return{zone:vy<SQ.RH?'ruler':vx<SQ.KW?'keys':'grid',tick,snap:Math.floor(tick/step)*step,p:rows[Math.max(0,Math.min(rows.length-1,r))],ok:r>=0&&r<rows.length,step};
 }
 function seqNoteAt(t,h){return t.notes.find(n=>n.p===h.p&&h.tick>=n.t&&h.tick<n.t+n.d)}
@@ -206,8 +208,11 @@ function saveMidi(){
   new ResizeObserver(()=>{if(!$('#seqModal').hidden){seqLayout();seqDraw()}}).observe(sc);
   const num=(id,k,lo,hi)=>$(id).addEventListener('change',e=>{const v=Math.round(numIn(e.target.value,state.music[k],lo,hi));seqEdit(()=>{const was=state.music[k];state.music[k]=v;if(k==='bpm')refitSamples(state.music,was)});e.target.value=v;$('#seqBars').value=state.music.bars;seqLayout();seqDraw()});
   num('#seqBpm','bpm',20,300);num('#seqBars','bars',1,64);
-  $('#seqBeats').onchange=e=>{seqEdit(()=>{state.music.beats=+e.target.value});seqLayout();seqDraw()};
-  $('#seqRes').onchange=e=>{seqEdit(()=>{state.music.res=+e.target.value});seqLastLen=PPQ/state.music.res;seqDraw()};
+  // RULE: changing the meter keeps the notes where they are in time and drops a grouping that no longer adds up.
+  const meter=()=>{const m=state.music,b=Math.round(numIn($('#seqBeats').value,m.beats,1,32)),u=+$('#seqUnit').value,g=parseGroups($('#seqGroups').value,b);
+    seqEdit(()=>{m.beats=b;m.unit=METER_UNITS.includes(u)?u:4;if(g)m.groups=g;else delete m.groups});seqControls();seqLayout();seqDraw()};
+  $('#seqBeats').onchange=meter;$('#seqUnit').onchange=meter;$('#seqGroups').onchange=meter;
+  $('#seqRes').onchange=e=>{seqEdit(()=>{state.music.res=+e.target.value});seqLastLen=gridTicks(state.music);seqDraw()};
   $('#seqLoop').onchange=e=>{seqP.loop=e.target.checked};
   $('#seqPlay').onclick=()=>{if(seqP.on)seqStop();else seqPlay()};
   $('#seqSave').onclick=()=>{audio();saveMidi()};

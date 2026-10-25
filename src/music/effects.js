@@ -103,7 +103,7 @@ function samplePlay(t,p,at,dur,vel){
 //   with bars added if it runs past the end, so the timeline shows how long it really is. A tempo change refits it.
 // FORMAT: a sample is {id, name, url, sec}; sec is the recording's length in seconds.
 const sampleTicks=(m,s)=>Math.max(1,Math.round(s.sec*m.bpm*PPQ/60));
-function fitSongTo(m,tick){const bar=m.beats*PPQ;m.bars=Math.min(64,Math.max(m.bars,Math.ceil(tick/bar)))}
+function fitSongTo(m,tick){const bar=barTicks(m);m.bars=Math.min(64,Math.max(m.bars,Math.ceil(tick/bar)))}
 function refitSamples(m,oldBpm){
   for(const t of m.tracks){const s=t.smp&&(m.samples||[]).find(x=>x.id===t.smp);if(!s||!s.sec)continue;
     const was=Math.round(s.sec*oldBpm*PPQ/60),now=sampleTicks(m,s);

@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-I80V3uhhG0LjbVeUeghScG1VotYhkEGoIfLoEkv9n3o='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' data: blob:; media-src 'self' blob: data:; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-WARTLLS/JzkNDNBairVwSaz1AKbeKE58LjnCUk96ewI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: http:; connect-src 'self' data: blob:; media-src 'self' blob: data:; object-src 'none'; frame-src 'none'; worker-src 'none'; base-uri 'none'; form-action 'none'"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>PIXIWYG</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -389,6 +389,7 @@ body[data-ws=music] #seqModal .seqwin>.tb,body[data-ws=music] #seqDone{display:n
 
 #seqModal .sqhelp{flex:1 1 0;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #seqRec.rec{background:var(--bad);color:var(--onbad);border-color:var(--ink)}#seqRepA,#seqRepB{width:3.4em}
+.sqmeter input[type=number]{width:46px}.sqmeter .sqgroups{width:70px;font:12px var(--f-mono);border:2px solid var(--ink);background:var(--paper);color:var(--ink);padding:2px 5px}
 /* SECTION: node editor (logic and animation) */
 .nodebody{flex:1;min-height:0;display:flex}
 .npal{width:170px;flex:none;overflow:auto;padding:8px;border-right:2px solid var(--ink);display:flex;flex-direction:column;gap:4px;background:var(--chrome)}
@@ -668,6 +669,21 @@ body[data-ws=paint] #w-studio>.tb{display:none}
 /* SECTION: effects and samples panel */
 .seqfx{position:fixed;right:16px;top:calc(var(--tbh,48px) + 60px);width:min(380px,calc(100vw - 32px));max-height:calc(100vh - var(--tbh,48px) - 90px);overflow:auto;z-index:70}.seqfx[hidden]{display:none}
 .sqfx{border:2px solid var(--ink);background:var(--paper);padding:6px;margin:6px 0}.sqfx.off{opacity:.55}.sqfxh{display:flex;gap:4px;align-items:center}.sqfxh b{flex:1}.sqfxs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}.sqfxs:empty{display:none}
+/* SECTION: song ideas panel */
+.seqideas .wb{display:flex;flex-direction:column;gap:10px}
+.idgenres{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.idgenre{display:flex;flex-direction:column;align-items:center;gap:2px;min-height:62px;padding:6px 4px;border:2px solid var(--ink);border-radius:10px;background:var(--paper);color:var(--ink);font:600 12px var(--f-ui);cursor:pointer}
+.idgenre i{font-style:normal;font-size:20px;line-height:1}
+.idgenre small{font:11px var(--f-mono);color:var(--muted)}
+/* RULE: the picked style is marked by shape (a thick inset bar and a raised shadow), not colour alone */
+.idgenre[aria-checked=true]{background:var(--sun);color:var(--onsun);box-shadow:inset 0 -4px 0 var(--ink),3px 3px 0 var(--shadow)}
+.idgenre[aria-checked=true] small{color:var(--onsun)}
+.idgenre:focus-visible{outline:3px solid var(--sel);outline-offset:2px}
+.idparts{display:flex;flex-wrap:wrap;gap:6px}
+.idparts .btn[aria-pressed=true]::before{content:'✓ '}
+.idparts .btn[aria-pressed=false]{opacity:.75}
+.idsays{margin:0;font-size:12px;color:var(--ink)}
+.idweird{flex-wrap:wrap;gap:6px 10px}
 /* SECTION: manuscript page view */
 .docpage{background:var(--doc-paper);color:var(--doc-ink);font:17px/1.65 Georgia,"Times New Roman",serif;padding:36px 40px;margin:8px 0;border:1px solid var(--chrome2);box-shadow:0 2px 10px rgba(0,0,0,.12);min-height:320px;outline:none;overflow-wrap:break-word;caret-color:var(--hot)}
 .docpage[hidden]{display:none}.docpage h1{font-size:1.9em;line-height:1.2;margin:.2em 0 .5em}.docpage h2{font-size:1.45em;margin:1em 0 .4em}.docpage h3{font-size:1.15em;margin:1em 0 .3em}
@@ -1147,14 +1163,10 @@ body.xmb #playBar,body.xmb #obModal .obmore,body.xmb #stageHud,body.xmb[data-ws=
 .xmbmenu{position:fixed;inset:0;z-index:99000;display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);color:var(--ink);touch-action:pan-y;user-select:none;-webkit-user-select:none;
   padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
   background:var(--desk);overflow:hidden;isolation:isolate}
-/* PERF: the wave is its own layer moved by transform, which the compositor does alone; animating background-position
-   repainted the whole screen every frame. */
-.xmbmenu::before{content:'';position:absolute;inset:-25%;z-index:-1;pointer-events:none;will-change:transform;
-  background:radial-gradient(60% 40% at 20% 80%,color-mix(in srgb,var(--hot) 22%,transparent),transparent 70%),radial-gradient(50% 35% at 80% 20%,color-mix(in srgb,var(--sel) 22%,transparent),transparent 70%);
-  animation:xmbwave 24s ease-in-out infinite alternate}
-/* INVARIANT: each part names its row, so the hidden search box leaves its row empty instead of shifting the rest up */
-.xmbtop{grid-row:1}.xmbsearch{grid-row:2}.xmbhead{grid-row:3}.xmbitems{grid-row:4}.xmbfoot{grid-row:5}
-@keyframes xmbwave{to{transform:translate(9%,-7%) rotate(5deg)}}
+/* PERF: the background is still: a moving layer half again the screen's size kept a tablet's GPU busy every frame,
+   and restyled the page 60 times a second, for a decoration. */
+.xmbmenu::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 40% at 15% 85%,color-mix(in srgb,var(--hot) 22%,transparent),transparent 70%),radial-gradient(50% 35% at 85% 15%,color-mix(in srgb,var(--sel) 22%,transparent),transparent 70%)}
 .xmbtop{display:flex;align-items:center;gap:8px;padding:10px 16px 4px}
 .xmbproj{flex:1;min-width:0;display:flex;flex-direction:column}
 .xmbproj b{font:700 18px var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1196,7 +1208,7 @@ body.xmb #playBar,body.xmb #obModal .obmore,body.xmb #stageHud,body.xmb[data-ws=
 .xmbwhere b{font:700 13px var(--f-ui)}
 .xmbwhere small{font:600 11px var(--f-mono);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:520px){.xmbstrip .xmbbtn span{display:none}.xmbstrip .xmbbtn{min-width:46px}.xmbwhere small{display:none}}
-@media (prefers-reduced-motion:reduce){.xmbmenu::before{animation:none}.xmbitems.in{animation:none}.xmbcats,.xcat,.xitem{transition:none}}
+@media (prefers-reduced-motion:reduce){.xmbitems.in{animation:none}.xmbcats,.xcat,.xitem{transition:none}}
 
 /* SECTION: XMB sheets: a tool's secondary controls, one at a time, above the strip */
 .xmbsheets{display:flex;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
@@ -1247,8 +1259,9 @@ body.quest .status{top:calc(var(--qh,84px) + 8px)}
 .qgrown i{position:absolute;inset:0;background:var(--hot);transform:scaleX(0);transform-origin:left}
 .qgrown span{position:relative}
 .qgrown.holding i{transform:scaleX(1);transition:transform 3s linear}
-.qspot{position:fixed;z-index:100250;pointer-events:none;box-sizing:border-box;border-radius:12px;box-shadow:0 0 0 200vmax color-mix(in srgb,#000 42%,transparent);
-  transition:left .25s ease,top .25s ease,width .25s ease,height .25s ease,border-radius .25s ease}
+/* PERF: the spotlight jumps to its next target: gliding repainted its screen-wide dimming every frame of the move,
+   which a tablet's GPU felt. The pulse below is a transform and opacity, which cost nothing to animate. */
+.qspot{position:fixed;z-index:100250;pointer-events:none;box-sizing:border-box;border-radius:12px;box-shadow:0 0 0 200vmax color-mix(in srgb,#000 42%,transparent)}
 .qspot[hidden]{display:none}
 /* PERF: the pulse is a transform and opacity on its own layer; animating the shadow repainted the whole screen each frame. */
 .qspot::after{content:'';position:absolute;inset:-3px;border:4px solid var(--sun);border-radius:inherit;will-change:transform,opacity;animation:qping 1.3s ease-out infinite}
@@ -1322,7 +1335,7 @@ body.dragging .qspot{opacity:0}
 .qmade li.ok{background:var(--sun);color:var(--onsun)}
 .qendacts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .qgo.ghost{background:var(--paper);color:var(--ink)}
-@media (prefers-reduced-motion:reduce){.qpixi,.qspot::after,.qspot span,.qdraw,.qdot,.qroll i.on,.qbounce,.qtype,.qcube,.qhop,.qspin{animation:none}.qdraw{stroke-dashoffset:0}.qtype{width:auto}.qgrown.holding i{transition:none}.qspot{transition:none}}
+@media (prefers-reduced-motion:reduce){.qpixi,.qspot::after,.qspot span,.qdraw,.qdot,.qroll i.on,.qbounce,.qtype,.qcube,.qhop,.qspin{animation:none}.qdraw{stroke-dashoffset:0}.qtype{width:auto}.qgrown.holding i{transition:none}}
 </style>
 
 <section class="writer" id="writer" hidden aria-label="Writer">
@@ -1825,6 +1838,29 @@ body.dragging .qspot{opacity:0}
     <div class="row"><select id="seqFxAdd" aria-label="Add an effect"><option value="">+ Add effect…</option></select></div>
     <p class="shelp">Effects run top to bottom; the song's master effects come after every track's own. Changes apply from the next note.</p></div>
 </div>
+<div class="seqfx win seqideas" id="seqIdeas" hidden role="dialog" aria-labelledby="seqIdeasTitle">
+  <div class="tb"><span id="seqIdeasTitle">Song ideas</span><button class="wclose" id="seqIdeasClose" aria-label="Close">×</button></div>
+  <div class="wb">
+    <div class="idgenres" id="seqIdeasGenres" role="radiogroup" aria-label="Style"></div>
+    <div class="idparts" role="group" aria-label="Make">
+      <button class="btn" type="button" data-part="melody" aria-pressed="true">Melody</button>
+      <button class="btn" type="button" data-part="bass" aria-pressed="true">Bass</button>
+      <button class="btn" type="button" data-part="drums" aria-pressed="true">Drums</button>
+      <button class="btn" type="button" data-part="chords" aria-pressed="false">Chords</button>
+    </div>
+    <div class="row idweird">
+      <label class="field2" for="seqIdeasMeter">Meter <select id="seqIdeasMeter"></select></label>
+      <label class="field2" for="seqIdeasSecond" title="Polytonal: the melody (and the chords' top triad) in a second key over the home key">Second key <select id="seqIdeasSecond"><option value="0">None</option><option value="1">Up a half step</option><option value="2">Up a whole step</option><option value="3">Up a minor third</option><option value="4">Up a major third</option><option value="6">A tritone away</option><option value="-1">Surprise me</option></select></label>
+      <label class="field2" for="seqIdeasCycle" title="Polymeter: the melody's phrases repeat every so many beats, drifting across the bar">Melody cycle <select id="seqIdeasCycle"><option value="0">The bar</option><option value="3">3 beats</option><option value="5">5 beats</option><option value="7">7 beats</option><option value="-1">Surprise me</option></select></label>
+    </div>
+    <div class="row">
+      <label class="field2" for="seqIdeasKey">Key <select id="seqIdeasKey"><option value="auto">Surprise me</option></select></label>
+      <label class="sqopt" for="seqIdeasTempo"><input type="checkbox" id="seqIdeasTempo"> <span id="seqIdeasTempoText">Use the style’s tempo</span></label>
+    </div>
+    <div class="row"><button class="btn primary" type="button" id="seqIdeasGo">✨ Generate</button><button class="btn" type="button" id="seqIdeasAgain" disabled title="Replace the last idea with a new one">↻ Another</button></div>
+    <p class="idsays" id="seqIdeasSays" aria-live="polite">New tracks, played at the song’s tempo. Everything they make is ordinary notes to edit; Undo takes it back.</p>
+  </div>
+</div>
 <div class="modal" id="seqModal" hidden>
   <div class="win seqwin" role="dialog" aria-modal="true" aria-labelledby="seqTitle">
     <div class="tb"><span id="seqTitle">Sequencer</span><button class="wclose" id="seqClose" aria-label="Close" title="Close (Esc)">×</button></div>
@@ -1833,6 +1869,7 @@ body.dragging .qspot{opacity:0}
       <input id="seqSongName" class="sqname" type="text" maxlength="60" aria-label="Song name" title="The song’s name: it names the .mid file and shows in the player">
       <button class="btn sqm" id="seqSongNew" title="Start another song in this project">+ Song</button>
       <button class="btn sqm" id="seqToPage" title="Add a button to the page that plays this song">Put on page</button>
+      <button class="btn sqm" id="seqIdeasBtn" title="Melody, bassline, drums and chords in a style you pick, at this song's tempo">✨ Ideas</button>
       <button class="btn sqm" id="seqSongImport" title="Open a .mid file as a new song (or drop one on the page)">Open .mid…</button><input type="file" id="seqMidiFile" accept=".mid,.midi,audio/midi" hidden>
       <button class="btn sqm" id="seqSongDel" title="Remove this song from the project">×</button>
       <button class="btn sqm" id="seqMasterFx" title="Effects on the whole song, after every track's own">Master FX</button>
@@ -1844,7 +1881,8 @@ body.dragging .qspot{opacity:0}
       <button class="btn sqm" id="seqMidiIn" title="Play and record with a MIDI keyboard">MIDI in…</button>
       <label class="sqopt">Tempo <input type="number" id="seqBpm" min="20" max="300" step="1"> BPM</label>
       <label class="sqopt">Bars <input type="number" id="seqBars" min="1" max="64" step="1"></label>
-      <label class="sqopt">Beats per bar <select id="seqBeats"><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label>
+      <span class="sqopt sqmeter" role="group" aria-label="Meter"><label for="seqBeats">Meter</label> <input type="number" id="seqBeats" min="1" max="32" step="1" aria-label="Beats in a bar (top number)"> / <select id="seqUnit" aria-label="Beat unit (bottom number)" title="2, 4, 8, 16: half, quarter, eighth, sixteenth. 3, 6, 12: irrational meters, a third, sixth or twelfth of a whole note"><option value="2">2</option><option value="4">4</option><option value="8">8</option><option value="16">16</option><option value="3">3</option><option value="6">6</option><option value="12">12</option></select>
+        <label for="seqGroups" class="sr">Accent groups</label><input type="text" id="seqGroups" class="sqgroups" inputmode="numeric" title="How the beats group, which places the accents: 7/8 as 2+2+3 or 3+2+2. Empty: worked out from the meter" aria-label="Accent groups, like 2+2+3"></span>
       <label class="sqopt">Grid <select id="seqRes"><option value="2">1/8</option><option value="3">1/8 triplets</option><option value="4">1/16</option><option value="6">1/16 triplets</option><option value="8">1/32</option></select></label>
       <span class="sqopt">Sound <b id="seqSfName">Built-in synth</b><button class="btn sqm" id="seqSfLoad" title="Play with a SoundFont (.sf2) of sampled instruments. You can also drop one on the window.">SoundFont…</button><button class="btn sqm" id="seqSfOff" hidden title="Forget the SoundFont and use the built-in synth">Built-in</button><input type="file" id="seqSfFile" accept=".sf2" hidden></span>
       <span class="grow"></span>
@@ -2379,7 +2417,7 @@ body.dragging .qspot{opacity:0}
 //   RULE       product behaviour the code enforces on purpose; changing it is a design decision
 //   TODO       known gap
 // FORMAT: written into exports, project manifests and problem reports; tools/package.json must match (tests assert it).
-const APP_VERSION='1.0.0-beta.1';
+const APP_VERSION='1.1.0-rc.1';
 // INVARIANT: last 50 errors persist across reloads so a report filed after a crash still has them.
 const ERRS=(()=>{try{const a=JSON.parse(localStorage.getItem('pixiwyg.errors'));return Array.isArray(a)?a.slice(-50):[]}catch(e){return[]}})();
 function logErr(kind,msg,stack){ERRS.push({t:new Date().toISOString(),v:APP_VERSION,kind,msg:String(msg??'').slice(0,500),stack:String(stack||'').slice(0,1200)});if(ERRS.length>50)ERRS.splice(0,ERRS.length-50);try{localStorage.setItem('pixiwyg.errors',JSON.stringify(ERRS))}catch(e){}}
@@ -6851,7 +6889,8 @@ $('#nodeProblems').onclick=()=>{audio();nedNextProblem()};
 // SECTION: sequencer
 // FORMAT: songs are kept in MIDI ticks (PPQ 480) so changing the grid never moves notes; up to 16 tracks, each an
 //   instrument or the drum kit. The .mid is generated on demand, not stored.
-const PPQ=480,SEQ_MAX_TICK=64*12*PPQ;
+// INVARIANT: room for 64 bars of the longest meter (32/2, 64 quarters a bar).
+const PPQ=480,SEQ_MAX_TICK=64*64*PPQ;
 const GM=[[0,'Piano','piano'],[4,'Electric piano','epiano'],[11,'Vibraphone','mallet'],[13,'Xylophone','mallet'],[16,'Organ','organ'],
   [24,'Nylon guitar','pluck'],[29,'Overdriven guitar','drive'],[33,'Electric bass','bass'],[38,'Synth bass','synbass'],[40,'Violin','strings'],
   [48,'Strings','strings'],[56,'Trumpet','brass'],[61,'Brass section','brass'],[65,'Alto sax','reed'],[73,'Flute','flute'],
@@ -6874,7 +6913,8 @@ function cleanSong(x){const m=cleanMusic(x);return m&&{name:cleanSongName(x.name
 function cleanMusic(m){
   if(!m||typeof m!=='object'||!Array.isArray(m.tracks))return null;
   const int=(v,d,lo,hi)=>Math.round(numIn(v,d,lo,hi));
-  const o={bpm:int(m.bpm,120,20,300),beats:int(m.beats,4,1,12),res:[2,3,4,6,8].includes(+m.res)?+m.res:4,bars:int(m.bars,4,1,64),tracks:[]};
+  const o={bpm:int(m.bpm,120,20,300),beats:int(m.beats,4,1,32),unit:METER_UNITS.includes(+m.unit)?+m.unit:4,res:[2,3,4,6,8].includes(+m.res)?+m.res:4,bars:int(m.bars,4,1,64),tracks:[]};
+  const groups=parseGroups(Array.isArray(m.groups)?m.groups.join('+'):'',o.beats);if(groups)o.groups=groups;
   let total=0;
   for(const t of m.tracks.slice(0,16)){
     if(!t||typeof t!=='object')continue;
@@ -6894,7 +6934,29 @@ function cleanMusic(m){
   const mf=cleanFx(m.fx);if(mf.length)o.fx=mf;
   return o;
 }
-const songEnd=m=>m.bars*m.beats*PPQ;
+// FORMAT: a meter is beats (the top number, 1–32) of unit (the bottom): 2, 4, 8 or 16, or an irrational 3, 6 or 12,
+//   a third, sixth or twelfth of a whole note (7/3 is seven beats of a triplet half). groups is the additive grouping
+//   that places the accents (7/8 as 2+2+3); without one, meterGroups works it out.
+const METER_UNITS=[2,3,4,6,8,12,16];
+const beatTicks=m=>PPQ*4/(m.unit||4);
+const barTicks=m=>m.beats*beatTicks(m);
+const irrational=m=>(m.unit||4)%3===0;
+// RULE: the note grid divides a quarter in ordinary meters; in an irrational one it divides the beat, in halves,
+//   quarters or eighths, so notes stay on its beats (a sixteenth doesn't divide a 7/3 beat).
+const gridTicks=m=>irrational(m)?beatTicks(m)/({2:2,3:2,4:4,6:4,8:8}[m.res]||4):PPQ/m.res;
+// RULE: default grouping: simple meters of up to four beats accent every beat; 6/8, 9/8 and 12/8 go in threes; the
+//   rest in twos with a three at the end (5 = 2+3, 7 = 2+2+3, 11 = 2+2+2+2+3).
+function meterGroups(m){
+  const g=m.groups,n=m.beats;
+  if(Array.isArray(g)&&g.length&&g.every(x=>Number.isInteger(x)&&x>=1)&&g.reduce((a,b)=>a+b,0)===n)return g;
+  if(n<=4&&(m.unit||4)<=4)return Array(n).fill(1);
+  if((m.unit||4)>=8&&n%3===0)return Array(n/3).fill(3);
+  const out=[];let k=n;while(k>4){out.push(2);k-=2}
+  if(k===4)out.push(2,2);else if(k===3)out.push(3);else if(k===2)out.push(2);else if(out.length)out[out.length-1]++;else out.push(1);
+  return out;
+}
+const parseGroups=(v,beats)=>{const g=String(v||'').split(/[+\s,]+/).filter(Boolean).map(Number);return g.length&&g.every(x=>Number.isInteger(x)&&x>=1)&&g.reduce((a,b)=>a+b,0)===beats?g:null};
+const songEnd=m=>m.bars*barTicks(m);
 
 // SECTION: MIDI import
 // SAFETY: parsed by hand with every length checked; anything inconsistent is refused, never half-read.
@@ -6904,7 +6966,7 @@ function parseMidi(buf){
   const id=()=>{if(i+4>N)bad();const v=String.fromCharCode(b[i],b[i+1],b[i+2],b[i+3]);i+=4;return v};
   if(id()!=='MThd')bad();const hl=u32();if(hl<6)bad();const fmt=u16(),ntrk=u16(),div=u16();i+=hl-6;
   if(fmt>2||!ntrk||ntrk>256)bad();if(div&0x8000)throw new Error('This MIDI file counts time in SMPTE frames, which PIXIWYG doesn’t read.');
-  const k=PPQ/div;let bpm=0,beats=0,total=0;const parts=new Map(),names=[];
+  const k=PPQ/div;let bpm=0,beats=0,unit=4,total=0;const parts=new Map(),names=[];
   for(let tr=0;tr<ntrk&&i<N;tr++){
     while(i+8<=N&&String.fromCharCode(b[i],b[i+1],b[i+2],b[i+3])!=='MTrk'){i+=4;const l=u32();i+=l}
     if(i+8>N)break;id();const len=u32(),end=i+len;if(end>N)bad();
@@ -6914,7 +6976,7 @@ function parseMidi(buf){
       t+=vlq();let st=b[i];if(st&0x80){i++;if(st<0xf0)run=st}else{if(!run)bad();st=run}
       if(st===0xff){const ty=b[i++],l=vlq();if(i+l>end)bad();
         if(ty===0x51&&l===3&&!bpm)bpm=6e7/(b[i]<<16|b[i+1]<<8|b[i+2]);
-        if(ty===0x58&&l>=1&&!beats)beats=b[i];
+        if(ty===0x58&&l>=2&&!beats){beats=b[i];unit=2**b[i+1]}
         if(ty===0x03&&!name)name=String.fromCharCode(...b.slice(i,i+Math.min(l,40))).replace(/[^\x20-\x7e]/g,'').trim();
         i+=l;continue}
       if(st===0xf0||st===0xf7){const l=vlq();i+=l;if(i>end)bad();continue}
@@ -6930,9 +6992,9 @@ function parseMidi(buf){
     names.push(name);i=end;
   }
   if(!parts.size)throw new Error('That MIDI file has no notes in it.');
-  const bt=Math.max(1,Math.min(12,beats||4)),last=Math.max(...[...parts.values()].flatMap(p=>p.notes.map(n=>n.t+n.d)));
+  const bt=Math.max(1,Math.min(32,beats||4)),un=METER_UNITS.includes(unit)?unit:4,last=Math.max(...[...parts.values()].flatMap(p=>p.notes.map(n=>n.t+n.d)));
   const tracks=[...parts.values()].sort((a,b)=>a.ch-b.ch).slice(0,16).map(p=>({name:p.name||(p.ch===9?'Drums':GM.find(g=>g[0]===p.prog)?.[1]||'Program '+(p.prog+1)),drums:p.ch===9,prog:p.ch===9?0:p.prog,vol:100,mute:false,notes:p.notes}));
-  return cleanMusic({bpm:Math.round(bpm||120),beats:bt,res:4,bars:Math.min(64,Math.ceil(last/(bt*PPQ))),tracks});
+  return cleanMusic({bpm:Math.round(bpm||120),beats:bt,unit:un,res:4,bars:Math.min(64,Math.ceil(last/(bt*PPQ*4/un))),tracks});
 }
 // RULE: a song reaches the page as a button that plays and stops it: a click node wired to the song's node.
 function songButton(s,at){
@@ -6953,6 +7015,8 @@ async function importMidi(file,at){
   return s;
 }
 // FORMAT: SMF format 1: a tempo track, then one track per unmuted instrument.
+// HACK: a MIDI time signature's bottom number is a power of two, so an irrational meter (7/3) is written with the next
+//   one up (7/4); the notes keep their real timing, only another program's bar lines differ.
 function midiBytes(m,title){
   const vlq=n=>{const b=[n&127];while((n>>>=7)>0)b.unshift((n&127)|128);return b};
   const text=(type,s)=>{const b=[...te.encode(s)].slice(0,127);return[255,type,...vlq(b.length),...b]};
@@ -6960,7 +7024,7 @@ function midiBytes(m,title){
   const track=(evs)=>{evs.sort((a,b)=>a.t-b.t||a.o-b.o);let last=0;const out=[];for(const e of evs){out.push(...vlq(e.t-last),...e.d);last=e.t}out.push(...vlq(end-last),255,47,0);return out};
   const chunk=(id,data)=>{const n=data.length;return[...te.encode(id),n>>>24&255,n>>>16&255,n>>>8&255,n&255,...data]};
   const us=Math.round(6e7/m.bpm);
-  const tracks=[track([{t:0,o:0,d:text(3,title||'PIXIWYG song')},{t:0,o:0,d:[255,81,3,us>>16&255,us>>8&255,us&255]},{t:0,o:0,d:[255,88,4,m.beats,2,24,8]}])];
+  const tracks=[track([{t:0,o:0,d:text(3,title||'PIXIWYG song')},{t:0,o:0,d:[255,81,3,us>>16&255,us>>8&255,us&255]},{t:0,o:0,d:[255,88,4,Math.min(255,m.beats),Math.round(Math.log2((m.unit||4)%3?m.unit||4:(m.unit*4/3))),24,8]}])];
   let ch=0;
   for(const t of m.tracks){
     if(t.mute)continue;
@@ -7030,7 +7094,7 @@ function pxSynth(ctx,out,map){
 // PERF: one OfflineAudioContext pass, exactly the song's length. Self-contained.
 // INVARIANT: note(ctx,out,synth) may return a player (the editor's SoundFont); otherwise the synth plays.
 async function pxRender(m,map,note){
-  const PPQ=480,sp=60/m.bpm/PPQ,end=m.bars*m.beats*PPQ,sr=44100,len=Math.max(1,Math.ceil(end*sp*sr));
+  const PPQ=480,sp=60/m.bpm/PPQ,end=m.bars*m.beats*PPQ*4/(m.unit||4),sr=44100,len=Math.max(1,Math.ceil(end*sp*sr));
   const ctx=new OfflineAudioContext(2,len,sr),comp=ctx.createDynamicsCompressor(),bus=ctx.createGain();bus.gain.value=.45;bus.connect(comp);comp.connect(ctx.destination);
   // INVARIANT: notes go into their track's input, through the track's effects, then the song's, then the bus.
   const master=ctx.createGain();pxFx(ctx,master,m.fx,bus);
@@ -7175,8 +7239,8 @@ const seqTrackSel=()=>state.music.tracks[Math.min(seq.sel,state.music.tracks.len
 function seqRows(t){return t.drums?DRUMS.map(k=>k[0]):Array.from({length:73},(_,i)=>96-i)}
 const rowH=t=>t.drums?26:15;
 function seqSize(){
-  const m=state.music,t=seqTrackSel(),beats=m.bars*m.beats;
-  return{w:SQ.KW+beats*SQ.BW,h:SQ.RH+seqRows(t).length*rowH(t)};
+  const m=state.music,t=seqTrackSel(),quarters=songEnd(m)/PPQ;
+  return{w:SQ.KW+quarters*SQ.BW,h:SQ.RH+seqRows(t).length*rowH(t)};
 }
 function songSync(){
   const sel=$('#seqSong');sel.replaceChildren();
@@ -7224,7 +7288,7 @@ function closeSeq(){if($('#seqModal').hidden)return;seqStop();$('#seqModal').hid
 let seqArmed=true;
 function seqEdit(fn){if(seqArmed){pushUndo();seqArmed=false;setTimeout(()=>seqArmed=true,0)}fn();save()}
 function seqControls(){
-  const m=state.music;$('#seqBpm').value=m.bpm;$('#seqBars').value=m.bars;$('#seqBeats').value=m.beats;$('#seqRes').value=m.res;$('#seqLoop').checked=seqP.loop;
+  const m=state.music;$('#seqBpm').value=m.bpm;$('#seqBars').value=m.bars;$('#seqBeats').value=m.beats;$('#seqUnit').value=String(m.unit||4);$('#seqGroups').value=m.groups?m.groups.join('+'):'';$('#seqGroups').placeholder=meterGroups(m).join('+');$('#seqRes').value=m.res;$('#seqLoop').checked=seqP.loop;
 }
 function seqTracks(){
   const box=$('#seqTrackList'),m=state.music;box.replaceChildren();
@@ -7278,15 +7342,17 @@ function seqDraw(){
   const m=state.music,t=seqTrackSel(),rows=seqRows(t),rh=rowH(t),sc=$('#seqScroll'),cv=$('#seqCanvas'),x=cv.getContext('2d');
   const dpr=devicePixelRatio||1,vw=sc.clientWidth,vh=sc.clientHeight,L=sc.scrollLeft,T=sc.scrollTop,C=seqColors();
   x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,vw,vh);
-  const {KW,RH,BW}=SQ,sw=BW/m.res,tk=PPQ/BW,end=songEnd(m),gx=tick=>KW+tick/tk-L,gy=r=>RH+r*rh-T;
+  const {KW,RH,BW}=SQ,gt=gridTicks(m),tk=PPQ/BW,sw=gt/tk,end=songEnd(m),gx=tick=>KW+tick/tk-L,gy=r=>RH+r*rh-T;
   x.fillStyle=C.paper;x.fillRect(KW,RH,vw-KW,vh-RH);
   rows.forEach((p,r)=>{const y=gy(r);if(y+rh<RH||y>vh)return;
     if(t.drums?r%2:isBlack(p)){x.fillStyle=C.chrome;x.globalAlpha=.7;x.fillRect(KW,y,vw-KW,rh);x.globalAlpha=1}
     if(!t.drums&&p%12===0){x.fillStyle=C.chrome2;x.fillRect(KW,y+rh-1,vw-KW,1)}});
   const first=Math.max(0,Math.floor((L)/sw)),last=Math.ceil((L+vw)/sw);
-  for(let s=first;s<=last;s++){const tick=s*PPQ/m.res;if(tick>end)break;const X=Math.round(gx(tick))+.5;if(X<KW)continue;
-    const bar=tick%(m.beats*PPQ)===0,beat=tick%PPQ===0;
-    x.strokeStyle=bar?C.ink:beat?C.muted:C.chrome2;x.globalAlpha=bar?.9:beat?.45:.6;x.lineWidth=bar?1.5:1;
+  // RULE: lines get heavier from grid to beat to group (the meter's accents) to bar.
+  const bt=beatTicks(m),barT=barTicks(m),starts=new Set(meterGroups(m).reduce((a,g)=>(a.push(a.at(-1)+g),a),[0]).slice(0,-1).map(b=>b*bt));
+  for(let s=first;s<=last;s++){const tick=s*gt;if(tick>end)break;const X=Math.round(gx(tick))+.5;if(X<KW)continue;
+    const bar=tick%barT===0,group=!bar&&starts.has(tick%barT),beat=tick%bt===0;
+    x.strokeStyle=bar||group?C.ink:beat?C.muted:C.chrome2;x.globalAlpha=bar?.9:group?.6:beat?.45:.6;x.lineWidth=bar?1.5:group?1.25:1;
     x.beginPath();x.moveTo(X,RH);x.lineTo(X,vh);x.stroke();x.globalAlpha=1}
   const ex=gx(end);if(ex<vw){x.fillStyle=C.ink;x.globalAlpha=.12;x.fillRect(Math.max(KW,ex),RH,vw,vh);x.globalAlpha=1}
   // RULE: other melodic tracks draw faintly so parts can be written against each other.
@@ -7306,7 +7372,7 @@ function seqDraw(){
       if(p%12===0){x.fillStyle='#16121f';x.fillText(noteName(p),KW-30,y+rh/2)}}});
   x.fillStyle=C.ink;x.fillRect(KW-2,RH,2,vh-RH);
   x.fillStyle=C.chrome;x.fillRect(0,0,vw,RH);x.fillStyle=C.ink;x.fillRect(0,RH-2,vw,2);
-  for(let b=0;b<m.bars;b++){const X=gx(b*m.beats*PPQ);if(X<KW-40||X>vw)continue;if(X>=KW){x.fillRect(Math.round(X),0,1.5,RH);x.fillText(String(b+1),X+5,RH/2)}}
+  for(let b=0;b<m.bars;b++){const X=gx(b*barTicks(m));if(X<KW-40||X>vw)continue;if(X>=KW){x.fillRect(Math.round(X),0,1.5,RH);x.fillText(String(b+1),X+5,RH/2)}}
   const cx=gx(seqP.cursor);if(cx>=KW){x.fillStyle=C.hot;x.beginPath();x.moveTo(cx-6,0);x.lineTo(cx+6,0);x.lineTo(cx,10);x.fill()}
   const now=seqP.on?seqNow():null;if(now!=null){const X=gx(now);if(X>=KW&&X<=vw){x.fillStyle=C.hot;x.fillRect(X-1,RH,2,vh-RH)}}
   x.fillStyle=C.chrome;x.fillRect(0,0,KW,RH);
@@ -7315,7 +7381,7 @@ function seqHit(e){
   const m=state.music,t=seqTrackSel(),cv=$('#seqCanvas').getBoundingClientRect(),sc=$('#seqScroll');
   const vx=e.clientX-cv.left,vy=e.clientY-cv.top,rows=seqRows(t),rh=rowH(t);
   const tick=Math.max(0,(vx-SQ.KW+sc.scrollLeft)*PPQ/SQ.BW),r=Math.floor((vy-SQ.RH+sc.scrollTop)/rh);
-  const step=PPQ/m.res;
+  const step=gridTicks(m);
   return{zone:vy<SQ.RH?'ruler':vx<SQ.KW?'keys':'grid',tick,snap:Math.floor(tick/step)*step,p:rows[Math.max(0,Math.min(rows.length-1,r))],ok:r>=0&&r<rows.length,step};
 }
 function seqNoteAt(t,h){return t.notes.find(n=>n.p===h.p&&h.tick>=n.t&&h.tick<n.t+n.d)}
@@ -7375,8 +7441,11 @@ function saveMidi(){
   new ResizeObserver(()=>{if(!$('#seqModal').hidden){seqLayout();seqDraw()}}).observe(sc);
   const num=(id,k,lo,hi)=>$(id).addEventListener('change',e=>{const v=Math.round(numIn(e.target.value,state.music[k],lo,hi));seqEdit(()=>{const was=state.music[k];state.music[k]=v;if(k==='bpm')refitSamples(state.music,was)});e.target.value=v;$('#seqBars').value=state.music.bars;seqLayout();seqDraw()});
   num('#seqBpm','bpm',20,300);num('#seqBars','bars',1,64);
-  $('#seqBeats').onchange=e=>{seqEdit(()=>{state.music.beats=+e.target.value});seqLayout();seqDraw()};
-  $('#seqRes').onchange=e=>{seqEdit(()=>{state.music.res=+e.target.value});seqLastLen=PPQ/state.music.res;seqDraw()};
+  // RULE: changing the meter keeps the notes where they are in time and drops a grouping that no longer adds up.
+  const meter=()=>{const m=state.music,b=Math.round(numIn($('#seqBeats').value,m.beats,1,32)),u=+$('#seqUnit').value,g=parseGroups($('#seqGroups').value,b);
+    seqEdit(()=>{m.beats=b;m.unit=METER_UNITS.includes(u)?u:4;if(g)m.groups=g;else delete m.groups});seqControls();seqLayout();seqDraw()};
+  $('#seqBeats').onchange=meter;$('#seqUnit').onchange=meter;$('#seqGroups').onchange=meter;
+  $('#seqRes').onchange=e=>{seqEdit(()=>{state.music.res=+e.target.value});seqLastLen=gridTicks(state.music);seqDraw()};
   $('#seqLoop').onchange=e=>{seqP.loop=e.target.checked};
   $('#seqPlay').onclick=()=>{if(seqP.on)seqStop();else seqPlay()};
   $('#seqSave').onclick=()=>{audio();saveMidi()};
@@ -7402,7 +7471,7 @@ function seqNoteOn(p,v=100){
   const m=state.music;if(!m||p<0||p>127)return;const t=seqTrackSel();if(t.drums&&!DRUMS.some(d=>d[0]===p))return;
   audio();if(ac&&seqOut())playNote(t,p,ac.currentTime+.005,.35,v);
   if(!seqIn.rec||seqIn.held.has(p))return;
-  const step=PPQ/m.res,end=songEnd(m);
+  const step=gridTicks(m),end=songEnd(m);
   if(!seqIn.take){pushUndo();seqIn.take=true}
   let at;
   if(seqP.on){const now=seqNow();if(now==null)return;at=Math.round((now%end)/step)*step%end}
@@ -7411,7 +7480,7 @@ function seqNoteOn(p,v=100){
 }
 function seqNoteOff(p){
   const h=seqIn.held.get(p);if(!h)return;seqIn.held.delete(p);const m=state.music;if(!m)return;
-  const step=PPQ/m.res,end=songEnd(m);
+  const step=gridTicks(m),end=songEnd(m);
   const d=seqP.on?Math.max(step,Math.round(((ac?ac.currentTime:0)-h.t0)/tickSec(m)/step)*step):h.track.drums?step:seqLastLen;
   h.track.notes.push({t:h.at,p,d:Math.min(d,end-h.at),v:h.v});seqTidy(h.track);
   if(!seqP.on&&!seqIn.held.size){seqP.cursor=(seqIn.step+(h.track.drums?step:seqLastLen))%end;seqIn.step=null}
@@ -7438,7 +7507,7 @@ $('#seqMidiIn').onclick=async()=>{audio();
 $('#seqScroll').addEventListener('wheel',e=>{const t=seqTrackSel(),h=seqHit(e),n=h.zone==='grid'&&seqNoteAt(t,h);if(!n)return;e.preventDefault();
   seqEdit(()=>{n.v=Math.max(1,Math.min(127,n.v+(e.deltaY<0?8:-8)))});status(`Velocity ${n.v}`);seqDraw()},{passive:false});
 $('#seqRepGo').onclick=()=>{audio();const m=state.music;if(!m)return;
-  const a=Math.max(1,Math.min(m.bars,+$('#seqRepA').value||1)),b=Math.max(a,Math.min(m.bars,+$('#seqRepB').value||a)),bar=m.beats*PPQ,lo=(a-1)*bar,hi=b*bar,len=hi-lo,end=songEnd(m);
+  const a=Math.max(1,Math.min(m.bars,+$('#seqRepA').value||1)),b=Math.max(a,Math.min(m.bars,+$('#seqRepB').value||a)),bar=barTicks(m),lo=(a-1)*bar,hi=b*bar,len=hi-lo,end=songEnd(m);
   if(hi>=end){status('Those bars already run to the end of the song');return}
   seqEdit(()=>{for(const t of $('#seqRepAll').checked?m.tracks:[seqTrackSel()]){const src=t.notes.filter(n=>n.t>=lo&&n.t<hi);
     t.notes=t.notes.filter(n=>n.t<hi);for(let o=hi;o<end;o+=len)for(const n of src){const at=n.t-lo+o;if(at<end)t.notes.push({...n,t:at,d:Math.min(n.d,end-at)})}seqTidy(t)}});
@@ -7653,7 +7722,7 @@ function samplePlay(t,p,at,dur,vel){
 //   with bars added if it runs past the end, so the timeline shows how long it really is. A tempo change refits it.
 // FORMAT: a sample is {id, name, url, sec}; sec is the recording's length in seconds.
 const sampleTicks=(m,s)=>Math.max(1,Math.round(s.sec*m.bpm*PPQ/60));
-function fitSongTo(m,tick){const bar=m.beats*PPQ;m.bars=Math.min(64,Math.max(m.bars,Math.ceil(tick/bar)))}
+function fitSongTo(m,tick){const bar=barTicks(m);m.bars=Math.min(64,Math.max(m.bars,Math.ceil(tick/bar)))}
 function refitSamples(m,oldBpm){
   for(const t of m.tracks){const s=t.smp&&(m.samples||[]).find(x=>x.id===t.smp);if(!s||!s.sec)continue;
     const was=Math.round(s.sec*oldBpm*PPQ/60),now=sampleTicks(m,s);
@@ -7708,6 +7777,266 @@ $('#seqFxClose').onclick=()=>{$('#seqFx').hidden=true};
 $('#seqMasterFx').onclick=()=>{audio();openFxPanel('master')};
 $('#seqSampleIn').onchange=async e=>{const fs=[...e.target.files];e.target.value='';for(const f of fs)await addSampleFile(f)};
 
+// SECTION: song ideas: melodies, basslines, drum beats and chords from a style, for the song's tempo and metre
+// RULE: ideas come from music theory, not noise. A style picks a mode, a chord progression (one chord a bar, looping
+//   every four), a drum pattern, a bass style and a melody rhythm. Drums are the style's pattern with a fill closing
+//   each four-bar phrase and a crash after it; the bass follows the chord roots in the style's rhythm, approaching
+//   the next chord; the melody is a one-bar motif heard as A A' B A'' over four bars: chord tones on strong beats,
+//   steps between them, a leap answered by a step back, A' the same shape moved to the next chord, the phrase ending
+//   on the tonic. The tempo thins the grid: sixteenths become eighths above about 150 BPM.
+// RULE: any meter works, irrational ones too (7/3): a step is a sixteenth, or a quarter of an irrational beat, and in
+//   anything but 4/4 the meter's groups (meterGroups: 7/8 as 2+2+3) place the kicks, backbeats, bass and accents.
+//   Optionally the melody is polytonal (in a second key over the home key's harmony) or polymetric (phrased in
+//   cycles of 3, 5 or 7 beats that drift across the bar).
+// FORMAT: everything is in the song's ticks (PPQ). Seeded, so one seed always gives one idea.
+const IDEA_MODES={major:[0,2,4,5,7,9,11],minor:[0,2,3,5,7,8,10],dorian:[0,2,3,5,7,9,10],mixolydian:[0,2,4,5,7,9,10],phrygian:[0,1,3,5,7,8,10]};
+const IDEA_MODE_NAMES={major:'major',minor:'minor',dorian:'Dorian',mixolydian:'Mixolydian',phrygian:'Phrygian'};
+// FORMAT: drum rows are a sixteen-step 4/4 bar: x hit, o soft (ghost), . rest; GM notes as in DRUMS.
+const IDEA_DRUMS={
+  pop:{36:'x.....x.x.......',38:'....x.......x...',42:'x.x.x.x.x.x.x.x.'},
+  rock:{36:'x.....x.x.x.....',38:'....x.......x...',42:'x.x.x.x.x.x.x.x.'},
+  boombap:{36:'x......x..x.....',38:'....x.....o.x...',42:'x.x.x.x.x.x.x.xo'},
+  trap:{36:'x......x..x.....',39:'........x.......',42:'x.x.x.x.x.x.x.x.'},
+  house:{36:'x...x...x...x...',39:'....x.......x...',46:'..x...x...x...x.',42:'x.x.x.x.x.x.x.x.'},
+  synthwave:{36:'x.......x.......',38:'....x.......x...',42:'x.x.x.x.x.x.x.x.'},
+  funk:{36:'x.....x...x..x..',38:'....x..o.o..x..o',42:'xxxxxxxxxxxxxxxx'},
+  chip:{36:'x.......x.x.....',38:'....x.......x...',42:'x.x.x.x.x.x.x.x.'},
+  onedrop:{36:'........x.......',38:'........x.......',42:'x.x.x.x.x.x.x.x.'},
+};
+// FORMAT: a style: name, icon, usual tempo, modes to pick from, progressions (scale degrees, 0 = the tonic), drum
+//   pattern, bass style, melody grid (subdivisions a beat), density (0–1), gate (share of the gap a note holds), the
+//   lead, bass and chord instruments (GM programs from the sequencer's own list), chord rhythm, sevenths, swing (0–1).
+const IDEA_GENRES={
+  pop:{name:'Pop',icon:'🎹',bpm:112,modes:['major'],progs:[[0,4,5,3],[0,5,3,4],[5,3,0,4],[3,4,0,0]],drums:'pop',bass:'pop',grid:2,density:.55,gate:.9,lead:4,bassProg:33,chordProg:0,chords:'whole'},
+  rock:{name:'Rock',icon:'🎸',bpm:128,modes:['mixolydian','minor','major'],progs:[[0,6,3,0],[0,3,4,3],[0,5,6,0]],drums:'rock',bass:'drive',grid:2,density:.5,gate:.95,lead:29,bassProg:33,chordProg:29,chords:'eighths'},
+  lofi:{name:'Lo-fi',icon:'☕',bpm:82,modes:['dorian','minor'],progs:[[1,4,0,0],[3,2,1,4],[0,5,1,4]],drums:'boombap',bass:'walk',grid:2,density:.4,gate:.85,lead:4,bassProg:33,chordProg:4,chords:'whole',sevenths:true,swing:.6},
+  trap:{name:'Trap',icon:'🔥',bpm:140,modes:['minor','phrygian'],progs:[[0,5,6,4],[0,0,5,6],[0,3,5,4]],drums:'trap',bass:'808',grid:2,density:.35,gate:.8,lead:98,bassProg:38,chordProg:89,chords:'whole'},
+  house:{name:'House',icon:'🏠',bpm:124,modes:['minor','dorian'],progs:[[0,5,3,4],[0,3,0,3],[0,6,5,6]],drums:'house',bass:'offbeat',grid:4,density:.4,gate:.5,lead:81,bassProg:38,chordProg:16,chords:'stabs',sevenths:true},
+  synthwave:{name:'Synthwave',icon:'🌆',bpm:100,modes:['minor'],progs:[[0,5,2,6],[0,3,5,4],[5,3,0,4]],drums:'synthwave',bass:'octave',grid:2,density:.35,gate:1,lead:81,bassProg:38,chordProg:89,chords:'whole'},
+  funk:{name:'Funk',icon:'🕺',bpm:104,modes:['dorian','mixolydian'],progs:[[0,0,3,3],[0,3,0,4],[0,6,0,6]],drums:'funk',bass:'funk',grid:4,density:.45,gate:.6,lead:61,bassProg:33,chordProg:4,chords:'stabs',sevenths:true,swing:.2},
+  chip:{name:'Chiptune',icon:'👾',bpm:150,modes:['major','minor'],progs:[[0,4,5,3],[0,5,3,4],[5,3,4,0]],drums:'chip',bass:'arp',grid:4,density:.6,gate:.7,lead:80,bassProg:80,chordProg:80,chords:'whole'},
+  reggae:{name:'Reggae',icon:'🌴',bpm:76,modes:['major','minor'],progs:[[0,3,4,3],[0,4,5,3],[0,3,0,4]],drums:'onedrop',bass:'reggae',grid:2,density:.4,gate:.8,lead:24,bassProg:33,chordProg:16,chords:'skank',swing:.3},
+};
+// PERF: mulberry32: a whole idea is a few hundred draws; one seed reproduces it exactly (tests, and Another).
+function ideaRng(seed){let a=seed>>>0;return()=>{a=a+0x6D2B79F5>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+const ideaPick=(r,a)=>a[Math.floor(r()*a.length)];
+const ROMAN=['I','II','III','IV','V','VI','VII'];
+
+// RULE: a chord is stacked thirds inside the mode (a triad, or a seventh chord for jazzier styles).
+function ideaChord(mode,deg,sevenths){const s=IDEA_MODES[mode],at=k=>s[(deg+k)%7]+12*Math.floor((deg+k)/7);return(sevenths?[0,2,4,6]:[0,2,4]).map(k=>at(k))}
+function ideaRoman(mode,deg){const c=ideaChord(mode,deg),third=c[1]-c[0],fifth=c[2]-c[0];
+  return third===4?ROMAN[deg]:fifth===6?ROMAN[deg].toLowerCase()+'°':ROMAN[deg].toLowerCase()}
+
+function songIdeas(m,{genre='pop',parts={melody:true,bass:true,drums:true},key='auto',second=0,cycle=0,seed=1}={}){
+  const g=IDEA_GENRES[genre]||IDEA_GENRES.pop,r=ideaRng(seed),bars=Math.max(1,Math.min(64,m.bars||4)),bpm=m.bpm||g.bpm;
+  const mode=ideaPick(r,g.modes),scale=IDEA_MODES[mode],minorish=scale[2]===3;
+  const tonic=key==='auto'?ideaPick(r,minorish?[9,4,2,7,0,5]:[0,7,2,9,5,4]):(+key%12+12)%12;
+  // FORMAT: second: semitones the melody's key sits above the home key (0 none, -1 surprise); cycle: the melody's
+  //   phrase length in beats against the bar (0 the bar, -1 surprise).
+  const shift=second<0?ideaPick(r,[1,2,3,4,6]):second|0,melTonic=(tonic+shift)%12;
+  const beatT=beatTicks(m),barT=barTicks(m),irr=irrational(m),step=irr?beatT/4:PPQ/4,spb=beatT/step,stepsBar=barT/step,end=bars*barT;
+  const groups=meterGroups(m),gStart=groups.reduce((a,x)=>(a.push(a.at(-1)+x*spb),a),[0]).slice(0,-1),gLen=groups.map(x=>x*spb);
+  const isGroup=st=>gStart.includes(st),isBeat=st=>st%spb===0,half=Math.max(1,spb/2);
+  // RULE: a style's own patterns are written for 4/4; every other meter is built from its groups.
+  const common=!irr&&(m.unit||4)===4&&m.beats===4&&!m.groups;
+  const prog=ideaPick(r,g.progs),fast=bpm>=150,swingT=Math.round(step*.33*(g.swing||0));
+  const swing=(st,unit)=>st%(2*unit)===unit?swingT*(unit===1?1:2):0;
+  const chordAt=b=>prog[((b%prog.length)+prog.length)%prog.length],tracks=[];
+  const note=(t,d,p,v)=>({t:Math.max(0,Math.min(end-1,Math.round(t))),d:Math.max(1,Math.min(end-Math.round(t),Math.round(d))),p:Math.max(0,Math.min(127,Math.round(p))),v:Math.max(1,Math.min(127,Math.round(v)))});
+  const hum=a=>(r()-.5)*2*a;
+
+  // SECTION: song ideas: drums
+  if(parts.drums){
+    const notes=[],snare=['trap','house'].includes(g.drums)?39:38,hatEvery=g.drums==='funk'?1:fast?spb:half;
+    for(let b=0;b<bars;b++){
+      const t0=b*barT,fill=bars>=4&&b%4===3,crash=b%4===0&&!['trap','boombap','onedrop'].includes(g.drums),fillFrom=stepsBar-Math.min(4,gLen.at(-1));
+      const hit=(st,p,v)=>notes.push(note(t0+st*step+swing(st,1),step/2,p,v+hum(8)));
+      if(common){
+        const pat=IDEA_DRUMS[g.drums];
+        for(const [n,row] of Object.entries(pat))for(let st=0;st<16;st++){
+          let c=row[st];if((+n===42||+n===46)&&fast&&g.drums!=='trap'&&st%2)c='.';
+          if(fill&&st>=12&&+n!==42&&+n!==46)c='.';
+          if(c==='.'||(+n===42&&g.drums!=='funk'&&g.drums!=='trap'&&c==='x'&&r()<.06))continue;
+          hit(st,+n,c==='x'?(st%4===0?104:92):52);
+        }
+      }else{
+        // RULE: in any other meter the groups carry the beat: a kick starts the bar and every second group after it,
+        //   a backbeat starts the groups between (one group alone gets it halfway through), hats run on the
+        //   subdivisions with an accent on each group. House kicks every beat; trap's backbeat sits on the middle
+        //   group (half time); the one-drop is kick and snare together on the middle group only.
+        const mid=gStart[Math.floor(groups.length/2)]||Math.floor(stepsBar/2);
+        for(let st=0;st<stepsBar;st++){
+          if(fill&&st>=fillFrom)continue;
+          const gi=gStart.indexOf(st);
+          if(g.drums==='onedrop'){if(st===mid){hit(st,36,100);hit(st,38,96)}}
+          else{
+            if(gi>=0&&gi%2===0||g.drums==='house'&&isBeat(st))hit(st,36,gi===0?108:98);
+            const back=g.drums==='trap'?st===mid&&groups.length>1:gi>=0&&gi%2===1||groups.length===1&&st===Math.floor(stepsBar/2);
+            if(back)hit(st,snare,100);
+            else if(['funk','boombap'].includes(g.drums)&&!isBeat(st)&&r()<.12)hit(st,38,48);
+          }
+          if(st%hatEvery===0&&!(g.drums!=='funk'&&g.drums!=='trap'&&r()<.06))hit(st,42,isGroup(st)?100:isBeat(st)?86:70);
+          if(g.drums==='house'&&spb>=2&&st%spb===spb/2)hit(st,46,84);
+        }
+      }
+      if(g.drums==='trap'&&r()<.6){
+        // RULE: trap hats roll: half a beat in thirty-seconds or triplets, once a bar or so, in the last group.
+        const at=t0+gStart.at(-1)*step+Math.max(0,gLen.at(-1)-half)*step,div=ideaPick(r,[8,6]),len=half*step;
+        for(let k=0;k<div/2;k++)notes.push(note(at+k*len*2/div,len/div,42,70+k*6));
+      }
+      if(fill){const at=t0+fillFrom*step,n=stepsBar-fillFrom,toms=r()<.5;
+        for(let k=0;k<n;k++)notes.push(note(at+k*step,step/2,toms?[50,50,47,45,45,45][Math.min(5,k)]:38,72+k*10));
+        notes.push(note(at,step/2,36,96))}
+      if(crash||(b>0&&b%4===0))notes.push(note(t0,beatT,49,98));
+    }
+    tracks.push({name:`Drums · ${g.name}`,drums:true,prog:0,vol:100,notes});
+  }
+
+  // SECTION: song ideas: bass
+  const pcOf=(deg,t=tonic)=>(t+scale[deg%7])%12;
+  const bassRoot=deg=>{let p=36+pcOf(deg);if(p>45)p-=12;return p};
+  if(parts.bass){
+    const notes=[];
+    for(let b=0;b<bars;b++){
+      const deg=chordAt(b),root=bassRoot(deg),ch=ideaChord(mode,deg,g.sevenths).map(i=>root+i-scale[deg%7]),next=bassRoot(chordAt(b+1)),t0=b*barT;
+      const fifth=root+7,oct=root+12,approach=next+(next>root?-1:1);
+      const hits=(steps,pitch,gate=.9)=>{const s=[...new Set(steps)].filter(x=>x>=0&&x<stepsBar).sort((a,b)=>a-b);s.forEach((st,i)=>{const nx=i+1<s.length?s[i+1]:stepsBar;notes.push(note(t0+st*step+swing(st,common?2:half),(nx-st)*step*gate,pitch(st,i,s.length),st===0?108:isGroup(st)?98:88+hum(6)))})};
+      const every=k=>Array.from({length:Math.ceil(stepsBar/k)},(_,i)=>i*k),offs=spb>=2?every(spb).map(x=>x+spb/2):every(2).map(x=>x+1);
+      if(common)switch(g.bass){
+        case'pop':hits([0,6,8,14],(st,i,n)=>i===n-1?approach:i===2&&r()<.5?fifth:root);break;
+        case'drive':hits(every(2),(st,i,n)=>i===n-1&&r()<.6?approach:root,.85);break;
+        case'walk':hits(every(4),(st,i,n)=>i===0?root:i===n-1?approach:ideaPick(r,[ch[1],ch[2],ch[3]||oct]));break;
+        case'808':hits([...IDEA_DRUMS.trap[36]].map((c,i)=>c==='x'?i:-1),(st,i,n)=>i===n-1&&r()<.4?oct:root,1);break;
+        case'offbeat':hits([2,6,10,14],(st,i,n)=>i===n-1&&r()<.4?oct:root,.5);break;
+        case'octave':hits(every(2),(st,i)=>i%2?oct:root,.8);break;
+        case'funk':hits([0,3,5,6,10,12,15],(st,i)=>i===0?root:ideaPick(r,[root,oct,oct,fifth,root+10]),.45);break;
+        case'arp':hits(every(2),(st,i)=>[root,fifth,oct,fifth][i%4],.7);break;
+        case'reggae':hits([0,3,6,10],(st,i)=>[root,ch[1],ch[2],root][i]??root,.8);break;
+      }else switch(g.bass){
+        // RULE: in other meters the bass lands on the groups: on every group start, or on every subdivision for the
+        //   driving styles, or on the offbeats for house; the last note walks into the next chord.
+        case'drive':case'octave':case'arp':hits(every(half),(st,i,n)=>g.bass==='octave'?(i%2?oct:root):g.bass==='arp'?[root,fifth,oct,fifth][i%4]:i===n-1&&r()<.6?approach:root,.8);break;
+        case'walk':hits(every(spb),(st,i,n)=>i===0?root:i===n-1?approach:ideaPick(r,[ch[1],ch[2],ch[3]||oct]));break;
+        case'offbeat':hits(offs,(st,i,n)=>i===n-1&&r()<.4?oct:root,.5);break;
+        case'funk':hits([...gStart,...gStart.map((s,i)=>s+1+Math.floor(r()*(gLen[i]-1)))],(st,i)=>i===0?root:ideaPick(r,[root,oct,fifth,root+10]),.45);break;
+        default:hits([...gStart,...(g.bass==='pop'?[stepsBar-half]:[])],(st,i,n)=>g.bass==='pop'&&i===n-1?approach:g.bass==='reggae'?[root,ch[1],ch[2],root][i%4]:i&&isGroup(st)&&r()<.3?fifth:root,g.bass==='808'?1:.9);
+      }
+    }
+    tracks.push({name:`Bass · ${g.name}`,drums:false,prog:g.bassProg,vol:100,notes});
+  }
+
+  // SECTION: song ideas: chords
+  if(parts.chords){
+    const notes=[];
+    for(let b=0;b<bars;b++){
+      const deg=chordAt(b),base=48+pcOf(deg)+(pcOf(deg)>7?-12:0),voice=ideaChord(mode,deg,g.sevenths).map(i=>base+i-scale[deg%7]),t0=b*barT;
+      // RULE: with a second key the chord is bitonal: the same degree's triad in that key stacked above the home one.
+      if(shift)voice.push(...ideaChord(mode,deg,false).map(i=>base+12+shift+i-scale[deg%7]));
+      const offs=spb>=2?Array.from({length:m.beats},(_,i)=>i*spb+spb/2):Array.from({length:Math.floor(stepsBar/2)},(_,i)=>i*2+1);
+      const at=(steps,len,v)=>steps.filter(s=>s<stepsBar).forEach(st=>voice.forEach(p=>notes.push(note(t0+st*step+swing(st,1),len,p,v+hum(4)))));
+      if(g.chords==='whole')at([0],barT*.98,70);
+      else if(g.chords==='eighths')at(Array.from({length:Math.ceil(stepsBar/half)},(_,i)=>i*half),half*step*.8,66);
+      else at(common&&g.chords==='stabs'?[2,6,10,14]:offs,step*.9,g.chords==='stabs'?74:72);
+    }
+    tracks.push({name:`Chords · ${g.name}`,drums:false,prog:g.chordProg,vol:80,notes});
+  }
+
+  // SECTION: song ideas: melody
+  if(parts.melody){
+    const notes=[],unit=g.grid===4&&!fast?Math.max(1,spb/4):half;
+    const lo=60+melTonic>67?48+melTonic:60+melTonic,pool=[];
+    for(let p=lo-3;p<=lo+19;p++)if(scale.includes(((p-melTonic)%12+12)%12))pool.push(p);
+    const idx=p=>pool.reduce((b,q,i)=>Math.abs(q-p)<Math.abs(pool[b]-p)?i:b,0);
+    const chordPcs=b=>ideaChord(mode,chordAt(b),g.sevenths).map(i=>(melTonic+i)%12);
+    const nearestChordTone=(b,from)=>{const pcs=chordPcs(b);let best=null;for(const p of pool)if(pcs.includes(p%12)&&(best===null||Math.abs(p-from)<Math.abs(best-from)||Math.abs(p-from)===Math.abs(best-from)&&r()<.5))best=p;return best};
+    // FORMAT: the melody's phrases are segments: the bars, or with a cycle, runs of that many beats laid end to end
+    //   across the bars (a polymeter); a segment takes the chord sounding where it starts.
+    const cyc=cycle<0?ideaPick(r,[3,5,7]):cycle|0,segSteps=cyc>0?cyc*spb:stepsBar,segs=[];
+    for(let t=0;t<end;t+=segSteps*step)segs.push({t0:t,steps:Math.min(segSteps,Math.round((end-t)/step)),bar:Math.floor(t/barT)});
+    const strongAt=(seg,st)=>cyc>0?st%spb===0&&(st===0||st%(spb*2)===0):isGroup(st)||isBeat(st);
+    const rhythm=steps=>{const on=[];for(let st=0;st<steps;st+=unit){const strong=strongAt({},st);if(r()<(strong?g.density+.25:g.density-.1))on.push(st)}if(!on.includes(0))on.unshift(0);if(on.length<2&&steps>unit)on.push(Math.floor(steps/2/unit)*unit);return on};
+    let prev=pool[Math.floor(pool.length/2)],leap=0,motif=null;
+    const rA=rhythm(segSteps),rB=rhythm(segSteps);
+    segs.forEach((seg,si)=>{
+      const ph=si%4,last=ph===3||si===segs.length-1,rh=(ph===2?rB:rA).filter(st=>st<seg.steps),pitches=[];
+      if(!rh.length)return;
+      // RULE: A' and A'' replay A's shape (its steps through the scale), moved to start on this segment's chord.
+      if((ph===1||ph===3)&&motif&&motif.length>=rh.length){let i=idx(nearestChordTone(seg.bar,prev));for(const d of motif.slice(0,rh.length)){i=Math.max(0,Math.min(pool.length-1,i+d));pitches.push(pool[i])}}
+      else{
+        rh.forEach((st,k)=>{let p;
+          if(k===0||strongAt(seg,st))p=nearestChordTone(seg.bar,prev+(r()<.5?2:-2));
+          else{let i=idx(prev);if(leap){i+=-Math.sign(leap);leap=0}else if(r()<.15){leap=ideaPick(r,[-4,-3,3,4]);i+=leap}else i+=r()<(ph<2?.6:.4)?1:-1;p=pool[Math.max(0,Math.min(pool.length-1,i))]}
+          pitches.push(p);prev=p});
+        if(ph===0)motif=pitches.map((p,k)=>k?idx(p)-idx(pitches[k-1]):0);
+      }
+      // RULE: a phrase ends on the tonic, the one nearest the note before it.
+      if(last){const ref=pitches.length>1?pitches.at(-2):prev;let best=null;for(const p of pool)if(p%12===melTonic&&(best===null||Math.abs(p-ref)<Math.abs(best-ref)))best=p;if(best!==null)pitches[pitches.length-1]=best}
+      rh.forEach((st,k)=>{const nx=k+1<rh.length?rh[k+1]:seg.steps,hold=last&&k===rh.length-1?seg.steps-st:Math.min(nx-st,(g.gate>=1?2:1)*spb);
+        notes.push(note(seg.t0+st*step+swing(st,unit),hold*step*Math.min(.95,g.gate),pitches[k],(strongAt(seg,st)?100:86)+hum(6)))});
+      prev=pitches.at(-1);
+    });
+    tracks.push({name:`Melody · ${g.name}`,drums:false,prog:g.lead,vol:90,notes});
+    if(cyc>0)tracks.at(-1).cycle=cyc;
+  }
+  for(const t of tracks)t.notes.sort((a,b)=>a.t-b.t||a.p-b.p);
+  const meter=`${m.beats}/${m.unit||4}`+(groups.length>1&&!common?` (${groups.join('+')})`:'');
+  const melCycle=tracks.find(t=>t.cycle)?.cycle;for(const t of tracks)delete t.cycle;
+  return{tracks,summary:{genre:g.name,key:NOTE_NAMES[tonic]+' '+IDEA_MODE_NAMES[mode],mode,tonic,melTonic,second:shift,
+    melodyKey:shift?NOTE_NAMES[melTonic]+' '+IDEA_MODE_NAMES[mode]:null,cycle:melCycle||0,meter,prog:prog.map(d=>ideaRoman(mode,d)).join(' – '),bpm,bars}};
+}
+
+// SECTION: song ideas panel
+// RULE: Generate adds the idea as new tracks (clearing out empty tracks first, so a new song's blank Piano and Drums
+//   don't linger) and plays it at once; Another swaps the last idea for a fresh one. Each is one undo step.
+const IDEAS={genre:'pop',parts:{melody:true,bass:true,drums:true,chords:false},last:null};
+// FORMAT: meter quick picks: [label, beats, unit, groups]; the first keeps the song's own meter.
+const IDEA_METERS=[['The song’s'],['4/4',4,4],['3/4',3,4],['5/4',5,4],['6/8',6,8],['7/8 (2+2+3)',7,8,[2,2,3]],['7/8 (3+2+2)',7,8,[3,2,2]],
+  ['9/8 (2+2+2+3)',9,8,[2,2,2,3]],['11/8',11,8],['13/16',13,16],['7/3 (irrational)',7,3],['5/6 (irrational)',5,6]];
+function ideasDraw(){
+  const box=$('#seqIdeasGenres');box.replaceChildren();
+  for(const [id,g] of Object.entries(IDEA_GENRES)){
+    const b=mkEl('button',{type:'button',className:'idgenre'});b.setAttribute('role','radio');b.setAttribute('aria-checked',IDEAS.genre===id);b.tabIndex=IDEAS.genre===id?0:-1;
+    b.append(mkEl('i',{textContent:g.icon}),mkEl('b',{textContent:g.name}),mkEl('small',{textContent:g.bpm+' BPM'}));b.firstChild.setAttribute('aria-hidden','true');
+    b.onclick=()=>{audio();sfx('click');IDEAS.genre=id;ideasDraw()};box.append(b);
+  }
+  for(const b of document.querySelectorAll('#seqIdeas [data-part]'))b.setAttribute('aria-pressed',!!IDEAS.parts[b.dataset.part]);
+  $('#seqIdeasTempoText').textContent=`Use ${IDEA_GENRES[IDEAS.genre].name}’s tempo (${IDEA_GENRES[IDEAS.genre].bpm} BPM)`;
+  $('#seqIdeasAgain').disabled=!IDEAS.last;
+}
+function openIdeas(){if(!$('#seqFx').hidden)$('#seqFx').hidden=true;ideasDraw();$('#seqIdeas').hidden=false;$('#seqIdeasGenres [aria-checked=true]')?.focus()}
+function ideasGenerate(again){
+  const m=state.music;if(!m)return;
+  if(!Object.values(IDEAS.parts).some(Boolean)){status('Pick at least one part to make.');return}
+  if($('#seqIdeasTempo').checked&&m.bpm!==IDEA_GENRES[IDEAS.genre].bpm)seqEdit(()=>{m.bpm=IDEA_GENRES[IDEAS.genre].bpm});
+  // RULE: a meter picked here becomes the song's (undoable), so the sequencer's bar lines match the idea.
+  const mt=IDEA_METERS[+$('#seqIdeasMeter').value];
+  if(mt&&mt[1])seqEdit(()=>{m.beats=mt[1];m.unit=mt[2];if(mt[3])m.groups=[...mt[3]];else delete m.groups});
+  const r=songIdeas(m,{genre:IDEAS.genre,parts:IDEAS.parts,key:$('#seqIdeasKey').value,second:+$('#seqIdeasSecond').value,cycle:+$('#seqIdeasCycle').value,seed:Math.floor(Math.random()*2**32)});
+  seqEdit(()=>{
+    const drop=new Set(again&&IDEAS.last||[]);
+    m.tracks=m.tracks.filter(t=>!drop.has(t)&&(t.notes.length||t.smp));
+    const add=r.tracks.slice(0,16-m.tracks.length).map(t=>({...seqTrack(t.drums),...t,mute:false}));
+    m.tracks.push(...add);IDEAS.last=add;
+  });
+  seq.sel=Math.max(0,m.tracks.length-1);seqControls();seqTracks();seqLayout();seqDraw();ideasDraw();
+  const s=r.summary;$('#seqIdeasSays').textContent=`${s.genre} in ${s.key}${s.melodyKey?`, melody in ${s.melodyKey}`:''}: ${s.prog}, ${s.meter}${s.cycle?`, melody in ${s.cycle}-beat cycles`:''}, ${s.bars} bar${s.bars===1?'':'s'} at ${s.bpm} BPM.`;
+  status(`✨ ${s.genre} idea in ${s.key}. Another tries a new one; Undo takes it back.`);
+  if(!seqP.on)seqPlay();
+}
+$('#seqIdeasBtn').onclick=()=>{audio();sfx('click');if($('#seqIdeas').hidden)openIdeas();else $('#seqIdeas').hidden=true};
+$('#seqIdeasClose').onclick=()=>{$('#seqIdeas').hidden=true};
+$('#seqIdeasGo').onclick=()=>{audio();ideasGenerate(false)};
+$('#seqIdeasAgain').onclick=()=>{audio();ideasGenerate(true)};
+for(const b of document.querySelectorAll('#seqIdeas [data-part]'))b.onclick=()=>{audio();sfx('click');IDEAS.parts[b.dataset.part]=!IDEAS.parts[b.dataset.part];ideasDraw()};
+$('#seqIdeasTempo').onchange=()=>ideasDraw();
+{const k=$('#seqIdeasKey');NOTE_NAMES.forEach((n,i)=>k.append(mkEl('option',{value:String(i),textContent:n})));
+  const mt=$('#seqIdeasMeter');IDEA_METERS.forEach(([l],i)=>mt.append(mkEl('option',{value:String(i),textContent:l})))}
+// RULE: the styles are a radio group: one tab stop, arrows move and pick.
+// RULE: Esc backs out one layer: an open Ideas panel closes first, wherever the focus is.
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#seqIdeas').hidden&&!e.target.closest?.('input,textarea,select')){e.preventDefault();e.stopImmediatePropagation();$('#seqIdeas').hidden=true;if(!$('#seqModal').hidden)$('#seqIdeasBtn').focus()}},true);
+$('#seqIdeas').addEventListener('keydown',e=>{
+  const cards=[...$('#seqIdeasGenres').children],i=cards.indexOf(document.activeElement);if(i<0)return;
+  const d={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key];if(!d)return;e.preventDefault();e.stopPropagation();cards[(i+d+cards.length)%cards.length].click();$('#seqIdeasGenres [aria-checked=true]')?.focus()});
 // SECTION: workspaces
 // RULE: one project, five workspaces; the canvas picks the first, the project remembers the last.
 //     page     the page
@@ -12293,6 +12622,7 @@ const CMD_ITEMS=[
   {cat:'Tools',name:'Import Markdown…',xmb:'write',hint:'Turn markdown blocks into elements',keys:'',run:()=>openMd()},
   {cat:'Tools',name:'Styles node editor…',xmb:'page',hint:'Fills, shapes, outlines, filters',keys:'',run:()=>openStyleEditor()},
   {cat:'Tools',name:'Page logic node editor…',xmb:'page',hint:'Clicks, timers, state variables',keys:'',run:()=>openLogicEditor()},
+  {cat:'Tools',name:'Song ideas…',hint:'Melody, bassline, drums and chords in a style you pick, at the song’s tempo',keys:'',xmb:'music',run:()=>{setWorkspace('music');openIdeas()}},
   {cat:'Output',name:'Export HTML…',xmb:'output',hint:'Self-contained HTML export',keys:'Ctrl+Shift+S',run:()=>openExport()},
   {cat:'Tools',name:'Load style set…',xmb:'page',hint:'Preview stylesheets, then append or replace',keys:'Ctrl+Shift+O',run:()=>openSset()},
   {cat:'Output',name:'Publish site',xmb:'output',hint:'Send the export to the local publish API',keys:'',run:()=>publishSite()},
@@ -13214,7 +13544,7 @@ if(/[?&]test(=|&|$)/.test(location.search))window.__pixiwyg={APP_VERSION,ERRS,st
   addLayer,dupLayer,delLayer,mergeDown,movePaintLayer,setActiveLayer,setLayerProp,toggleLayer:i=>toggleLayer(studio.layers[i]),flatURL,layerBlank,sUndo,sRedo,
   layers:()=>studio.layers.map(L=>({id:L.id,name:L.name,opacity:L.opacity,blend:L.blend,hidden:L.hidden,active:L===activeLayer()})),movePal:(k,to,at)=>movePal(document.querySelector(`.spal[data-pal=${k}]`),to,at),togglePalettes,sZoomTo,sZoomFit,viewScale,
   curBrush,selectBrush,newBrush,editBrush,openBrushEditor,closeBrushEditor,allBrushes,cleanBrush,brushPreview,BUILTIN_BRUSHES,brushStylesChanged,tipCache,styleClasses,
-  fxApply,layerFxOn,openLayerStyle,studioLayer:i=>studio.layers[i],studioOutputs,fxPartner,m3dScene:()=>m3d.scene,m3dSceneFromSrc,cleanScene,m3dSceneMesh,m3dStartScene,m3dFlush,m3dSceneSTL,textSolid,vp:()=>vp,setUi,ui:()=>({mode:ui.mode,on:ui.on,home:!$('#xmb').hidden}),xmbOpen,xmbClose,xmbCat:()=>XMB.cats()[XMB.c].id,xmbItems:()=>XMB.items.map(i=>i.name),zoom:()=>Z};
+  fxApply,layerFxOn,openLayerStyle,studioLayer:i=>studio.layers[i],studioOutputs,fxPartner,m3dScene:()=>m3d.scene,m3dSceneFromSrc,cleanScene,m3dSceneMesh,m3dStartScene,m3dFlush,m3dSceneSTL,textSolid,vp:()=>vp,setUi,ui:()=>({mode:ui.mode,on:ui.on,home:!$('#xmb').hidden}),xmbOpen,xmbClose,xmbCat:()=>XMB.cats()[XMB.c].id,xmbItems:()=>XMB.items.map(i=>i.name),zoom:()=>Z,songIdeas,IDEA_GENRES,IDEA_MODES,openIdeas,meterGroups,barTicks,beatTicks,gridTicks};
 (async()=>{
   checkEnvironment();
   initPanels();fitStage();

@@ -9,7 +9,7 @@ if(/[?&]test(=|&|$)/.test(location.search))window.__pixiwyg={APP_VERSION,ERRS,st
   addLayer,dupLayer,delLayer,mergeDown,movePaintLayer,setActiveLayer,setLayerProp,toggleLayer:i=>toggleLayer(studio.layers[i]),flatURL,layerBlank,sUndo,sRedo,
   layers:()=>studio.layers.map(L=>({id:L.id,name:L.name,opacity:L.opacity,blend:L.blend,hidden:L.hidden,active:L===activeLayer()})),movePal:(k,to,at)=>movePal(document.querySelector(`.spal[data-pal=${k}]`),to,at),togglePalettes,sZoomTo,sZoomFit,viewScale,
   curBrush,selectBrush,newBrush,editBrush,openBrushEditor,closeBrushEditor,allBrushes,cleanBrush,brushPreview,BUILTIN_BRUSHES,brushStylesChanged,tipCache,styleClasses,
-  fxApply,layerFxOn,openLayerStyle,studioLayer:i=>studio.layers[i],studioOutputs,fxPartner,m3dScene:()=>m3d.scene,m3dSceneFromSrc,cleanScene,m3dSceneMesh,m3dStartScene,m3dFlush,m3dSceneSTL,textSolid,vp:()=>vp,setUi,ui:()=>({mode:ui.mode,on:ui.on,home:!$('#xmb').hidden}),xmbOpen,xmbClose,xmbCat:()=>XMB.cats()[XMB.c].id,xmbItems:()=>XMB.items.map(i=>i.name),zoom:()=>Z};
+  fxApply,layerFxOn,openLayerStyle,studioLayer:i=>studio.layers[i],studioOutputs,fxPartner,m3dScene:()=>m3d.scene,m3dSceneFromSrc,cleanScene,m3dSceneMesh,m3dStartScene,m3dFlush,m3dSceneSTL,textSolid,vp:()=>vp,setUi,ui:()=>({mode:ui.mode,on:ui.on,home:!$('#xmb').hidden}),xmbOpen,xmbClose,xmbCat:()=>XMB.cats()[XMB.c].id,xmbItems:()=>XMB.items.map(i=>i.name),zoom:()=>Z,songIdeas,IDEA_GENRES,IDEA_MODES,openIdeas,meterGroups,barTicks,beatTicks,gridTicks};
 (async()=>{
   checkEnvironment();
   initPanels();fitStage();

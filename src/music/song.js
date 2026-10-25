@@ -1,7 +1,8 @@
 // SECTION: sequencer
 // FORMAT: songs are kept in MIDI ticks (PPQ 480) so changing the grid never moves notes; up to 16 tracks, each an
 //   instrument or the drum kit. The .mid is generated on demand, not stored.
-const PPQ=480,SEQ_MAX_TICK=64*12*PPQ;
+// INVARIANT: room for 64 bars of the longest meter (32/2, 64 quarters a bar).
+const PPQ=480,SEQ_MAX_TICK=64*64*PPQ;
 const GM=[[0,'Piano','piano'],[4,'Electric piano','epiano'],[11,'Vibraphone','mallet'],[13,'Xylophone','mallet'],[16,'Organ','organ'],
   [24,'Nylon guitar','pluck'],[29,'Overdriven guitar','drive'],[33,'Electric bass','bass'],[38,'Synth bass','synbass'],[40,'Violin','strings'],
   [48,'Strings','strings'],[56,'Trumpet','brass'],[61,'Brass section','brass'],[65,'Alto sax','reed'],[73,'Flute','flute'],
@@ -24,7 +25,8 @@ function cleanSong(x){const m=cleanMusic(x);return m&&{name:cleanSongName(x.name
 function cleanMusic(m){
   if(!m||typeof m!=='object'||!Array.isArray(m.tracks))return null;
   const int=(v,d,lo,hi)=>Math.round(numIn(v,d,lo,hi));
-  const o={bpm:int(m.bpm,120,20,300),beats:int(m.beats,4,1,12),res:[2,3,4,6,8].includes(+m.res)?+m.res:4,bars:int(m.bars,4,1,64),tracks:[]};
+  const o={bpm:int(m.bpm,120,20,300),beats:int(m.beats,4,1,32),unit:METER_UNITS.includes(+m.unit)?+m.unit:4,res:[2,3,4,6,8].includes(+m.res)?+m.res:4,bars:int(m.bars,4,1,64),tracks:[]};
+  const groups=parseGroups(Array.isArray(m.groups)?m.groups.join('+'):'',o.beats);if(groups)o.groups=groups;
   let total=0;
   for(const t of m.tracks.slice(0,16)){
     if(!t||typeof t!=='object')continue;
@@ -44,5 +46,27 @@ function cleanMusic(m){
   const mf=cleanFx(m.fx);if(mf.length)o.fx=mf;
   return o;
 }
-const songEnd=m=>m.bars*m.beats*PPQ;
+// FORMAT: a meter is beats (the top number, 1–32) of unit (the bottom): 2, 4, 8 or 16, or an irrational 3, 6 or 12,
+//   a third, sixth or twelfth of a whole note (7/3 is seven beats of a triplet half). groups is the additive grouping
+//   that places the accents (7/8 as 2+2+3); without one, meterGroups works it out.
+const METER_UNITS=[2,3,4,6,8,12,16];
+const beatTicks=m=>PPQ*4/(m.unit||4);
+const barTicks=m=>m.beats*beatTicks(m);
+const irrational=m=>(m.unit||4)%3===0;
+// RULE: the note grid divides a quarter in ordinary meters; in an irrational one it divides the beat, in halves,
+//   quarters or eighths, so notes stay on its beats (a sixteenth doesn't divide a 7/3 beat).
+const gridTicks=m=>irrational(m)?beatTicks(m)/({2:2,3:2,4:4,6:4,8:8}[m.res]||4):PPQ/m.res;
+// RULE: default grouping: simple meters of up to four beats accent every beat; 6/8, 9/8 and 12/8 go in threes; the
+//   rest in twos with a three at the end (5 = 2+3, 7 = 2+2+3, 11 = 2+2+2+2+3).
+function meterGroups(m){
+  const g=m.groups,n=m.beats;
+  if(Array.isArray(g)&&g.length&&g.every(x=>Number.isInteger(x)&&x>=1)&&g.reduce((a,b)=>a+b,0)===n)return g;
+  if(n<=4&&(m.unit||4)<=4)return Array(n).fill(1);
+  if((m.unit||4)>=8&&n%3===0)return Array(n/3).fill(3);
+  const out=[];let k=n;while(k>4){out.push(2);k-=2}
+  if(k===4)out.push(2,2);else if(k===3)out.push(3);else if(k===2)out.push(2);else if(out.length)out[out.length-1]++;else out.push(1);
+  return out;
+}
+const parseGroups=(v,beats)=>{const g=String(v||'').split(/[+\s,]+/).filter(Boolean).map(Number);return g.length&&g.every(x=>Number.isInteger(x)&&x>=1)&&g.reduce((a,b)=>a+b,0)===beats?g:null};
+const songEnd=m=>m.bars*barTicks(m);
 

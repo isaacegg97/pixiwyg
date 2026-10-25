@@ -23,6 +23,7 @@ const CMD_ITEMS=[
   {cat:'Tools',name:'Import Markdown…',xmb:'write',hint:'Turn markdown blocks into elements',keys:'',run:()=>openMd()},
   {cat:'Tools',name:'Styles node editor…',xmb:'page',hint:'Fills, shapes, outlines, filters',keys:'',run:()=>openStyleEditor()},
   {cat:'Tools',name:'Page logic node editor…',xmb:'page',hint:'Clicks, timers, state variables',keys:'',run:()=>openLogicEditor()},
+  {cat:'Tools',name:'Song ideas…',hint:'Melody, bassline, drums and chords in a style you pick, at the song’s tempo',keys:'',xmb:'music',run:()=>{setWorkspace('music');openIdeas()}},
   {cat:'Output',name:'Export HTML…',xmb:'output',hint:'Self-contained HTML export',keys:'Ctrl+Shift+S',run:()=>openExport()},
   {cat:'Tools',name:'Load style set…',xmb:'page',hint:'Preview stylesheets, then append or replace',keys:'Ctrl+Shift+O',run:()=>openSset()},
   {cat:'Output',name:'Publish site',xmb:'output',hint:'Send the export to the local publish API',keys:'',run:()=>publishSite()},
