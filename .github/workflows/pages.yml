@@ -1,10 +1,8 @@
-# RULE: publishing a release (not drafting it) deploys its PIXIWYG_*_web.zip to GitHub Pages, so the public site never
-#   runs ahead of the private beta. Run it by hand with a tag to redeploy or roll back to that release.
+# RULE: every release deploys itself to GitHub Pages (release.yml); this is for redeploying, or rolling back to, an
+#   older release's PIXIWYG_*_web.zip by hand.
 # FORMAT: the repository's Settings → Pages → Source must be "GitHub Actions".
 name: Pages
 on:
-  release:
-    types: [published]
   workflow_dispatch:
     inputs:
       tag:
@@ -27,7 +25,7 @@ jobs:
       - name: Fetch the release's web zip
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          TAG: ${{ inputs.tag }}
         run: |
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern '*_web.zip' --dir .
           mkdir site && unzip -q ./*_web.zip -d site
