@@ -239,13 +239,19 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.datas
 function xmbFitPage(){
   const ws=document.body.dataset.ws;if(!ui.on||!state.project||!['page','animate'].includes(ws))return;
   const key=state.project.id+ws;if(XMB.fitted===key)return;XMB.fitted=key;
+  xmbFitContent(false);
+}
+// RULE: a web page fits its content's width, not its design width: a 1280px layout's elements may span less. Framing
+//   (Showtime, a finished site) also zooms in up to 100% and scrolls to the content's top-left; the entry fit only
+//   ever zooms out, so a zoom you chose stays.
+function xmbFitContent(frame){
   if(isFixed()){zoomFit();return}
-  // RULE: a web page fits its content's width, not its design width: a 1280px layout's elements may span less.
-  const sr=stage.getBoundingClientRect();let x0=Infinity,x1=-Infinity;
-  for(const h of stage.querySelectorAll('.el')){const r=h.getBoundingClientRect();if(r.width){x0=Math.min(x0,r.left);x1=Math.max(x1,r.right)}}
-  if(!(x1>x0)){x0=sr.left;x1=sr.right}
-  const w=(x1-x0)/Z,left=(x0-sr.left)/Z,z=Math.min(1,(desk.clientWidth-24)/w);
-  if(z<Z-.01){setZoom(z);desk.scrollLeft=Math.max(0,stage.offsetLeft+left*Z-12)}
+  const sr=stage.getBoundingClientRect();let x0=Infinity,x1=-Infinity,y0=Infinity;
+  for(const h of stage.querySelectorAll('.el')){const r=h.getBoundingClientRect();if(r.width){x0=Math.min(x0,r.left);x1=Math.max(x1,r.right);y0=Math.min(y0,r.top)}}
+  if(!(x1>x0)){x0=sr.left;x1=sr.right;y0=sr.top}
+  const w=(x1-x0)/Z,left=(x0-sr.left)/Z,top=(y0-sr.top)/Z,z=Math.min(1,(desk.clientWidth-24)/w);
+  if(frame?Math.abs(z-Z)>.01:z<Z-.01)setZoom(z);
+  if(frame||z<Z+.01){desk.scrollLeft=Math.max(0,stage.offsetLeft+left*Z-12);if(frame)desk.scrollTop=Math.max(0,stage.offsetTop+top*Z-12)}
 }
 
 // SECTION: XMB touch gestures

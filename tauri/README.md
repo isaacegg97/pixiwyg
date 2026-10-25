@@ -30,6 +30,9 @@ Rust (stable), the build libraries listed in `../tools/README.md`, and `npm ci` 
   `$XDG_RUNTIME_DIR/pixiwyg-publish.sock`).
 - One instance per user; launching again opens another window. Help → Open Log Folder has `pixiwyg.log`.
 - `PIXIWYG_USER_DATA` (scratch profile) and `PIXIWYG_HIDDEN=1` (no window shown) are for tests and scripted runs.
+- `PIXIWYG_SMOKE=1` launches the app as a check: it waits for the page to finish starting, prints what it saw, and
+  exits 0 (started clean), 1 (an error, or no title screen within a minute) or 2 (the page never reported). CI runs it on
+  every platform; pair it with `PIXIWYG_USER_DATA` so it starts like a first launch.
 
 ## Wayland or X11: chosen for you
 

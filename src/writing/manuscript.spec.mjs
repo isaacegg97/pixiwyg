@@ -1,5 +1,5 @@
 // SECTION: manuscripts: flow, manuscript blocks, convert one/all, put back
-import {test, expect, boot, ws, freshPage} from '../../tools/tests/helpers.mjs';
+import {test, expect, boot, ws, freshPage, budget} from '../../tools/tests/helpers.mjs';
 
 const T = (page, fn, arg) => page.evaluate(fn, arg);
 const ESSAY = ['# The Long Walk', '', '*An essay in six parts.*', '']
@@ -183,7 +183,7 @@ test('INVARIANT: an incremental reflow lays out exactly what a full reflow would
   expect(r.pages).toBeGreaterThan(8);
   expect(r.same).toEqual([true, true, true, true, true, true]);
   // PERF: the same-height edit stops at its own page; the end append touches one block.
-  expect(Math.min(r.ms[0], r.ms[4])).toBeLessThan(25);
+  expect(Math.min(r.ms[0], r.ms[4])).toBeLessThan(budget(25));
   expect(errors).toEqual([]);
 });
 

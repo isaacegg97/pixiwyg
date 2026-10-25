@@ -12,6 +12,10 @@ const WEB = {browserName: 'chromium', launchOptions: {args: ['--autoplay-policy=
 export default defineConfig({
   testMatch: /\.spec\.mjs$/,
   timeout: 90_000,
+  // RULE: on CI a systemic failure stops early and says which tests it reached, rather than retrying every test to
+  //   its timeout for hours.
+  maxFailures: process.env.CI ? 12 : 0,
+  globalTimeout: process.env.CI ? 30 * 60_000 : 0,
   expect: {timeout: 15_000},
   retries: process.env.CI ? 1 : 0,
   workers: process.env.CI ? 2 : 4,

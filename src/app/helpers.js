@@ -4,6 +4,8 @@ const viewCenter=()=>{const r=stage.getBoundingClientRect(),d=desk.getBoundingCl
 function imgSize(src){return new Promise(res=>{const i=new Image();i.onload=()=>res({w:i.naturalWidth,h:i.naturalHeight});i.onerror=()=>res({w:0,h:0});i.src=src})}
 function isBlankImage(src){return new Promise(res=>{const i=new Image();i.onload=()=>{const c=document.createElement('canvas');c.width=Math.max(1,Math.min(400,i.width));c.height=Math.max(1,Math.round(c.width*i.height/i.width));const x=c.getContext('2d');x.drawImage(i,0,0,c.width,c.height);const d=x.getImageData(0,0,c.width,c.height).data;for(let k=3;k<d.length;k+=4)if(d[k]>8){res(false);return}res(true)};i.onerror=()=>res(true);i.src=src})}
 function trimmedCanvas(c){
+  // INVARIANT: an empty canvas has nothing to trim; reading it would throw.
+  if(!c.width||!c.height)return null;
   const x=c.getContext('2d'),w=c.width,h=c.height,d=x.getImageData(0,0,w,h).data;let x0=w,y0=h,x1=-1,y1=-1;
   for(let y=0;y<h;y++){const row=y*w*4;for(let i=0;i<w;i++)if(d[row+i*4+3]>0){if(i<x0)x0=i;if(i>x1)x1=i;if(y<y0)y0=y;y1=y}}
   if(x1<0)return null;const pad=2;x0=Math.max(0,x0-pad);y0=Math.max(0,y0-pad);x1=Math.min(w-1,x1+pad);y1=Math.min(h-1,y1+pad);

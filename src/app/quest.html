@@ -1,4 +1,4 @@
-<!-- SECTION: Creative Quest: the kids' guided first hour (intro, the mission card and pointer, the finale) -->
+<!-- SECTION: Creative Quest: the kids' guided first hour (intro, mission cards, the guide and its spotlight, the finale) -->
 <div class="qcard" id="qCard" hidden role="region" aria-label="Creative Quest" aria-live="polite">
   <span class="qpixi" aria-hidden="true">⭐</span>
   <div class="qtext"><small id="qMission"></small><b id="qSay"></b></div>
@@ -7,26 +7,36 @@
     <button class="qgrown" id="qGrown" type="button" aria-label="Grown-ups: hold for 3 seconds to end the Creative Quest"><i></i><span>Grown-up? Hold 3 s to end</span></button>
   </div>
 </div>
-<div class="qring" id="qRing" hidden aria-hidden="true"><span>👆</span></div>
+<div class="qspot" id="qSpot" hidden aria-hidden="true"><span>👆</span></div>
 <div class="qburst" id="qBurst" aria-hidden="true"></div>
 <div class="qstage" id="qIntro" hidden role="dialog" aria-modal="true" aria-labelledby="qIntroH">
   <div class="qpanel">
     <span class="qpixi big" aria-hidden="true">⭐</span>
     <h2 id="qIntroH">Hi! I’m Pixi.</h2>
-    <p>This is your art studio. You can draw, make music, write stories, build in 3D and make things move.</p>
-    <p><b>Let’s go on a Creative Quest!</b> Seven missions. Every mission you finish earns a star.</p>
+    <p>This is your art studio. Together we’ll build your very own <b>mini website</b>, one piece at a time.</p>
+    <p>Seven missions. Every mission you finish earns a star.</p>
     <div class="qstars big" id="qIntroStars" aria-hidden="true"></div>
     <button class="qgo" id="qGo" type="button">Let’s go! ▶</button>
+  </div>
+</div>
+<div class="qstage" id="qMissionCard" hidden role="dialog" aria-modal="true" aria-labelledby="qMcH">
+  <div class="qpanel">
+    <small class="qmcnum" id="qMcNum"></small>
+    <h2 id="qMcH"></h2>
+    <div class="qdemo" id="qMcDemo" aria-hidden="true"></div>
+    <p id="qMcWhat"></p>
+    <p class="qmake" id="qMcMake"></p>
+    <button class="qgo" id="qMcGo" type="button"></button>
   </div>
 </div>
 <div class="qstage" id="qEnd" hidden role="dialog" aria-modal="true" aria-labelledby="qEndH">
   <div class="qpanel">
     <span class="qpixi big" aria-hidden="true">🏆</span>
-    <h2 id="qEndH">You did it!</h2>
-    <p>Seven stars. You’re a real creator now. Everything you made is saved in <b>My Creative Quest</b>.</p>
-    <div class="qstars big" id="qEndStars" aria-hidden="true"></div>
+    <h2 id="qEndH">You built a mini website!</h2>
+    <p>Seven stars. Everything is saved in <b>My Creative Quest</b>.</p>
+    <ul class="qmade" id="qMade"></ul>
     <h3>Ideas to try next</h3>
     <ul class="qideas" id="qIdeas"></ul>
-    <button class="qgo" id="qDone" type="button">Start creating! ✨</button>
+    <div class="qendacts"><button class="qgo ghost" id="qWatch" type="button">▶ Watch my site</button><button class="qgo" id="qDone" type="button">Start creating! ✨</button></div>
   </div>
 </div>

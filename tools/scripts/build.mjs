@@ -82,14 +82,15 @@ export function resolveTheme(css, name) {
 export function builtinThemes() {
   if (!existsSync(themesDir)) return [];
   return readdirSync(themesDir).filter(f => f.endsWith('.css') && f !== 'template.css').sort().map(f => {
-    const css = readFileSync(join(themesDir, f), 'utf8'), m = /SECTION:\s*([^:\n]+):\s*([^\n]*?)(?:\*\/|\n)/.exec(css);
+    const css = readFileSync(join(themesDir, f), 'utf8').replace(/\r\n?/g, '\n'), m = /SECTION:\s*([^:\n]+):\s*([^\n]*?)(?:\*\/|\n)/.exec(css);
     // SAFETY: theme text lands inside the inline script; these would end it or make the parser mangle it.
     return {id: f.replace(/\.css$/, ''), name: m ? m[1].trim() : f.replace(/\.css$/, ''), about: m ? m[2].trim().replace(/\s*An example PIXIWYG interface theme\.?$/, '') : '', css: (() => { const r = resolveTheme(css, f); if (/<\/script|<!--/i.test(r)) throw new Error(`themes/${f} contains </script or <!--`); return r; })()};
   });
 }
 
 // FORMAT: an .html file's whole-line <!-- SECTION: … --> comments are for whoever edits it; the page leaves them out.
-const read = f => { const t = readFileSync(join(src, f), 'utf8'); return f.endsWith('.html') ? t.replace(/^<!-- SECTION:[^\n]*-->\n/gm, '') : t; };
+// INVARIANT: sources are read with LF line endings whatever the checkout used, so every platform builds the same page.
+const read = f => { const t = readFileSync(join(src, f), 'utf8').replace(/\r\n?/g, '\n'); return f.endsWith('.html') ? t.replace(/^<!-- SECTION:[^\n]*-->\n/gm, '') : t; };
 export const joinFiles = files => files.map(f => { const t = read(f); return t.endsWith('\n') ? t : t + '\n'; }).join('').replace(/\n$/, '');
 // SAFETY: an include names a file under src/ and can't nest forever.
 const includes = (html, depth = 0) => html.replace(/^[ \t]*<!-- INCLUDE: ([\w./-]+) -->\n/gm, (m, f) => {
@@ -104,7 +105,7 @@ export function build() {
   const clashes = checkGlobals(src, scripts);
   if (clashes.length) throw new Error('Top-level name clash between modules:\n  ' + clashes.join('\n  '));
   const code = joinFiles(scripts).replace('/* INJECT:THEMES */[]', () => JSON.stringify(builtinThemes()));
-  const html = readFileSync(templatePath, 'utf8')
+  const html = readFileSync(templatePath, 'utf8').replace(/\r\n?/g, '\n')
     .replace('/* INJECT:STYLES */', () => joinFiles(styles))
     .replace('<!-- INJECT:MARKUP -->', () => includes(joinFiles(markup)))
     .replace('/* INJECT:SCRIPTS */', () => code);

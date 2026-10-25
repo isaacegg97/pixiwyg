@@ -13,7 +13,25 @@ on:
 permissions:
   contents: write
 jobs:
+  # RULE: the Playwright suite runs once, in the Playwright image, before any installer is built; each platform then
+  #   launches its real app in smoke mode before packaging it (see ci.yml).
+  test:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
+    defaults:
+      run:
+        working-directory: tools
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('tools/package-lock.json') }}
+      - run: npm ci --prefer-offline --no-audit --no-fund
+      - run: npm test
+
   build:
+    needs: test
     strategy:
       fail-fast: true
       matrix:
@@ -36,12 +54,9 @@ jobs:
           node scripts/version.mjs
           v="$(node -p "require('./package.json').version")"
           test "v$v" = "$GITHUB_REF_NAME" || { echo "tag $GITHUB_REF_NAME but the app says $v"; exit 1; }
-      - run: npx playwright install --with-deps chromium
-      - run: npm test
-
       - name: Build libraries (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libsoup-3.0-dev libgtk-3-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev rpm
+        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libsoup-3.0-dev libgtk-3-dev libssl-dev librsvg2-dev libayatana-appindicator3-dev rpm xvfb dbus-x11
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ runner.os == 'macOS' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
@@ -50,6 +65,17 @@ jobs:
           workspaces: tauri
       - run: cargo test --locked
         working-directory: tauri
+      - name: Launch the app (smoke)
+        working-directory: tauri
+        shell: bash
+        env:
+          PIXIWYG_SMOKE: '1'
+          WEBKIT_DISABLE_COMPOSITING_MODE: '1'
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          node ../tools/scripts/build.mjs
+          if [ "$RUNNER_OS" = Linux ]; then PIXIWYG_USER_DATA="$RUNNER_TEMP/profile" dbus-run-session -- xvfb-run -a cargo run --locked
+          else PIXIWYG_USER_DATA="$RUNNER_TEMP/profile" cargo run --locked; fi
 
       # RULE: macOS signs and notarizes only with the certificate and the Apple ID secrets together; Windows with its
       #   certificate. AppImages, .deb and .rpm are never signed.

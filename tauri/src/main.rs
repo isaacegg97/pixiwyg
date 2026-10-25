@@ -143,6 +143,30 @@ fn serve(root: &Path, req: &Request<Vec<u8>>) -> Response<Vec<u8>> {
   }
 }
 
+// SECTION: smoke run
+// RULE: PIXIWYG_SMOKE=1 launches the real app as a check (CI runs it on every platform): a script injected before the
+//   page's own watches for uncaught errors and for the boot to finish (the title screen up, no missing-feature bar),
+//   then posts what it saw to /__smoke; the shell prints it and exits 0 if the page started clean, 1 if it didn't, 2 if
+//   it never reported.
+fn smoke() -> bool {
+  std::env::var("PIXIWYG_SMOKE").as_deref() == Ok("1")
+}
+const SMOKE_JS: &str = r#"(()=>{if(window.top!==window)return;const t0=Date.now(),errs=[];
+addEventListener('error',e=>errs.push(String(e.message||e)+(e.error&&e.error.stack?' @ '+String(e.error.stack).split('\n').slice(0,4).join(' < '):'')));addEventListener('unhandledrejection',e=>errs.push(String(e.reason&&e.reason.message||e.reason)));
+const send=ok=>fetch('/__smoke',{method:'POST',body:JSON.stringify({ok,errs,ms:Date.now()-t0,ua:navigator.userAgent})}).catch(()=>{});
+const tick=()=>{const t=document.getElementById('title'),env=document.getElementById('envBar'),up=!!t&&!t.hidden&&!!env&&env.hidden;
+  if(up)setTimeout(()=>send(true),1500);else if(Date.now()-t0>60000)send(false);else setTimeout(tick,250)};
+addEventListener('DOMContentLoaded',tick)})();"#;
+fn smoke_report(body: &[u8]) -> ! {
+  let v: serde_json::Value = serde_json::from_slice(body).unwrap_or(serde_json::Value::Null);
+  let ok = v["ok"].as_bool() == Some(true) && v["errs"].as_array().map(|a| a.is_empty()).unwrap_or(false);
+  println!("smoke: {} after {} ms on {}", if ok { "page started clean" } else { "page did NOT start clean" }, v["ms"], v["ua"]);
+  for e in v["errs"].as_array().into_iter().flatten() {
+    println!("smoke: error: {e}");
+  }
+  std::process::exit(if ok { 0 } else { 1 });
+}
+
 // SECTION: logs
 fn log<R: Runtime>(app: &AppHandle<R>, line: &str) {
   if let Ok(dir) = app.path().app_log_dir() {
@@ -225,6 +249,9 @@ fn new_window<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
         let _ = w.show();
       }
     });
+  if smoke() {
+    b = b.initialization_script(SMOKE_JS);
+  }
   // INVARIANT: PIXIWYG_USER_DATA points tests (or anyone) at a scratch profile, away from real projects.
   if let Ok(d) = std::env::var("PIXIWYG_USER_DATA") {
     b = b.data_directory(PathBuf::from(d));
@@ -291,7 +318,12 @@ fn main() {
     .register_asynchronous_uri_scheme_protocol("app", |ctx, req, responder| {
       let root = root(ctx.app_handle());
       // PERF: publishing can take a while; the request is answered off the main thread.
-      std::thread::spawn(move || responder.respond(serve(&root, &req)));
+      std::thread::spawn(move || {
+        if smoke() && req.method() == "POST" && req.uri().path() == "/__smoke" {
+          smoke_report(req.body());
+        }
+        responder.respond(serve(&root, &req))
+      });
     })
     .setup(move |app| {
       let h = app.handle().clone();
@@ -311,6 +343,13 @@ fn main() {
       let info = h.package_info();
       log(&h, &format!("started {} (Tauri {}) on {}-{}{}", info.version, tauri::VERSION, std::env::consts::OS, std::env::consts::ARCH,
         choice.as_ref().map(|c| format!(", {} ({}){}", c.backend, c.reason, if c.no_dmabuf { ", DMA-BUF renderer off (NVIDIA)" } else { "" })).unwrap_or_default()));
+      if smoke() {
+        std::thread::spawn(|| {
+          std::thread::sleep(std::time::Duration::from_secs(120));
+          println!("smoke: the page never reported back");
+          std::process::exit(2);
+        });
+      }
       new_window(&h)?;
       Ok(())
     })

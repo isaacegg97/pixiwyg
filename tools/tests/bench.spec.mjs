@@ -2,7 +2,7 @@
 // RULE: bounds are 10x a dev machine's numbers, there to catch an O(n^2) slipping in, not to grade hardware.
 //   npm run bench prints the timings.
 import {test, expect} from '@playwright/test';
-import {boot, settle} from './helpers.mjs';
+import {boot, settle, budget} from './helpers.mjs';
 
 test('benchmark page: opens clean, boxes are sane, ink rules hold, round-trips, and stays fast', async ({page}, info) => {
   test.setTimeout(180_000);
@@ -38,7 +38,7 @@ test('benchmark page: opens clean, boxes are sane, ink rules hold, round-trips, 
   expect(timings.open).toBeLessThan(30_000);
   expect(timings.renderAll).toBeLessThan(10_000);
   // FIX: the Inspector's style list once rebuilt 13k options per select: 200 selects took 11s; now ~1-3s.
-  expect(timings.select200).toBeLessThan(6_000);
+  expect(timings.select200).toBeLessThan(budget(6_000));
   expect(timings.pack).toBeLessThan(5_000);
   expect(errors).toEqual([]);
 });

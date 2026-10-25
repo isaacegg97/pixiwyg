@@ -36,15 +36,20 @@ function parseMidi(buf){
   const tracks=[...parts.values()].sort((a,b)=>a.ch-b.ch).slice(0,16).map(p=>({name:p.name||(p.ch===9?'Drums':GM.find(g=>g[0]===p.prog)?.[1]||'Program '+(p.prog+1)),drums:p.ch===9,prog:p.ch===9?0:p.prog,vol:100,mute:false,notes:p.notes}));
   return cleanMusic({bpm:Math.round(bpm||120),beats:bt,res:4,bars:Math.min(64,Math.ceil(last/(bt*PPQ))),tracks});
 }
+// RULE: a song reaches the page as a button that plays and stops it: a click node wired to the song's node.
+function songButton(s,at){
+  const st=nextStyleFor('button'),el={id:nid('e'),tag:'button',fileId:st.fileId,selector:st.selector,x:Math.round(at.x),y:Math.round(at.y),z:maxZ()+1,content:'▶ '+s.name};
+  state.els.push(el);const L=state.logic||(state.logic=emptyGraph()),y=40+L.nodes.length*30;
+  const a={id:'n'+nid('').slice(-8)+L.nodes.length,type:'click',x:40,y,f:{...nodeDefaults('click'),el:el.id}},b2={id:'n'+nid('').slice(-8)+(L.nodes.length+1),type:'song',x:320,y,f:{...nodeDefaults('song'),what:'toggle',song:s.id,el:el.id}};
+  L.nodes.push(a,b2);L.wires.push({a:a.id,ap:'fire',b:b2.id,bp:'in'});renderAll();select(el.id);
+  return el;
+}
+$('#seqToPage').onclick=()=>{audio();const s=useSong();if(!s||!state.project)return;pushUndo();const c=viewCenter();songButton(s,{x:c.x-60,y:c.y});save();sfx('pop');
+  status(`“${s.name}” has a button on the page: pressing it plays the song. Double-click it to come back here.`)};
 async function importMidi(file,at){
   let m;try{m=parseMidi(await file.arrayBuffer())}catch(e){status(e.message);return null}
   pushUndo();const s=newSong(cleanSongName(file.name.replace(/\.midi?$/i,'')),m);
-  if(at&&state.project){
-    const st=nextStyleFor('button'),el={id:nid('e'),tag:'button',fileId:st.fileId,selector:st.selector,x:Math.round(at.x),y:Math.round(at.y),z:maxZ()+1,content:'▶ '+s.name};
-    state.els.push(el);const L=state.logic||(state.logic=emptyGraph()),y=40+L.nodes.length*30;
-    const a={id:'n'+nid('').slice(-8)+L.nodes.length,type:'click',x:40,y,f:{...nodeDefaults('click'),el:el.id}},b2={id:'n'+nid('').slice(-8)+(L.nodes.length+1),type:'song',x:320,y,f:{...nodeDefaults('song'),what:'toggle',song:s.id,el:el.id}};
-    L.nodes.push(a,b2);L.wires.push({a:a.id,ap:'fire',b:b2.id,bp:'in'});renderAll();select(el.id);
-  }
+  if(at&&state.project)songButton(s,at);
   save();if(!$('#seqModal').hidden){useSong(s.id);songSync();seqControls();seqTracks();seqLayout();seqDraw()}
   status(`Imported ${s.name}: ${m.tracks.length} track${m.tracks.length===1?'':'s'}, ${m.bars} bars at ${m.bpm} BPM.${at?' Its button plays it; double-click the button to open it in the Sequencer.':''}`);
   return s;

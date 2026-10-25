@@ -6,6 +6,10 @@ import {join} from 'node:path';
 
 export const PUBLISH_SOCK = join(tmpdir(), `pixiwyg-test-publish-${process.getuid ? process.getuid() : 0}.sock`);
 
+// RULE: a timing limit is set on a developer machine; shared CI runners are slower and noisier, so there it is
+//   loosened 4×. A real regression (the 2× to 10× ones these tests exist for) still fails on either.
+export const budget = ms => ms * (process.env.CI ? 4 : 1);
+
 export const pkg = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)));
 
 // INVARIANT: returns page errors except Google Fonts, which a test machine may not reach and the app doesn't need.
