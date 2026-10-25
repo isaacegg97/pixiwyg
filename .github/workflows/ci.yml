@@ -1,50 +1,97 @@
-# RULE: every push and pull request runs the web suite in Chromium on each platform the beta ships to, and the
-#   desktop shell's own tests (cargo test in tauri/) on each. The tooling lives in tools/; the specs live with
-#   their features in src/.
+# RULE: one chain, cheapest and most telling first, each step only if the one before passed:
+#     1. web        the Playwright suite, once, in Microsoft's Playwright image (Chromium and its libraries ready made)
+#     2. app-linux  the desktop shell's tests, then the real app launched (WebKitGTK, under Xvfb) in smoke mode
+#     3. app        the same on macOS (WKWebView) and Windows (WebView2), the dear runners, only after Linux is green
+#   The suite drives Chromium, the same everywhere, so it isn't repeated per platform; what does differ per platform is
+#   the app's own web engine, and the smoke launch checks the page really starts in each one (PIXIWYG_SMOKE in
+#   tauri/src/main.rs). A newer push to the same branch cancels the run before it; docs-only changes don't run.
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore: ['**.md', 'docs/**']
+  pull_request:
+    paths-ignore: ['**.md', 'docs/**']
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   web:
-    timeout-minutes: 40
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # INVARIANT: the image tag is the @playwright/test version in tools/package.json, so its browsers match.
+    container: mcr.microsoft.com/playwright:v1.63.0-noble
     defaults:
       run:
         working-directory: tools
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/cache@v4
         with:
-          node-version: 24
-          cache: npm
-          cache-dependency-path: tools/package-lock.json
-      - run: npm ci
-      - run: npx playwright install --with-deps chromium
+          path: ~/.npm
+          key: npm-${{ hashFiles('tools/package-lock.json') }}
+      - run: npm ci --prefer-offline --no-audit --no-fund
       - run: node scripts/version.mjs
       - run: npm test
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: test-results-${{ matrix.os }}
+          name: test-results
           path: tools/test-results/
 
-  shell:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-22.04, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+  app-linux:
+    needs: web
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: WebKitGTK build libraries
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libsoup-3.0-dev libgtk-3-dev libssl-dev librsvg2-dev
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libwebkit2gtk-4.1-dev libsoup-3.0-dev libgtk-3-dev libssl-dev librsvg2-dev xvfb dbus-x11
+          version: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: tauri
+      - run: node tools/scripts/build.mjs
       - run: cargo test --locked
         working-directory: tauri
+      - run: cargo build --locked
+        working-directory: tauri
+      # HACK: Xvfb has no GPU, so WebKitGTK draws in software; dbus-run-session gives the single-instance plugin a bus.
+      - name: Launch the app (smoke)
+        working-directory: tauri
+        env:
+          PIXIWYG_SMOKE: '1'
+          WEBKIT_DISABLE_COMPOSITING_MODE: '1'
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: PIXIWYG_USER_DATA="$RUNNER_TEMP/profile" dbus-run-session -- xvfb-run -a ./target/debug/pixiwyg
+
+  app:
+    needs: app-linux
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: tauri
+      - run: node tools/scripts/build.mjs
+      - run: cargo test --locked
+        working-directory: tauri
+      - name: Launch the app (smoke)
+        working-directory: tauri
+        shell: bash
+        env:
+          PIXIWYG_SMOKE: '1'
+        run: PIXIWYG_USER_DATA="$RUNNER_TEMP/profile" cargo run --locked

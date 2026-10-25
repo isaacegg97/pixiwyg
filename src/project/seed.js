@@ -19,9 +19,12 @@ async function seed(){
   if(N)E('button',N,'.nes-btn.is-primary',440,330,null,'Press start');
   if(W98)E('div',W98,'.window',380,410,210,'<div class="title-bar"><div class="title-bar-text">Guestbook.exe</div><div class="title-bar-controls"><button aria-label="Minimize"></button><button aria-label="Close"></button></div></div><div class="window-body"><p style="margin:0">Sign below. Be nice.</p></div>');
   state.nextStyle={h1:{fileId:R,selector:'h1'},button:{fileId:B,selector:'.gel'},div:{fileId:R,selector:'.card'}};
-  const art=document.createElement('canvas');art.width=W;art.height=H;
+  // FIX: the desktop shell keeps its window hidden until the page has loaded, so the first boot could find the stage
+  //   0×0 and paint the starter art on an empty canvas, which threw and stopped the boot (about half of first launches
+  //   on Linux). The art gets the size it was drawn for whatever the stage measures.
+  const art=document.createElement('canvas');art.width=Math.max(W,1000);art.height=Math.max(H,700);
   withCtx(art.getContext('2d'),()=>drawSeedArt(ox,oy));
-  state.bgd={base:{c:'#ffffff',role:0},layers:[{id:nid('l'),type:'image',src:art.toDataURL(),w:W,h:H,fit:'once',pos:'left top',scale:100}]};
+  state.bgd={base:{c:'#ffffff',role:0},layers:[{id:nid('l'),type:'image',src:art.toDataURL(),w:art.width,h:art.height,fit:'once',pos:'left top',scale:100}]};
   state._seedArt=art;
 }
 
