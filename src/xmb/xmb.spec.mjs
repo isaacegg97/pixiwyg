@@ -229,3 +229,26 @@ test('XMB drag from the Add panel: the panel slides away so the page takes the d
   expect(await T(page, () => window.__pixiwyg.state().els.length)).toBe(1);
   expect(errors).toEqual([]);
 });
+
+test('XMB touch: dragging a style card sideways onto the page adds it; the song gets a button from the Sequencer', async ({browser}) => {
+  const ctx = await browser.newContext({viewport: {width: 800, height: 1280}, hasTouch: true, isMobile: true});
+  const page = await ctx.newPage();
+  const errors = await xmbBoot(page, {width: 800, height: 1280});
+  await page.locator('.xitem', {hasText: 'New: Web page'}).click();
+  await expect(page.locator('#xmbStrip')).toBeVisible();
+  if ((await page.locator('#xmbAdd').getAttribute('aria-pressed')) !== 'true') await page.click('#xmbAdd');
+  await page.click('#sideL .ptab >> nth=0');
+  const c = await page.locator('#sgrid .scard').first().boundingBox();
+  const x = c.x + c.width / 2, y = c.y + c.height / 2;
+  // FIX: a finger on a card scrolled the list and cancelled the drag.
+  await touch(page, Array.from({length: 14}, (_, i) => [[4, x + i * 40, y + i * 6]]));
+  await expect.poll(() => T(page, () => window.__pixiwyg.state().els.length)).toBe(1);
+
+  await T(page, () => window.__pixiwyg.setWorkspace('music'));
+  await page.click('#xmbSheets [data-sheet=song]');
+  await page.click('#seqToPage');
+  expect(await T(page, () => window.__pixiwyg.state().els.filter(e => e.tag === 'button' && e.content.startsWith('▶')).length)).toBe(1);
+  expect(await T(page, () => window.__pixiwyg.state().logic.nodes.some(n => n.type === 'song'))).toBe(true);
+  expect(errors).toEqual([]);
+  await ctx.close();
+});

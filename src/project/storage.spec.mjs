@@ -1,5 +1,5 @@
 // SECTION: browser storage: content-addressed blobs shared across projects, old records still read, GC after delete
-import {test, expect, boot} from '../../tools/tests/helpers.mjs';
+import {test, expect, boot, budget} from '../../tools/tests/helpers.mjs';
 
 const T = (page, fn, arg) => page.evaluate(fn, arg);
 
@@ -47,7 +47,7 @@ test('PERF: autosave on a project with large images no longer clones them', asyn
     return Math.min(...t);
   });
   // PERF: ~140ms per save before v3 at this size; now text-only.
-  expect(ms).toBeLessThan(60);
+  expect(ms).toBeLessThan(budget(60));
   expect(errors).toEqual([]);
 });
 

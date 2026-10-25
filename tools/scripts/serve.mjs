@@ -1,7 +1,7 @@
 // INVARIANT: serves exactly what the app serves (index.html, lib/, examples/) on :4173 for the web tests.
 import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
-import {extname, join, normalize} from 'node:path';
+import {extname, join, posix} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createRequire} from 'node:module';
 
@@ -20,7 +20,9 @@ createServer(async (req, res) => {
     res.writeHead(r.status, {'content-type': r.type, 'cache-control': 'no-store'}).end(r.body); return;
   }
   let rel = decodeURIComponent(new URL(req.url, 'http://x').pathname).replace(/^\/+/, '') || 'index.html';
-  rel = normalize(rel);
+  // FIX: path.normalize is the platform's, so on Windows lib/x.css came back with a backslash, failed the check below
+  //   and every library file 404ed (each test then stalled until its timeout). URL paths are POSIX everywhere.
+  rel = posix.normalize(rel);
   if (!(rel === 'index.html' || /^(lib|examples)\/[\w.-]+$/.test(rel))) { res.writeHead(404).end(); return; }
   try {
     // INVARIANT: index.html is served stamped, as the desktop app serves it; tests/security.spec checks the file on disk.

@@ -5,6 +5,7 @@ name: CI
 on: [push, pull_request]
 jobs:
   web:
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:

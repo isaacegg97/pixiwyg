@@ -17,7 +17,7 @@ test('the Creative Quest starts from the welcome, steps only by doing, and nothi
   await page.click('#qGo');
   await expect(page.locator('#qCard')).toBeVisible();
   await expect(say(page)).toContainText('Add');
-  await expect(page.locator('#qRing')).toBeVisible();
+  await expect(page.locator('#qSpot')).toBeVisible();
   expect(await T(page, () => window.__pixiwyg.state().project.name)).toBe('My Creative Quest');
   expect(await step(page)).toBe(0);
 
@@ -27,7 +27,7 @@ test('the Creative Quest starts from the welcome, steps only by doing, and nothi
   expect(await step(page)).toBe(0);
   await page.click('#xmbAdd');
   await expect.poll(() => step(page)).toBe(1);
-  await expect(say(page)).toContainText('h1');
+  await expect(say(page)).toContainText('Big Headline');
 
   // RULE: Esc, Back and a reload all leave it running, at the same step.
   await page.keyboard.press('Escape');
