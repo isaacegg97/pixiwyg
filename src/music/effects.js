@@ -14,6 +14,10 @@ const FX_DEFS={
   delay:{name:'Delay',p:[['ms','Time (ms)',20,2000,5,375],['fb','Feedback',0,.95,.01,.35],['mix','Mix',0,1,.01,.3]]},
   reverb:{name:'Reverb',p:[['sec','Length (s)',.2,8,.1,2.2],['decay','Decay',.5,8,.1,3],['mix','Mix',0,1,.01,.3]]},
   pan:{name:'Pan',p:[['pan','Left ↔ right',-1,1,.01,0]]},
+  // RULE: the pump isn't in the chain: each voice ducks on the song's beats as it starts (pxSynth's duck), synth notes,
+  //   SoundFont voices and samples alike.
+  pump:{name:'Sidechain pump',p:[['depth','Depth',0,1,.01,.7],['rate','Pumps a beat',.5,4,.5,1]]},
+  crush:{name:'Bitcrush',p:[['bits','Bits',2,16,1,6],['mix','Mix',0,1,.01,.6]]},
 };
 const FX_MAX=8,SMP_MAX=24,SMP_BYTES=24*1024*1024;
 // INVARIANT: self-contained (exports carry its source). Connects input through the chain to dest; returns the
@@ -39,6 +43,9 @@ function pxFx(ctx,input,chain,dest){
         const sr=ctx.sampleRate,len=Math.max(1,Math.round(sr*Math.min(8,+f.sec||2))),ir=ctx.createBuffer(2,len,sr);let s=1234567;
         for(let c=0;c<2;c++){const dd=ir.getChannelData(c);for(let i=0;i<len;i++){s=(s*1103515245+12345)&0x7fffffff;dd[i]=(s/0x3fffffff-1)*Math.pow(1-i/len,+f.decay||3)}}
         const cv=ctx.createConvolver();cv.buffer=ir;wetDry(cv,cv,+f.mix,out);break}
+      case'crush':{const w=ctx.createWaveShaper(),n=4096,cv=new Float32Array(n),lv=Math.pow(2,Math.round(+f.bits||6)-1);for(let i=0;i<n;i++){const x=i/(n-1)*2-1;cv[i]=Math.round(x*lv)/lv}
+        w.curve=cv;wetDry(w,w,+f.mix,out);break}
+      case'pump':cur.connect(out);break;
       case'pan':{const p=ctx.createStereoPanner();p.pan.value=Math.max(-1,Math.min(1,+f.pan||0));cur.connect(p);p.connect(out);break}
       default:cur.connect(out);
     }
@@ -47,11 +54,14 @@ function pxFx(ctx,input,chain,dest){
   cur.connect(dest);return oscs;
 }
 // INVARIANT: self-contained. One sample hit: re-pitched from its root note unless pitched is off; rings out unless gated.
-function pxSample(ctx,buf,t,p,at,dur,vel,dest){
+//   syn, when given, is the synth whose clock pumps it.
+function pxSample(ctx,buf,t,p,at,dur,vel,dest,syn){
   const s=ctx.createBufferSource(),g=ctx.createGain();s.buffer=buf;
-  if(t.pitched!==false)s.playbackRate.value=Math.pow(2,(p-(t.root??60))/12);
-  g.gain.setValueAtTime((t.vol/127)*(vel/127),at);s.connect(g);g.connect(dest);s.start(at);
-  if(t.gate){g.gain.setTargetAtTime(0,at+dur,.015);s.stop(at+dur+.12)}
+  const rate=t.pitched!==false?Math.pow(2,(p-(t.root??60))/12):1;s.playbackRate.value=rate;
+  g.gain.setValueAtTime((t.vol/127)*(vel/127),at);s.connect(g);s.start(at);
+  const stop=t.gate?at+dur+.12:at+buf.duration/rate;
+  (syn&&syn.duck?syn.duck(t,at,stop,g):g).connect(dest);
+  if(t.gate){g.gain.setTargetAtTime(0,at+dur,.015);s.stop(stop)}
 }
 // SAFETY: effects from files are rebuilt from known kinds and in-range numbers.
 function cleanFx(list){
@@ -95,7 +105,7 @@ async function sampleBuf(url){
 async function samplesReady(m){audio();if(!ac||!m)return;await Promise.all((m.samples||[]).map(s=>{const c=live.bufs.get(s.url);return c instanceof Promise?c:c?null:(sampleBuf(s.url),live.bufs.get(s.url))}))}
 function samplePlay(t,p,at,dur,vel){
   const m=state.music,s=m&&(m.samples||[]).find(x=>x.id===t.smp),b=s&&live.bufs.get(s.url);if(!b||b instanceof Promise){if(s)sampleBuf(s.url);return}
-  const dest=trackIn(t);if(dest)pxSample(ac,b,t,p,at,dur,vel,dest);
+  const dest=trackIn(t);if(dest)pxSample(ac,b,t,p,at,dur,vel,dest,synth);
 }
 
 // SECTION: samples in the song
@@ -103,7 +113,7 @@ function samplePlay(t,p,at,dur,vel){
 //   with bars added if it runs past the end, so the timeline shows how long it really is. A tempo change refits it.
 // FORMAT: a sample is {id, name, url, sec}; sec is the recording's length in seconds.
 const sampleTicks=(m,s)=>Math.max(1,Math.round(s.sec*m.bpm*PPQ/60));
-function fitSongTo(m,tick){const bar=m.beats*PPQ;m.bars=Math.min(64,Math.max(m.bars,Math.ceil(tick/bar)))}
+function fitSongTo(m,tick){const bar=barTicks(m);m.bars=Math.min(64,Math.max(m.bars,Math.ceil(tick/bar)))}
 function refitSamples(m,oldBpm){
   for(const t of m.tracks){const s=t.smp&&(m.samples||[]).find(x=>x.id===t.smp);if(!s||!s.sec)continue;
     const was=Math.round(s.sec*oldBpm*PPQ/60),now=sampleTicks(m,s);

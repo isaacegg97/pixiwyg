@@ -98,5 +98,5 @@ stage.addEventListener('dblclick',e=>{if(playing)return;
   if(el.md){openDoc(el.md);showText(el.mdB);return}
   const sg=songOfEl(el.id);if(sg!==undefined){askOpenSong(el,sg);return}
   if(el.tag==='img'){studioOpenImage(el.content||IMG_PH,{kind:'el',id:el.id},el.w);return}
-  startEdit(el)});
+  startEdit(el,{x:e.clientX,y:e.clientY})});
 

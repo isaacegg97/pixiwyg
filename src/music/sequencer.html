@@ -7,6 +7,7 @@
       <input id="seqSongName" class="sqname" type="text" maxlength="60" aria-label="Song name" title="The song’s name: it names the .mid file and shows in the player">
       <button class="btn sqm" id="seqSongNew" title="Start another song in this project">+ Song</button>
       <button class="btn sqm" id="seqToPage" title="Add a button to the page that plays this song">Put on page</button>
+      <button class="btn sqm" id="seqIdeasBtn" title="Melody, bassline, drums and chords in a style you pick, at this song's tempo">✨ Ideas</button>
       <button class="btn sqm" id="seqSongImport" title="Open a .mid file as a new song (or drop one on the page)">Open .mid…</button><input type="file" id="seqMidiFile" accept=".mid,.midi,audio/midi" hidden>
       <button class="btn sqm" id="seqSongDel" title="Remove this song from the project">×</button>
       <button class="btn sqm" id="seqMasterFx" title="Effects on the whole song, after every track's own">Master FX</button>
@@ -14,22 +15,39 @@
       <span class="sqsep"></span>
       <button class="btn primary" id="seqPlay" aria-pressed="false" title="Play or stop (Space)">▶ Play</button>
       <label class="sqopt"><input type="checkbox" id="seqLoop" checked> Loop</label>
+      <label class="sqopt" title="A metronome while it plays: a high click on each bar, a lower one on the beats"><input type="checkbox" id="seqClick"> Click</label>
       <button class="btn" id="seqRec" aria-pressed="false" title="Record into the selected track from a MIDI keyboard or the computer keys (A–L play, W E T Y U the sharps, Z X change octave). While playing, notes land where you play them; stopped, each lands at the cursor and steps on (R)">● Rec</button>
       <button class="btn sqm" id="seqMidiIn" title="Play and record with a MIDI keyboard">MIDI in…</button>
       <label class="sqopt">Tempo <input type="number" id="seqBpm" min="20" max="300" step="1"> BPM</label>
       <label class="sqopt">Bars <input type="number" id="seqBars" min="1" max="64" step="1"></label>
-      <label class="sqopt">Beats per bar <select id="seqBeats"><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option></select></label>
+      <span class="sqopt sqmeter" role="group" aria-label="Meter"><label for="seqBeats">Meter</label> <input type="number" id="seqBeats" min="1" max="32" step="1" aria-label="Beats in a bar (top number)"> / <select id="seqUnit" aria-label="Beat unit (bottom number)" title="2, 4, 8, 16: half, quarter, eighth, sixteenth. 3, 6, 12: irrational meters, a third, sixth or twelfth of a whole note"><option value="2">2</option><option value="4">4</option><option value="8">8</option><option value="16">16</option><option value="3">3</option><option value="6">6</option><option value="12">12</option></select>
+        <label for="seqGroups" class="sr">Accent groups</label><input type="text" id="seqGroups" class="sqgroups" inputmode="numeric" title="How the beats group, which places the accents: 7/8 as 2+2+3 or 3+2+2. Empty: worked out from the meter" aria-label="Accent groups, like 2+2+3"></span>
       <label class="sqopt">Grid <select id="seqRes"><option value="2">1/8</option><option value="3">1/8 triplets</option><option value="4">1/16</option><option value="6">1/16 triplets</option><option value="8">1/32</option></select></label>
-      <span class="sqopt">Sound <b id="seqSfName">Built-in synth</b><button class="btn sqm" id="seqSfLoad" title="Play with a SoundFont (.sf2) of sampled instruments. You can also drop one on the window.">SoundFont…</button><button class="btn sqm" id="seqSfOff" hidden title="Forget the SoundFont and use the built-in synth">Built-in</button><input type="file" id="seqSfFile" accept=".sf2" hidden></span>
+      <label class="sqopt sqsf" title="What plays the notes: the built-in synth, the bundled TimGM6mb SoundFont of sampled instruments, or a SoundFont (.sf2) of your own. You can also drop a .sf2 on the window.">Sound <select id="seqSound"></select><input type="file" id="seqSfFile" accept=".sf2" hidden></label>
       <span class="grow"></span>
       <button class="btn" id="seqSave" title="Download the song as a Standard MIDI File, for any music program">Save .mid</button>
+      <button class="btn" id="seqMp3" title="Download the song as it sounds here, effects and all, as an MP3">Save .mp3</button>
+      <details class="dd" id="seqMore" hidden><summary class="btn sqm" aria-label="More song tools">More ▾</summary><div class="ddbody" id="seqOverflow"></div></details>
     </div>
     <div class="seqbody">
       <div class="seqtracks"><div id="seqTrackList"></div>
         <div class="row"><button class="btn" id="seqAddMel">+ Instrument</button><button class="btn" id="seqAddDrum">+ Drums</button></div></div>
-      <div class="seqview"><div class="seqscroll" id="seqScroll" tabindex="0" aria-label="Notes: click to add, click a note to remove"><div class="seqspace" id="seqSpace"></div></div><canvas id="seqCanvas"></canvas></div>
+      <div class="seqview">
+        <div class="sqtools" role="toolbar" aria-label="Note tools">
+          <span class="sqseg" role="group" aria-label="Mode"><button class="btn sqm" type="button" id="seqModeDraw" aria-pressed="true" aria-label="Draw" title="Draw: click for a note, click a note to remove it, drag to move. Ctrl+click or Ctrl+drag selects"><span aria-hidden="true">✎</span><span class="sqlbl"> Draw</span></button><button class="btn sqm" type="button" id="seqModeSel" aria-pressed="false" aria-label="Select" title="Select: click notes, Ctrl+click to add, drag a box around them"><span aria-hidden="true">⬚</span><span class="sqlbl"> Select</span></button></span>
+          <button class="btn sqm" type="button" id="seqCopy" disabled aria-label="Copy" title="Copy the selected notes (Ctrl+C)"><span aria-hidden="true">⧉</span><span class="sqlbl"> Copy</span></button>
+          <button class="btn sqm" type="button" id="seqCut" disabled aria-label="Cut" title="Cut the selected notes (Ctrl+X)"><span aria-hidden="true">✂</span><span class="sqlbl"> Cut</span></button>
+          <button class="btn sqm" type="button" id="seqPaste" disabled aria-label="Paste" title="Paste at the cursor, the pink marker on the ruler (Ctrl+V). Click the ruler to move it"><span aria-hidden="true">⎘</span><span class="sqlbl"> Paste</span></button>
+          <button class="btn sqm" type="button" id="seqDup" disabled aria-label="Duplicate" title="A copy of the selection right after it (Ctrl+D)"><span aria-hidden="true">⊕</span><span class="sqlbl"> Duplicate</span></button>
+          <button class="btn sqm" type="button" id="seqDel" disabled aria-label="Delete the selected notes" title="Delete the selected notes (Delete)"><span aria-hidden="true">🗑</span><span class="sqlbl"> Delete</span></button>
+          <span class="grow"></span>
+          <button class="btn sqm" type="button" id="seqLaneBtn" aria-pressed="true" aria-label="Velocity" title="The velocity lane under the notes: how hard each one plays. Drag across it to set them"><span aria-hidden="true">▁▃▆</span><span class="sqlbl"> Velocity</span></button>
+          <span class="sqseg" role="group" aria-label="Zoom"><button class="btn sqm" type="button" id="seqZoomOut" aria-label="Zoom out" title="Zoom out (−, or Ctrl+wheel)">−</button><button class="btn sqm" type="button" id="seqZoomIn" aria-label="Zoom in" title="Zoom in (=, or Ctrl+wheel)">+</button></span>
+        </div>
+        <div class="seqroll"><div class="seqscroll" id="seqScroll" tabindex="0" aria-label="Notes: click to add, click a note to remove, drag a note’s end to change its length"><div class="seqspace" id="seqSpace"></div></div><canvas id="seqCanvas"></canvas></div>
+      </div>
     </div>
-    <div class="row seqfoot"><label class="sqopt" title="The Winamp skin the page’s player wears">Player <select id="seqSkin"></select></label><button class="btn sqm" id="seqSkinLoad" title="Use your own Winamp skin (.wsz), from the Winamp Skin Museum or anywhere">Skin…</button><input type="file" id="seqSkinFile" accept=".wsz,.zip" hidden><button class="btn sqm" id="seqPlayer" title="Open the player with this song">Try the player</button><span class="shelp sqhelp" title="Click or drag to draw notes. Click a note to remove it; drag it to move it or its end to resize it. Shift-click a note for an accent; the wheel over a note sets how hard it plays. Click the keys to hear them, the ruler to choose where play starts. R records; A–L play from the computer keys, Z and X change octave.">Click: note · Drag: move · Wheel: velocity · R: record · A–L: play</span>
+    <div class="row seqfoot"><label class="sqopt" title="The Winamp skin the page’s player wears">Player <select id="seqSkin"></select></label><button class="btn sqm" id="seqSkinLoad" title="Use your own Winamp skin (.wsz), from the Winamp Skin Museum or anywhere">Skin…</button><input type="file" id="seqSkinFile" accept=".wsz,.zip" hidden><button class="btn sqm" id="seqPlayer" title="Open the player with this song">Try the player</button><span class="shelp sqhelp" title="Click or drag to draw notes. Click a note to remove it; drag it to move it or its end to resize it. Shift-click a note for an accent; the wheel over a note sets how hard it plays. Click the keys to hear them, the ruler to choose where play starts. R records; A–L play from the computer keys, Z and X change octave.">Click: note · Drag: move · Drag its end: length · Ctrl+drag: select · Ctrl+C/V: copy, paste at the cursor · Arrows: move selected · Ctrl+wheel: zoom · R: record · A–L: play</span>
       <span class="sqopt" title="Copy a run of bars over and over to the end of the song">Repeat bars <input type="number" id="seqRepA" min="1" max="64" value="1" aria-label="From bar"> – <input type="number" id="seqRepB" min="1" max="64" value="1" aria-label="To bar"></span>
       <label class="sqopt"><input type="checkbox" id="seqRepAll"> every track</label><button class="btn sqm" id="seqRepGo" title="Fill the rest of the song with copies of those bars, replacing what comes after them (undo brings it back)">Fill to the end</button>
       <button class="btn" id="seqClear">Clear track</button><button class="btn primary" id="seqDone">Done</button></div>

@@ -1,0 +1,24 @@
+<!-- SECTION: song ideas panel -->
+<div class="seqfx win seqideas" id="seqIdeas" hidden role="dialog" aria-labelledby="seqIdeasTitle">
+  <div class="tb"><span id="seqIdeasTitle">Song ideas</span><button class="wclose" id="seqIdeasClose" aria-label="Close">×</button></div>
+  <div class="wb">
+    <div class="idgenres" id="seqIdeasGenres" role="radiogroup" aria-label="Style"></div>
+    <div class="idparts" role="group" aria-label="Make">
+      <button class="btn" type="button" data-part="melody" aria-pressed="true">Melody</button>
+      <button class="btn" type="button" data-part="bass" aria-pressed="true">Bass</button>
+      <button class="btn" type="button" data-part="drums" aria-pressed="true">Drums</button>
+      <button class="btn" type="button" data-part="chords" aria-pressed="false">Chords</button>
+    </div>
+    <div class="row idweird">
+      <label class="field2" for="seqIdeasMeter">Meter <select id="seqIdeasMeter"></select></label>
+      <label class="field2" for="seqIdeasSecond" title="Polytonal: the melody (and the chords' top triad) in a second key over the home key">Second key <select id="seqIdeasSecond"><option value="0">None</option><option value="1">Up a half step</option><option value="2">Up a whole step</option><option value="3">Up a minor third</option><option value="4">Up a major third</option><option value="6">A tritone away</option><option value="-1">Surprise me</option></select></label>
+      <label class="field2" for="seqIdeasCycle" title="Polymeter: the melody's phrases repeat every so many beats, drifting across the bar">Melody cycle <select id="seqIdeasCycle"><option value="0">The bar</option><option value="3">3 beats</option><option value="5">5 beats</option><option value="7">7 beats</option><option value="-1">Surprise me</option></select></label>
+    </div>
+    <div class="row">
+      <label class="field2" for="seqIdeasKey">Key <select id="seqIdeasKey"><option value="auto">Surprise me</option></select></label>
+      <label class="sqopt" for="seqIdeasTempo"><input type="checkbox" id="seqIdeasTempo"> <span id="seqIdeasTempoText">Use the style’s tempo</span></label>
+    </div>
+    <div class="row"><button class="btn primary" type="button" id="seqIdeasGo">✨ Generate</button><button class="btn" type="button" id="seqIdeasAgain" disabled title="Replace the last idea with a new one">↻ Another</button><button class="btn" type="button" id="seqIdeasRestyle" title="Keep your notes and move them into this style: its key, groove, instruments and beat">🎨 Restyle song</button></div>
+    <p class="idsays" id="seqIdeasSays" aria-live="polite">Generate starts a new idea; Restyle moves the song you have into the style. Everything is ordinary notes to edit; Undo takes it back.</p>
+  </div>
+</div>

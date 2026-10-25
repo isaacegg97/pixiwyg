@@ -79,7 +79,12 @@ function qTidy(){if(state.els.length>1)try{autoformat()}catch(e){logErr('quest',
 const qFrame=()=>requestAnimationFrame(()=>xmbFitContent(true));
 
 // SECTION: Creative Quest flow
-function startQuest(){
+function startQuest(){$('#qAsk').hidden=false;$('#qAskGo').focus()}
+function qAskClose(){$('#qAsk').hidden=true}
+$('#qAskGo').onclick=()=>{qAskClose();audio();qIntro()};
+$('#qAskNo').onclick=$('#qAskClose').onclick=()=>{qAskClose();audio();sfx('whoosh')};
+$('#qAsk').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();$('#qAskNo').click()}});
+function qIntro(){
   if(!ui.on)setUi('xmb');
   $('#qIntroStars').replaceChildren(...QUEST_MISSIONS.map(([n])=>mkEl('span',{textContent:'☆',title:n})));
   $('#qIntro').hidden=false;$('#qGo').focus();

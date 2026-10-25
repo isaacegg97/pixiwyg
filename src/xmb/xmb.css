@@ -37,14 +37,10 @@ body.xmb #playBar,body.xmb #obModal .obmore,body.xmb #stageHud,body.xmb[data-ws=
 .xmbmenu{position:fixed;inset:0;z-index:99000;display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr);color:var(--ink);touch-action:pan-y;user-select:none;-webkit-user-select:none;
   padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
   background:var(--desk);overflow:hidden;isolation:isolate}
-/* PERF: the wave is its own layer moved by transform, which the compositor does alone; animating background-position
-   repainted the whole screen every frame. */
-.xmbmenu::before{content:'';position:absolute;inset:-25%;z-index:-1;pointer-events:none;will-change:transform;
-  background:radial-gradient(60% 40% at 20% 80%,color-mix(in srgb,var(--hot) 22%,transparent),transparent 70%),radial-gradient(50% 35% at 80% 20%,color-mix(in srgb,var(--sel) 22%,transparent),transparent 70%);
-  animation:xmbwave 24s ease-in-out infinite alternate}
-/* INVARIANT: each part names its row, so the hidden search box leaves its row empty instead of shifting the rest up */
-.xmbtop{grid-row:1}.xmbsearch{grid-row:2}.xmbhead{grid-row:3}.xmbitems{grid-row:4}.xmbfoot{grid-row:5}
-@keyframes xmbwave{to{transform:translate(9%,-7%) rotate(5deg)}}
+/* PERF: the background is still: a moving layer half again the screen's size kept a tablet's GPU busy every frame,
+   and restyled the page 60 times a second, for a decoration. */
+.xmbmenu::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 40% at 15% 85%,color-mix(in srgb,var(--hot) 22%,transparent),transparent 70%),radial-gradient(50% 35% at 85% 15%,color-mix(in srgb,var(--sel) 22%,transparent),transparent 70%)}
 .xmbtop{display:flex;align-items:center;gap:8px;padding:10px 16px 4px}
 .xmbproj{flex:1;min-width:0;display:flex;flex-direction:column}
 .xmbproj b{font:700 18px var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -86,7 +82,7 @@ body.xmb #playBar,body.xmb #obModal .obmore,body.xmb #stageHud,body.xmb[data-ws=
 .xmbwhere b{font:700 13px var(--f-ui)}
 .xmbwhere small{font:600 11px var(--f-mono);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:520px){.xmbstrip .xmbbtn span{display:none}.xmbstrip .xmbbtn{min-width:46px}.xmbwhere small{display:none}}
-@media (prefers-reduced-motion:reduce){.xmbmenu::before{animation:none}.xmbitems.in{animation:none}.xmbcats,.xcat,.xitem{transition:none}}
+@media (prefers-reduced-motion:reduce){.xmbitems.in{animation:none}.xmbcats,.xcat,.xitem{transition:none}}
 
 /* SECTION: XMB sheets: a tool's secondary controls, one at a time, above the strip */
 .xmbsheets{display:flex;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}

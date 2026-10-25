@@ -9,6 +9,10 @@ test('the Creative Quest starts from the welcome, steps only by doing, and nothi
   const errors = await boot(page, '/?test', {welcome: true});
   await expect(page.locator('#obModal')).toBeVisible();
   await page.click('#obQuest');
+  // RULE: it asks a grown-up first, and switches nothing until they say yes.
+  await expect(page.locator('#qAsk')).toBeVisible();
+  expect(await T(page, () => window.__pixiwyg.ui().on)).toBe(false);
+  await page.click('#qAskGo');
   await expect(page.locator('#qIntro')).toBeVisible();
   expect(await T(page, () => window.__pixiwyg.ui().on)).toBe(true);
   // RULE: the intro has one way forward.

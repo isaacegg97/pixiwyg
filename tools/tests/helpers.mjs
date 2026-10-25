@@ -36,6 +36,14 @@ export async function tb(page, sel) {
   await page.click(sel);
 }
 
+// RULE: a sequencer tool that doesn't fit the song bar lives in its More ▾; click it where a person would find it.
+//   It waits two frames first: the bar refits a frame after a resize.
+export async function sq(page, sel) {
+  await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
+  if (!(await page.locator(sel).isVisible())) await page.click('#seqMore summary');
+  await page.click(sel);
+}
+
 // FORMAT: shorthands the specs share: T runs a function in the page, M is the platform's command key.
 export const T = (page, fn, arg) => page.evaluate(fn, arg);
 export const M = process.platform === 'darwin' ? 'Meta' : 'Control';

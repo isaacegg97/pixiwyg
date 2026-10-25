@@ -1,5 +1,5 @@
 // SECTION: sequencer: grid notes, preview synth, Standard MIDI File out
-import {test, expect, boot, ws} from '../../tools/tests/helpers.mjs';
+import {test, expect, boot, ws, T, sq} from '../../tools/tests/helpers.mjs';
 
 // FORMAT: minimal SMF reader: format, tracks, every event with its absolute tick
 function readMidi(buf) {
@@ -54,7 +54,10 @@ test('notes drawn on the grid save as a MIDI file a player can read', async ({pa
   expect(await page.evaluate(() => window.__pixiwyg.state().music.tracks[0].notes.length)).toBe(1);
   await page.mouse.click(b.x, b.y);
   await page.locator('.sqtrack').nth(1).click({position: {x: 4, y: 4}});
-  const k = await cell(page, 0, 11);
+  // RULE: the kick is the kit's bottom row, wherever the hand percussion pushed it; scroll it into view.
+  const kick = await page.evaluate(() => { const i = window.__pixiwyg.DRUMS.findIndex(d => d[0] === 36), sc = document.getElementById('seqScroll'); sc.scrollTop = Math.max(0, 22 + i * 26 - sc.clientHeight / 2); return i; });
+  await page.waitForTimeout(100);
+  const k = await cell(page, 0, kick);
   await page.mouse.move(k.x, k.y); await page.mouse.down();
   for (let s = 1; s < 4; s++) await page.mouse.move(k.x + s * 24, k.y);
   await page.mouse.up();
@@ -63,7 +66,7 @@ test('notes drawn on the grid save as a MIDI file a player can read', async ({pa
   await page.locator('.sqtrack').nth(0).locator('select').selectOption('33');
   await page.fill('#seqBpm', '90'); await page.locator('#seqBpm').dispatchEvent('change');
   await page.fill('#seqSongName', 'Night Bus');
-  const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#seqSave')]);
+  const [dl] = await Promise.all([page.waitForEvent('download'), sq(page, '#seqSave')]);
   expect(dl.suggestedFilename()).toBe('night-bus.mid');
   const bytes = Buffer.concat(await (await dl.createReadStream()).toArray());
   const f = readMidi(bytes);
@@ -142,9 +145,9 @@ function tinySF2() {
 
 test('a SoundFont replaces the synth, lists its instruments and kits, and stays loaded', async ({page}) => {
   const errors = await open(page);
-  await expect(page.locator('#seqSfName')).toHaveText('Built-in synth');
+  await expect(page.locator('#seqSound option:checked')).toHaveText('Built-in synth');
   await page.setInputFiles('#seqSfFile', {name: 'tiny.sf2', mimeType: 'audio/x-soundfont', buffer: tinySF2()});
-  await expect(page.locator('#seqSfName')).toHaveText('tiny.sf2');
+  await expect(page.locator('#seqSound option:checked')).toHaveText('tiny.sf2');
   expect(await page.evaluate(() => window.__pixiwyg.soundfont())).toEqual({name: 'Tiny Test Font', file: 'tiny.sf2', presets: 2});
   expect(await page.locator('.sqtrack').nth(0).locator('select > option').allTextContents()).toEqual(['1. Sine Piano']);
   expect(await page.locator('.sqtrack').nth(1).locator('select > option').allTextContents()).toEqual(['9. Tiny Kit', 'Kit 1 (not in this SoundFont)']);
@@ -153,16 +156,18 @@ test('a SoundFont replaces the synth, lists its instruments and kits, and stays 
   await page.click('#seqPlay'); await page.waitForTimeout(400); await page.click('#seqPlay');
   expect(await page.evaluate(() => window.__pixiwyg.sfStats.voices)).toBeGreaterThan(v0 + 1);
   // FORMAT: the kit goes in the .mid as a program change on channel 10
-  const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#seqSave')]);
+  const [dl] = await Promise.all([page.waitForEvent('download'), sq(page, '#seqSave')]);
   const f = readMidi(Buffer.concat(await (await dl.createReadStream()).toArray()));
   expect(f.tracks[2].find(e => e.type === 0xc0)).toMatchObject({ch: 9, data: [8]});
   await page.reload();
   await page.waitForFunction(() => window.__pixiwyg && !document.getElementById('title').hidden);
   await page.evaluate(async () => { await window.__pixiwyg.newProject('Again', true, {type: 'web'}); });
   await ws(page, 'music');
-  await expect(page.locator('#seqSfName')).toHaveText('tiny.sf2');
-  await page.click('#seqSfOff');
-  await expect(page.locator('#seqSfName')).toHaveText('Built-in synth');
+  await expect(page.locator('#seqSound option:checked')).toHaveText('tiny.sf2');
+  await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
+  if (!(await page.locator('#seqSound').isVisible())) await page.click('#seqMore summary');
+  await page.selectOption('#seqSound', 'synth');
+  await expect(page.locator('#seqSound option:checked')).toHaveText('Built-in synth');
   expect(errors).toEqual([]);
 });
 
@@ -184,7 +189,7 @@ test('a full General MIDI SoundFont loads and covers every program and the drum 
   test.skip(!existsSync(FLUID), 'no FluidR3_GM.sf2 on this machine');
   const errors = await open(page);
   await page.setInputFiles('#seqSfFile', FLUID);
-  await expect(page.locator('#seqSfName')).toHaveText('FluidR3_GM.sf2', {timeout: 60_000});
+  await expect(page.locator('#seqSound option:checked')).toHaveText('FluidR3_GM.sf2', {timeout: 60_000});
   const r = await page.evaluate(() => {
     const T = window.__pixiwyg; T.audio(); const out = T.seqOut(), missing = [];
     for (let prog = 0; prog < 128; prog++) if (![60, 36].some(p => T.sfPlay({drums: false, prog, vol: 100}, p, 0, .05, 100, out))) missing.push(prog);   // COMPAT: some GM instruments (contrabass) stop short of middle C
@@ -286,7 +291,7 @@ test('samples: a WAV loads onto its own track, plays pitched or not, survives sa
   await expect(page.locator('#seqFxList .sqfx')).toHaveCount(2);
   await page.locator('#seqFxList .sqfx').first().locator('input[data-k=mix]').fill('0.7');
   await page.locator('#seqFxList .sqfx').nth(1).locator('button[aria-label="Earlier in the chain"]').click();
-  await page.click('#seqMasterFx'); await page.selectOption('#seqFxAdd', 'comp');
+  await sq(page, '#seqMasterFx'); await page.selectOption('#seqFxAdd', 'comp');
   const s = await page.evaluate(async () => { const P = window.__pixiwyg, m = P.state().music, f1 = P.packProject(), k = P.filesKey(f1), man = JSON.parse(new TextDecoder().decode(typeof f1.get('manifest.json') === 'string' ? new TextEncoder().encode(f1.get('manifest.json')) : f1.get('manifest.json')));
     await P.openFiles(new Map(await P.unzip(P.zipFiles(P.sortEntries(f1)))), {});
     const m2 = P.state().songs[0];
@@ -298,5 +303,114 @@ test('samples: a WAV loads onto its own track, plays pitched or not, survives sa
   await expect(page.locator('#status')).toContainText('Added “long” (0:10)');
   expect(await clip()).toEqual({notes: 1, t: 0, d: 9600, p: 60, bars: 5});
   expect(await page.evaluate(() => Math.round(window.__pixiwyg.cleanMusic(window.__pixiwyg.state().music).samples.at(-1).sec))).toBe(10);
+  expect(errors).toEqual([]);
+});
+
+test('piano roll: drag a note’s end to change its length, zoom keeps the pointer’s moment, a picked track shows its notes, the view follows the playhead', async ({page}) => {
+  const errors = await boot(page);
+  await page.setViewportSize({width: 1400, height: 900});
+  await T(page, async () => { const P = window.__pixiwyg; await P.newProject('Roll'); P.setWorkspace('music'); });
+  await T(page, () => { const P = window.__pixiwyg, m = P.state().music; m.bars = 8; m.bpm = 300;
+    m.tracks[0].notes = [{t: 0, d: 480, p: 72, v: 100}];
+    m.tracks.push({id: 'tlow', name: 'Low', drums: false, prog: 33, vol: 100, mute: false, notes: [{t: 0, d: 960, p: 31, v: 100}]});
+    P.closeSeq(); P.openSeq(); });
+  await page.waitForTimeout(200);
+  const geo = () => T(page, () => { const sc = document.getElementById('seqScroll'), r = sc.getBoundingClientRect(); return {l: r.left, t: r.top, sl: sc.scrollLeft, st: sc.scrollTop, h: sc.clientHeight, w: sc.clientWidth, space: parseFloat(document.getElementById('seqSpace').style.width)}; });
+  const notes = i => T(page, i => window.__pixiwyg.state().music.tracks[i].notes.map(n => [n.t, n.d]), i);
+  let g = await geo();
+  const y = g.t + 22 + (96 - 72) * 15 - g.st + 7, x = g.l + 96 + 96 - 3 - g.sl;
+  await page.mouse.move(x, y);
+  expect(await T(page, () => document.getElementById('seqScroll').style.cursor)).toBe('ew-resize');
+  await page.mouse.down(); await page.mouse.move(x + 100, y, {steps: 5}); await page.mouse.up();
+  expect(await notes(0)).toEqual([[0, 1080]]);
+  await T(page, () => window.__pixiwyg.undo());
+  expect(await notes(0)).toEqual([[0, 480]]);
+  // RULE: a click on a note's end without a drag leaves it alone.
+  await page.mouse.click(x, y);
+  expect(await notes(0)).toEqual([[0, 480]]);
+  await page.click('.sqtrack:nth-child(3)');
+  g = await geo();
+  const lowY = (96 - 31) * 15;
+  expect(lowY).toBeGreaterThanOrEqual(g.st);
+  expect(lowY + 15).toBeLessThanOrEqual(g.st + g.h - 22);
+  const tickAt = g => (g.l + 500 - g.l - 96 + g.sl) / ((g.space - 96) / (8 * 4));
+  // INVARIANT: zooming out at the very start can't keep the anchor (nothing left of zero to scroll to); start scrolled.
+  await T(page, () => { document.getElementById('seqScroll').scrollLeft = 800; });
+  g = await geo();
+  const before = tickAt(g);
+  await page.mouse.move(g.l + 500, g.t + 200);
+  await page.keyboard.down('Control'); await page.mouse.wheel(0, 300); await page.keyboard.up('Control');
+  g = await geo();
+  expect(g.space).toBeLessThan(96 + 32 * 96);
+  expect(Math.abs(tickAt(g) - before)).toBeLessThan(0.05);
+  await page.focus('#seqScroll');
+  for (let i = 0; i < 4; i++) await page.keyboard.press('Equal');
+  await page.click('#seqPlay');
+  await expect.poll(async () => (await geo()).sl, {timeout: 8000}).toBeGreaterThan(0);
+  await page.click('#seqPlay');
+  expect(errors).toEqual([]);
+});
+
+test('piano roll: box select, copy and paste at the cursor, duplicate, nudge, delete, the velocity lane, Select mode', async ({page}) => {
+  const errors = await open(page);
+  const P = () => window.__pixiwyg;
+  await page.evaluate(() => { const m = window.__pixiwyg.state().music; m.tracks[0].notes = [[0, 60], [240, 64], [480, 67], [1920, 60]].map(([t, p]) => ({t, d: 240, p, v: 100})); });
+  const notes = () => page.evaluate(() => window.__pixiwyg.state().music.tracks[0].notes.map(n => [n.t, n.p]));
+  const sel = () => page.evaluate(() => window.__pixiwyg.seqSel());
+  // RULE: Ctrl+drag on empty grid draws a selection box in Draw mode.
+  const a = await cell(page, 0, 96 - 68), b = await cell(page, 700, 96 - 58);
+  await page.mouse.move(a.x - 2, a.y);
+  await page.keyboard.down('Control'); await page.mouse.down(); await page.mouse.move(b.x, b.y, {steps: 4}); await page.mouse.up(); await page.keyboard.up('Control');
+  expect(await sel()).toEqual([[0, 60], [240, 64], [480, 67]]);
+  await expect(page.locator('#seqCopy')).toBeEnabled();
+  await page.keyboard.press('Control+c');
+  await expect(page.locator('#seqPaste')).toBeEnabled();
+  // RULE: the ruler sets the cursor; a paste lands there, is selected, and moves the cursor a whole number of beats on.
+  const r = await cell(page, 3840, 0), rulerY = await page.evaluate(() => document.getElementById('seqCanvas').getBoundingClientRect().top + 11);
+  await page.mouse.click(r.x, rulerY);
+  expect(await page.evaluate(() => window.__pixiwyg.seqCursor())).toBe(3840);
+  await page.keyboard.press('Control+v');
+  expect(await sel()).toEqual([[3840, 60], [4080, 64], [4320, 67]]);
+  expect(await page.evaluate(() => window.__pixiwyg.seqCursor())).toBe(4800);
+  await page.click('#seqPaste');
+  expect(await sel()).toEqual([[4800, 60], [5040, 64], [5280, 67]]);
+  await page.focus('#seqScroll');
+  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('Shift+ArrowRight');
+  expect(await sel()).toEqual([[6720, 61], [6960, 65], [7200, 68]]);
+  await page.keyboard.press('Delete');
+  expect((await notes()).length).toBe(7);
+  await page.keyboard.press('Control+z');
+  expect((await notes()).length).toBe(10);
+  await page.keyboard.press('Control+a');
+  expect((await sel()).length).toBe(10);
+  await page.keyboard.press('Escape');
+  expect(await sel()).toEqual([]);
+  await expect(page.locator('#seqCopy')).toBeDisabled();
+  // RULE: Duplicate puts a copy right after the selection; the clipboard keeps what was copied.
+  await page.evaluate(() => { const m = window.__pixiwyg.state().music; m.tracks[0].notes = m.tracks[0].notes.filter(n => n.t < 1920); });
+  await page.keyboard.press('Control+a');
+  await page.keyboard.press('Control+d');
+  expect(await sel()).toEqual([[960, 60], [1200, 64], [1440, 67]]);
+  // RULE: dragging across the velocity lane sets how hard notes play, from the stem height.
+  await page.keyboard.press('Escape');
+  if (await page.locator('#seqLaneBtn').getAttribute('aria-pressed') !== 'true') await page.click('#seqLaneBtn');
+  await page.evaluate(() => { document.getElementById('seqScroll').scrollLeft = 0; });
+  const lane = await page.evaluate(() => { const c = document.getElementById('seqScroll').getBoundingClientRect(), sc = document.getElementById('seqScroll'); return {y: c.top + sc.clientHeight - 10, l: c.left}; });
+  const x0 = (await cell(page, 0, 0)).x - 3, x1 = (await cell(page, 500, 0)).x;
+  await page.mouse.move(x0, lane.y); await page.mouse.down(); await page.mouse.move(x1, lane.y, {steps: 6}); await page.mouse.up();
+  const vs = await page.evaluate(() => window.__pixiwyg.state().music.tracks[0].notes.map(n => [n.t, n.v]));
+  expect(vs.filter(([t]) => t <= 480).map(([, v]) => v < 25)).toEqual([true, true, true]);
+  expect(vs.filter(([t]) => t >= 960).every(([, v]) => v === 100)).toBe(true);
+  // RULE: in Select mode a click picks a note instead of removing it, and a click on empty grid lets go.
+  await page.click('#seqModeSel');
+  const n = await cell(page, 960, 96 - 60);
+  await page.mouse.click(n.x + 4, n.y);
+  expect(await sel()).toEqual([[960, 60]]);
+  expect((await notes()).length).toBe(6);
+  const e = await cell(page, 2880, 96 - 50);
+  await page.mouse.click(e.x, e.y);
+  expect(await sel()).toEqual([]);
+  expect((await notes()).length).toBe(6);
   expect(errors).toEqual([]);
 });

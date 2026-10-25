@@ -50,7 +50,7 @@ async function editorSong(id){
   const key=JSON.stringify(m)+'|'+(soundfont?soundfont.file:'');
   if(songCache&&songCache.key===key)return songCache;
   status('Rendering the song…');
-  const buf=await pxRender(m,GMV,soundfont?(ctx,out,syn)=>(t,p,at,d,v,dest)=>{if(!sfPlay(t,p,at,d,v,dest||out,ctx))syn.note(t,p,at,d,v,dest)}:null);
+  const buf=await pxRender(m,GMV,sfRender());
   songCache={key,blob:pxWav(buf),duration:buf.duration,title:m.name,artist:state.project?state.project.name:'PIXIWYG'};
   status('');return songCache;
 }

@@ -5,7 +5,7 @@ const pickEl=sel=>{const el=byStyle(sel);select(el?el.id:null)};
 const K=(k,d)=>[k,d];
 const FULL_TOUR=[
   // RULE: the tour opens on the title screen; Next builds the demo and continues inside it.
-  {onTitle:true,target:'#tKinds',spot:['#tKinds','#tKindOpts','#tBlank'],title:'Start with a canvas',body:'Every project begins here, with what you’re making: a web page, a printed flyer or poster, a folded zine, an eight-page mini zine, or a fixed screen size. Click one to see its sizes; Create makes a blank one. Next opens the zine fair demo, a web page, to show everything working.',
+  {onTitle:true,enter:()=>{$('#tMore').open=true},target:'#tKinds',spot:['#tKinds','#tKindOpts','#tBlank'],title:'Start with a canvas',body:'Every project begins here, with what you’re making: a web page, a printed flyer or poster, a folded zine, an eight-page mini zine, or a fixed screen size. Click one to see its sizes; Create makes a blank one. Next opens the zine fair demo, a web page, to show everything working.',
    keys:[K('Esc','Leave the tour at any step')]},
   {title:'Welcome to PIXIWYG',body:'This is the zine fair demo, already saved as your own project. The tour shows you around and ends right here, so nothing you try along the way is lost or wasted.',
    keys:[K('Esc','Leave the tour at any step')],enter:()=>select(null)},
@@ -164,7 +164,7 @@ const PROFILES={
        keys:[K('Space','Play or stop'),K('Right-click','Remove a note'),K(M+'+Z','Undo')]},
       {ws:'music',target:'#seqRec',spot:['#seqRec','#seqMidiIn'],title:'Playing it in',body:'● Rec, then play: a MIDI keyboard (MIDI in…) or the computer keys, A to L, with Z and X for octaves. Playing, notes land where you hit them; stopped, each lands at the cursor and steps on, chords included. The wheel over a note sets how hard it’s played.',
        keys:[K('R','Record on or off'),K('A – L','Play notes'),K('Z X','Octave down, up')]},
-      {ws:'music',target:'#seqSfLoad',spot:['#seqSfName','#seqSfLoad','#seqSave','#seqSkin'],title:'Better sounds, the file, the player',body:'The built-in synth is honest about being a synth. Load a SoundFont (.sf2) and the sequencer plays real sampled instruments instead. Save .mid writes the song as a standard MIDI file. Player picks the Winamp skin the page’s player wears.',
+      {ws:'music',target:'#seqSound',spot:['#seqSound','#seqSave','#seqSkin'],title:'Better sounds, the file, the player',body:'The built-in synth is honest about being a synth. Sound switches to TimGM6mb, a SoundFont of real sampled instruments that comes with PIXIWYG, or to a SoundFont (.sf2) of your own. Save .mid writes the song as a standard MIDI file. Player picks the Winamp skin the page’s player wears.',
       },
       {target:'#playBtn',spot:['#playBtn','#logicBtn'],title:'The player on the page',body:'The ▶ on this page is wired to Play the song in Logic, and the song plays in Webamp: a real Winamp, skins and all. Press ▶ Play up here (or Space), then the page’s ▶. The Sequencer picks the skin; bring your own .wsz from the Winamp Skin Museum.',
        keys:[K(M+'+Enter','Play the page'),K('Esc','Stop')],enter:()=>select(null)},

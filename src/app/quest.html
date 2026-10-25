@@ -40,3 +40,18 @@
     <div class="qendacts"><button class="qgo ghost" id="qWatch" type="button">▶ Watch my site</button><button class="qgo" id="qDone" type="button">Start creating! ✨</button></div>
   </div>
 </div>
+<!-- RULE: the quest asks first, in grown-up words: it is for kids, it changes the interface, and only a grown-up ends it. -->
+<div class="modal" id="qAsk" hidden>
+  <div class="win qaskwin" role="dialog" aria-modal="true" aria-labelledby="qAskH">
+    <div class="tb"><span id="qAskH">Start the Creative Quest?</span><button class="wclose" id="qAskClose" aria-label="Not now" title="Not now (Esc)">×</button></div>
+    <div class="wb">
+      <p>A guided tour for kids, about eight and up: seven hands-on missions that build a little website with a drawing, a tune, a story, a 3D shape and something that moves.</p>
+      <ul class="qasklist">
+        <li>It starts a new project, <b>My Creative Quest</b>. Whatever is open now stays saved.</li>
+        <li>It switches to the <b>touch interface</b>, made for tablets. Settings switches back.</li>
+        <li>Kids can’t skip it by accident: a grown-up ends it by <b>holding the button in the corner for 3 seconds</b>.</li>
+      </ul>
+      <div class="row"><span class="grow"></span><button class="btn" id="qAskNo" type="button">Not now</button><button class="btn primary" id="qAskGo" type="button">Start the quest</button></div>
+    </div>
+  </div>
+</div>

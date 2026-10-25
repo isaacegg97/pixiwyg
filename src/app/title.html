@@ -1,31 +1,42 @@
-<!-- SECTION: title screen and new-project canvas picker -->
+<!-- SECTION: home screen: start something, learn, carry on; the new-project canvas picker folded under Start -->
 <div class="title" id="title" hidden>
-  <div class="win tpanel" role="dialog" aria-modal="true" aria-label="PIXIWYG projects">
-    <div class="tb"><span>Projects</span></div>
+  <div class="win tpanel" role="dialog" aria-modal="true" aria-label="PIXIWYG home">
+    <div class="tb"><span>Home</span></div>
     <div class="wb tbody">
-      <div class="logo biglogo" aria-hidden="true"><b>P</b><b>I</b><b>X</b><b>I</b><b>W</b><b>Y</b><b>G</b></div>
-      <p class="tagline">Paint under it. Style on top of it.</p>
-      <button class="btn primary" id="tContinue" hidden>Back</button>
-      <section class="tsec"><h3>New project</h3>
-        <div class="kinds" id="tKinds" role="group" aria-label="Canvas"></div>
-        <div id="tKindOpts"></div>
-        <div class="row"><input id="tName" type="text" placeholder="Name it, or don't" aria-label="New project name" maxlength="80">
-          <select id="tStart" aria-label="Start in" title="The workspace it opens in; every project has them all"><option value="">Start in: what suits the canvas</option><option value="page">Start in Page</option><option value="write">Start in Write</option><option value="paint">Start in Paint</option><option value="music">Start in Music</option><option value="animate">Start in Animate</option></select>
-          <button class="btn primary" id="tBlank" title="Start it with no stylesheets yet">Create</button>
-</div>
-      </section>
-      <section class="tsec"><h3>New here?</h3>
-        <div class="row"><button class="btn primary" id="tTour">Show me around</button>
-          <small class="credit">Tell it roughly who you are and get a short tour on an example page, or take the full tour, or learn to build components.</small></div>
-      </section>
-      <section class="tsec"><h3>Open a file</h3>
-        <div class="row"><label class="btn" for="tFile">Open project file…</label><input class="sr" type="file" id="tFile" accept=".pixiwyg,.zip,.json,application/zip">
-          <small class="credit">A .pixiwyg file or a backup zip, or drop one anywhere on this screen.</small></div>
-      </section>
-      <section class="tsec"><h3>In this browser</h3><div class="tlist" id="tList"></div>
-        <div class="row"><button class="btn" id="tBackup" title="Download every project and the primitives library as one zip">Back up everything</button><small class="credit" id="tStorage"></small></div>
-        <small class="credit">Projects save themselves here as you work. Save file downloads a copy you can keep, share or open somewhere else.</small></section>
+      <header class="thead">
+        <div class="logo biglogo" aria-hidden="true"><b>P</b><b>I</b><b>X</b><b>I</b><b>W</b><b>Y</b><b>G</b></div>
+        <p class="tagline">Paint under it. Style on top of it.</p>
+        <button class="btn primary" id="tContinue" hidden>Back</button>
+      </header>
+      <div class="tcols">
+        <div class="tcol">
+          <section class="tsec" aria-labelledby="tStartH"><h3 id="tStartH">Start something</h3>
+            <div class="row"><input id="tName" type="text" placeholder="Name it, or don't" aria-label="New project name" maxlength="80"></div>
+            <div class="tstarts" id="tStarts" role="group" aria-labelledby="tStartH"></div>
+            <details class="tmore" id="tMore"><summary>Choose a canvas and size…</summary>
+              <div class="kinds" id="tKinds" role="group" aria-label="Canvas"></div>
+              <div id="tKindOpts"></div>
+              <div class="row">
+                <select id="tStart" aria-label="Start in" title="The workspace it opens in; every project has them all"><option value="">Start in: what suits the canvas</option><option value="page">Start in Page</option><option value="write">Start in Write</option><option value="paint">Start in Paint</option><option value="music">Start in Music</option><option value="animate">Start in Animate</option><option value="model">Start in 3D</option></select>
+                <button class="btn primary" id="tBlank" title="Start it with no stylesheets yet">Create</button>
+              </div>
+            </details>
+          </section>
+          <section class="tsec" aria-labelledby="tLearnH"><h3 id="tLearnH">Learn</h3>
+            <div class="ttours" id="tTours" role="group" aria-labelledby="tLearnH"></div>
+            <div class="row"><button class="btn" id="tTour">Pick a tour for me…</button><small class="credit">Say roughly who you are, pick a look, and get the tour that fits.</small></div>
+          </section>
+        </div>
+        <div class="tcol">
+          <section class="tsec" aria-labelledby="tGoH"><h3 id="tGoH">Continue</h3>
+            <div class="tlist" id="tList"></div>
+            <div class="row"><label class="btn" for="tFile">Open project file…</label><input class="sr" type="file" id="tFile" accept=".pixiwyg,.zip,.json,application/zip">
+              <button class="btn" id="tBackup" title="Download every project and the primitives library as one zip">Back up everything</button></div>
+            <small class="credit">A .pixiwyg file or a backup zip opens here, or drop one anywhere on this screen. Projects save themselves in this browser as you work; Save file keeps a copy.</small>
+            <small class="credit" id="tStorage"></small>
+          </section>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-

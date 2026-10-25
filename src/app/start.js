@@ -11,7 +11,7 @@
 //   RULE       product behaviour the code enforces on purpose; changing it is a design decision
 //   TODO       known gap
 // FORMAT: written into exports, project manifests and problem reports; tools/package.json must match (tests assert it).
-const APP_VERSION='1.0.0-beta.1';
+const APP_VERSION='1.1.0-rc.1';
 // INVARIANT: last 50 errors persist across reloads so a report filed after a crash still has them.
 const ERRS=(()=>{try{const a=JSON.parse(localStorage.getItem('pixiwyg.errors'));return Array.isArray(a)?a.slice(-50):[]}catch(e){return[]}})();
 function logErr(kind,msg,stack){ERRS.push({t:new Date().toISOString(),v:APP_VERSION,kind,msg:String(msg??'').slice(0,500),stack:String(stack||'').slice(0,1200)});if(ERRS.length>50)ERRS.splice(0,ERRS.length-50);try{localStorage.setItem('pixiwyg.errors',JSON.stringify(ERRS))}catch(e){}}

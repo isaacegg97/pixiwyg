@@ -4,7 +4,7 @@ async function showTitle(){
   await flushSave();if(more.open)more.open=false;
   const cur=state.project,list=await listProjects(),box=$('#tList');box.replaceChildren();
   $('#tContinue').hidden=!cur;if(cur)$('#tContinue').textContent=`Back to ${cur.name}`;
-  if(!list.length)box.append(mkEl('p',{className:'empty',textContent:'No projects in this browser yet. Start one above, or open a .pixiwyg file.'}));
+  if(!list.length)box.append(mkEl('p',{className:'empty',textContent:'No projects in this browser yet. Start one, or open a .pixiwyg file.'}));
   for(const p of list){
     const row=mkEl('div',{className:'trow'+(cur&&cur.id===p.id?' on':'')}),info=mkEl('div');
     const sh=(p.sheets||[]).slice(0,3).join(', ')+((p.sheets||[]).length>3?` +${p.sheets.length-3}`:'');
@@ -19,12 +19,42 @@ async function showTitle(){
     open.addEventListener('dblclick',e=>e.stopPropagation());row.ondblclick=()=>open.click();
     row.append(info,mkEl('div',{className:'tacts'}));row.lastChild.append(open,dl,del);box.append(row);
   }
-  renderKindPicker();storageLine().then(t=>{$('#tStorage').textContent=t});
+  renderStarts();renderTours();renderKindPicker();storageLine().then(t=>{$('#tStorage').textContent=t});
   $('#title').hidden=false;document.body.classList.add('titled');
-  (!$('#tContinue').hidden?$('#tContinue'):list.length?$('#tName'):$('#tTour')).focus();
+  (!$('#tContinue').hidden?$('#tContinue'):list.length?$('#tName'):$('#tStarts .tstart')).focus();
 }
 function hideTitle(){if(!state.project)return;$('#title').hidden=true;document.body.classList.remove('titled')}
 $('#tContinue').onclick=()=>{audio();hideTitle()};
+// SECTION: home: start something (a workflow: a canvas, the workspace it opens in, and a first push)
+// RULE: each start is one tap to a blank project already where that kind of work happens; the canvas picker under it
+//   is for choosing sizes first.
+const STARTS=[
+  {icon:'🌐',name:'A web page',note:'Grows with the window',kind:'web',ws:'page'},
+  {icon:'✒',name:'A story',note:'Write on printed pages',kind:'page',ws:'write'},
+  {icon:'📖',name:'A zine',note:'Folded, stapled, printed',kind:'booklet',ws:'page'},
+  {icon:'🎨',name:'A picture',note:'Paint on a square',kind:'screen',ws:'paint'},
+  {icon:'♫',name:'A song',note:'Starts with ideas to play with',kind:'web',ws:'music',then:()=>openIdeas()},
+  {icon:'◷',name:'An animation',note:'Things that move on a screen',kind:'screen',ws:'animate'},
+  {icon:'◆',name:'Something in 3D',note:'Shapes for the page',kind:'web',ws:'model'},
+];
+function renderStarts(){
+  $('#tStarts').replaceChildren(...STARTS.map(s=>{const b=mkEl('button',{type:'button',className:'tstart'});
+    b.append(mkEl('span',{className:'ticon',textContent:s.icon,ariaHidden:'true'}),mkEl('b',{textContent:s.name}),mkEl('small',{textContent:s.note}));
+    b.onclick=()=>{audio();startWork(s,$('#tName').value)};return b}));
+}
+async function startWork(s,name){await newProject(name||'',false,kindCanvas(s.kind),s.ws);if(s.then)s.then()}
+// SECTION: home: learn (every tour, one tap each)
+// FIX: built when drawn: the profiles and tours are defined after this file.
+const tours=()=>[
+  ...Object.entries(PROFILES).map(([p,v])=>({name:`${v.name} tour`,note:v.gets,run:()=>chooseProfile(p)})),
+  {name:'Components',note:'Animation, logic and parts to reuse',run:async()=>{await newProject('Component workshop',true);runTour('Components',COMPONENTS)}},
+  {name:'The full tour',note:'Everything, in order',run:()=>startTour()},
+  {name:'⭐ Creative Quest',note:'For kids: seven missions with stars',run:()=>startQuest(),kid:true},
+];
+function renderTours(){
+  $('#tTours').replaceChildren(...tours().map(t=>{const b=mkEl('button',{type:'button',className:'btn ttour'+(t.kid?' kid':''),title:t.note});
+    b.append(mkEl('b',{textContent:t.name}),mkEl('small',{textContent:t.note}));b.onclick=()=>{audio();t.run()};return b}));
+}
 $('#tBlank').onclick=()=>{audio();newProject($('#tName').value,false,newKind,$('#tStart').value)};
 $('#tName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#tBlank').click()}});
 $('#tFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(f)openProjectFile(f)};

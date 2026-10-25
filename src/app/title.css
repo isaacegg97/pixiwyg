@@ -1,6 +1,6 @@
 /* SECTION: title screen and the new-project canvas picker */
 .title{position:fixed;inset:0;z-index:90000;display:grid;place-items:center;padding:16px;overflow:auto;background-color:var(--desk);background-image:repeating-conic-gradient(var(--desk2) 0 25%,transparent 0 50%);background-size:4px 4px}
-.tpanel{width:min(640px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column}
+.tpanel{width:min(980px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column}
 .tbody{display:flex;flex-direction:column;gap:14px;overflow:auto}
 .tagline{margin:-6px 0 0;text-align:center;color:var(--muted)}
 #tContinue{align-self:center;font-size:15px;padding:6px 16px}
@@ -30,3 +30,25 @@
 .kicon.minizine::before{left:2px;width:34px;top:3px;height:20px;background:repeating-linear-gradient(90deg,transparent 0 7px,currentColor 7px 9px)}
 .kicon.screen::before{left:4px;width:30px;top:2px;height:18px}.kicon.screen::after{left:14px;width:10px;top:22px;height:0;border-width:2px 0 0}
 #tKindOpts .cvfields{flex-direction:row;flex-wrap:wrap;gap:6px 14px;align-items:center}
+/* SECTION: home: two columns (one on a phone), start cards, tour buttons */
+.thead{display:flex;flex-direction:column;align-items:center;gap:8px}
+.tcols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.tcol{display:flex;flex-direction:column;gap:18px;min-width:0}
+@media (max-width:760px){.tcols{grid-template-columns:minmax(0,1fr)}}
+.tstarts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.tstarts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* RULE: seven starts, the web page twice as wide: the grid fills evenly at four columns and at two. */
+.tstart:first-child{grid-column:span 2}
+.tstart{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:44px;padding:10px;text-align:left;border:2px solid var(--ink);background:var(--paper);color:var(--ink);box-shadow:3px 3px 0 var(--shadow);cursor:pointer;font:inherit}
+.tstart:hover,.tstart:focus-visible{background:var(--sun);color:var(--onsun);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--shadow);outline:none}
+.tstart:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--shadow)}
+.ticon{font-size:22px;line-height:1.1}
+.tstart b{font-size:14px}
+.tstart small{font-size:12px;opacity:.75}
+.tmore>summary{cursor:pointer;font-size:13px;padding:4px 0;min-height:24px}
+.tmore[open]{display:flex;flex-direction:column;gap:8px}
+.ttours{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.ttours .ttour{white-space:normal;min-width:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:1px;padding:6px 10px;min-height:44px}
+.ttour small{font-size:11px;opacity:.75;font-weight:400}
+.ttour.kid{grid-column:1/-1}
+@media (prefers-reduced-motion:reduce){.tstart,.tstart:hover,.tstart:active{transform:none}}
