@@ -15,12 +15,11 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: false
+# RULE: upload and deploy are separate jobs, as in GitHub's own Pages workflow. In one job, deploy-pages looked up
+#   the artifact seconds after its upload and found none (v1.2.0, three runs in a row).
 jobs:
-  deploy:
+  upload:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - name: Fetch the release's web zip
         env:
@@ -33,5 +32,12 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
+  deploy:
+    needs: upload
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
       - id: deploy
         uses: actions/deploy-pages@v4

@@ -275,12 +275,10 @@ jobs:
           pre=(); case "$TAG" in *-*) pre=(--prerelease);; esac
           gh release create "$TAG" --target "$SHA" "${pre[@]}" --title "PIXIWYG ${NAME:-$TAG}" --notes-file notes.md --generate-notes "${files[@]}"
 
-  pages:
+  # RULE: upload and deploy are separate jobs (see pages.yml); in one job deploy-pages couldn't find the artifact.
+  pages-upload:
     needs: [plan, web, publish]
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -290,5 +288,12 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
+  pages:
+    needs: pages-upload
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
       - id: deploy
         uses: actions/deploy-pages@v4
