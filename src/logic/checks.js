@@ -3,6 +3,8 @@
 //   the Checks panel even with the editor shut. Errors break something; warnings are something that does nothing.
 // FORMAT: problems = [{node, level:'error'|'warn', msg}].
 const LC_EL=new Set(['click','change','elText','setText','addText','animate','show','cls']);
+// FORMAT: the note words the runtime understands (noteMatch in runtime.js): names, MIDI numbers, ranges, drum words.
+const NOTE_ONE='(?:\\d{1,3}|[a-g][#♯b♭]?-?\\d)',NOTE_WORD=new RegExp(`^(?:${NOTE_ONE}(?:-${NOTE_ONE})?|kick|snare|clap|hat|crash|ride|tom|cowbell|tambourine)$`,'i');
 const execOut=(n,p)=>{const d=NT[n.type];return!!(d&&(d.outs||[]).some(o=>o[0]===p&&o[2]==='exec'))};
 function validateLogic(g=state.logic){
   const out=[],nodes=g&&g.nodes||[],wires=g&&g.wires||[],byId=new Map(nodes.map(n=>[n.id,n])),add=(n,level,msg)=>out.push({node:n.id,level,msg});
@@ -20,6 +22,7 @@ function validateLogic(g=state.logic){
       if(!inline||String(n.f[k]??'')==='')add(n,'warn',`Nothing goes into “${label||k}”`)}
     if(n.type==='getVar'&&!setNames.has(String(n.f.name)))add(n,'warn',`Variable “${n.f.name}” is never set`);
     if(n.type==='animate'&&n.f.el){const el=state.els.find(e=>e.id===n.f.el);if(el&&!el.anim)add(n,'error','That element has no animation yet: give it one in Animate')}
+    if(n.type==='note'){const bad=String(n.f.notes||'').split(/[\s,]+/).filter(t=>t&&!NOTE_WORD.test(t));if(bad.length)add(n,'warn',`“${bad[0]}” isn’t a note: use names like C4 or F#3, numbers, ranges like C3-C4, or kick, snare, hat`)}
     if(n.type==='every'&&+n.f.ms<100)add(n,'warn','Faster than 10 times a second; pages slow down');
     if(n.type==='cls'&&!/^[\w-]+$/.test(String(n.f.name||'').trim()))add(n,'error','Give it a class name (letters, numbers, - and _)');
   }

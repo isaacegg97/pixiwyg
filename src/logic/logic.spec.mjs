@@ -258,3 +258,141 @@ test('ideas read off the page: counter, close, send; one click wires them, and t
   expect(cls).toBe(true);
   expect(errors).toEqual([]);
 });
+
+// SECTION: animation driven by notes and songs
+test('RULE: notes drive animations: a held key plays to B and back, a hit plays it whole, and the filter picks the notes', async ({page}) => {
+  const errors = await boot(page);
+  const r = await page.evaluate(async () => {
+    const P = window.__pixiwyg, host = document.createElement('div'); document.body.append(host);
+    const spec = o => ({trigger: 'note', dur: 400, delay: 0, ease: 'linear', keys: [], repeat: 'once', alt: false, from: 'A', b: {x: 50, y: 0, rot: 0, scale: 100, op: 100}, song: '', note: o});
+    let send = null; const env = o => ({el: () => ({host, target: null}), animate() {}, listen: cb => { send = cb; return () => {}; }, ...o});
+    const st = () => { const a = host.getAnimations()[0]; return a ? [a.playState, a.playbackRate] : null; };
+    let run = P.pxRuntime({nodes: [], wires: []}, [{ref: 'a', spec: spec({from: 'any', notes: 'C4 kick F#3-G3', track: '', hold: true, sound: false})}], env({}));
+    const out = {};
+    send({on: true, p: 62, v: 90, src: 'keyboard'}); out.miss = st();
+    send({on: true, p: 60, v: 90, src: 'keyboard'}); out.down = st();
+    send({on: false, p: 60, v: 0, src: 'keyboard'}); out.up = st();
+    send({on: true, p: 36, v: 90, src: 'keyboard'}); out.kick = st()[1];
+    send({on: true, p: 55, v: 90, src: 'keyboard'}); out.range = st()[1];
+    run.stop();
+    run = P.pxRuntime({nodes: [], wires: []}, [{ref: 'a', spec: spec({from: 'keyboard', notes: '', hold: false, sound: false})}], env({}));
+    send({on: true, p: 70, v: 90, src: 'keyboard'}); const a = host.getAnimations()[0]; a.currentTime = 300;
+    send({on: true, p: 71, v: 90, src: 'keyboard'}); out.hit = [Math.round(a.currentTime), a.playbackRate];
+    send({on: false, p: 71, v: 0, src: 'keyboard'}); out.hitUp = a.playbackRate;
+    a.currentTime = 300; send({on: true, p: 60, v: 90, src: 'song'}); out.fromKeys = Math.round(a.currentTime) !== 300;
+    run.stop();
+    // RULE: the logic node hands on which note and how hard.
+    const G = {nodes: [{id: 'n', type: 'note', f: {from: 'any', notes: 'kick', track: '', sound: true}}, {id: 's', type: 'setText', f: {el: 'x'}}, {id: 'v', type: 'setText', f: {el: 'y'}}],
+      wires: [{a: 'n', ap: 'fire', b: 's', bp: 'in'}, {a: 'n', ap: 'pitch', b: 's', bp: 'value'}, {a: 'n', ap: 'off', b: 'v', bp: 'in'}, {a: 'n', ap: 'vel', b: 'v', bp: 'value'}]};
+    const tx = document.createElement('p'), ty = document.createElement('p'); let sounded = 0;
+    run = P.pxRuntime(G, [], {el: r => ({host: r === 'x' ? tx : ty, target: r === 'x' ? tx : ty}), animate() {}, listen: cb => { send = cb; return () => {}; }, sound: () => sounded++});
+    send({on: true, p: 36, v: 77, src: 'keyboard'}); send({on: false, p: 36, v: 0, src: 'keyboard'}); send({on: true, p: 37, v: 77, src: 'keyboard'});
+    out.logic = [tx.textContent, ty.textContent, sounded];
+    run.stop(); host.remove(); return out;
+  });
+  expect(r).toEqual({miss: ['paused', 1], down: ['running', 1], up: ['running', -1], kick: 1, range: 1, hit: [0, 1], hitUp: 1, fromKeys: false, logic: ['C2', '0', 1]});
+  expect(errors).toEqual([]);
+});
+
+test('INVARIANT: song notes and song animations follow the song clock: on time, released on a loop, never drifting', async ({page}) => {
+  const errors = await boot(page);
+  const r = await page.evaluate(async () => {
+    const P = window.__pixiwyg, a = document.createElement('div'), b = document.createElement('div'); document.body.append(a, b);
+    const spec = (trigger, o) => ({trigger, dur: 2000, delay: 500, ease: 'linear', keys: [], repeat: 'once', alt: false, from: 'A', b: {x: 100, y: 0, rot: 0, scale: 100, op: 100}, ...o});
+    const notes = P.pxSongNotes({bpm: 120, tracks: [{name: 'Drums', mute: false, notes: [{t: 480, d: 240, p: 36, v: 100}]}, {name: 'Muted', mute: true, notes: [{t: 0, d: 480, p: 60, v: 100}]}]});
+    let t = null, f = null; const step = x => { t = x; const g = f; f = null; g(); };
+    const run = P.pxRuntime({nodes: [], wires: []}, [{ref: 'a', spec: spec('song', {song: 0})}, {ref: 'b', spec: spec('note', {song: '', note: {from: 'song', notes: 'kick', track: 'drums', hold: true}})}],
+      {el: r => ({host: r === 'a' ? a : b, target: null}), animate() {}, clock: () => t == null ? null : {song: 0, t}, notes: () => notes, raf: g => { f = g; return 1; }, caf() {}});
+    const rate = () => { const x = b.getAnimations()[0]; return x.playState === 'paused' ? 0 : x.playbackRate; }, out = {notes: notes.map(n => [n.t, n.d, n.p, n.track])};
+    step(0); step(.4); out.before = rate(); step(.55); out.on = rate(); step(.8); out.off = rate();
+    step(1.25); out.songAt = Math.round(a.getAnimations()[0].currentTime);
+    step(.1); step(.55); out.again = rate(); step(.2); out.loopReleased = rate();
+    step(null); step(null); out.stoppedAt = Math.round(a.getAnimations()[0].currentTime);
+    run.stop(); a.remove(); b.remove(); return out;
+  });
+  expect(r).toEqual({notes: [[.5, .25, 36, 'Drums']], before: 0, on: 1, off: -1, songAt: 1250, again: 1, loopReleased: -1, stoppedAt: 200});
+  expect(errors).toEqual([]);
+});
+
+test('RULE: an animation counted in beats follows its song\'s tempo; the timeline plays along in bars and snaps to beats', async ({page}) => {
+  const errors = await boot(page);
+  await page.setViewportSize({width: 1400, height: 900});
+  const r = await page.evaluate(async () => {
+    const P = window.__pixiwyg; await P.newProject('beats', true, {type: 'web'}); const S = P.state();
+    const m = P.newSong('Beat', {bpm: 120, beats: 4, res: 4, bars: 2, tracks: [{id: 't1', name: 'Drums', drums: true, prog: 0, vol: 100, mute: false, notes: [{t: 0, d: 120, p: 36, v: 100}]}]});
+    const el = {id: 'k', tag: 'p', content: 'beat', x: 100, y: 100, w: 120, z: 1, fileId: null, selector: null, anim: P.defaultAnimGraph()};
+    const tr = el.anim.nodes.find(n => n.type === 'transition'); Object.assign(tr.f, {unit: 'beats', tempo: m.id, dur: 2, delay: 1});
+    S.els.push(el); P.renderAll();
+    const at120 = P.animSpec(el.anim); m.bpm = 60; const at60 = P.animSpec(el.anim); m.bpm = 120;
+    P.setWorkspace('animate'); P.tlRender();
+    const labels = [...document.querySelectorAll('#tlRuler .tltick.major')].map(x => x.textContent);
+    return {at120: [at120.dur, at120.delay, at120.beatMs], at60: [at60.dur, at60.delay], song: document.getElementById('tlSong').value === m.id, labels, bar: document.querySelector('#tlRows .tlbar span').textContent};
+  });
+  expect(r).toMatchObject({at120: [1000, 500, 500], at60: [2000, 1000], song: true, bar: '2 beats'});
+  expect(r.labels.slice(0, 3)).toEqual(['1', '2', '3']);
+  // RULE: dragging snaps to whole beats, and an animation counted in beats keeps beats.
+  const bar = page.locator('#tlRows .tlbar:not(.ghost)').first(), bb = await bar.boundingBox(), pps = await page.evaluate(() => window.__pixiwyg.TL.pps);
+  await page.mouse.move(bb.x + 10, bb.y + bb.height / 2); await page.mouse.down();
+  await page.mouse.move(bb.x + 10 + pps * 0.6, bb.y + bb.height / 2, {steps: 4}); await page.mouse.up();
+  expect(await page.evaluate(() => window.__pixiwyg.state().els.find(e => e.id === 'k').anim.nodes.find(n => n.type === 'transition').f.delay)).toBe(2);
+  const moved = await page.evaluate(async () => {
+    const P = window.__pixiwyg; P.tlPlay(); await new Promise(res => setTimeout(res, 400));
+    const out = {audio: !!P.TL.audio, t: P.TL.t, label: document.getElementById('tlTime').textContent}; P.tlStop(); return {...out, stopped: !P.TL.audio};
+  });
+  expect(moved.audio).toBe(true); expect(moved.stopped).toBe(true);
+  expect(moved.t).toBeGreaterThan(.1); expect(moved.label).toMatch(/^bar 1 · beat [12]$/);
+  expect(errors).toEqual([]);
+});
+
+test('RULE: the trigger shows note and song options only for those triggers; a keyboard note animates in Play and in the export', async ({page, context}) => {
+  const errors = await boot(page);
+  await page.setViewportSize({width: 1600, height: 950});
+  await page.evaluate(async () => {
+    const P = window.__pixiwyg; await P.newProject('keys', true, {type: 'web'}); const S = P.state();
+    S.els.push({id: 'k', tag: 'p', content: 'shout', x: 100, y: 100, w: 120, z: 1, fileId: null, selector: null}); P.renderAll(); P.select('k');
+    P.openAnimEditor(S.els.find(e => e.id === 'k'));
+  });
+  const trig = page.locator('#nodeLayer .nnode', {hasText: 'Trigger'});
+  await expect(trig.getByLabel('Notes (empty: any)')).toHaveCount(0);
+  await trig.getByLabel('Starts on').selectOption('note');
+  await expect(trig.getByLabel('Notes (empty: any)')).toBeVisible();
+  await trig.getByLabel('Notes (empty: any)').fill('C4');
+  await expect(trig.getByLabel('Song', {exact: true})).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  const play = await page.evaluate(async () => {
+    const P = window.__pixiwyg; P.setPlay(true); await new Promise(r => setTimeout(r, 50));
+    const st = () => { const a = P.hostOf('k').getAnimations()[0]; return a.playState === 'paused' ? 0 : a.playbackRate; };
+    const key = (type, key) => window.dispatchEvent(new KeyboardEvent(type, {key, bubbles: true}));
+    const out = [st()]; key('keydown', 's'); out.push(st()); key('keydown', 'a'); out.push(st()); key('keyup', 'a'); out.push(st());
+    P.setPlay(false); return out;
+  });
+  expect(play).toEqual([0, 0, 1, -1]);
+  const html = await page.evaluate(() => { const P = window.__pixiwyg; P.expOpt.nojs = false; return P.buildExport(); });
+  expect(html).toContain('window.__pxLive');
+  const ex = await context.newPage(); const exErrors = []; ex.on('pageerror', e => exErrors.push(e.message));
+  await ex.setContent(html); await ex.waitForTimeout(100);
+  const exp = await ex.evaluate(() => { const h = [...document.querySelectorAll('.el')].find(x => x.shadowRoot && x.shadowRoot.textContent.includes('shout')), st = () => { const a = h.getAnimations()[0]; return a.playState === 'paused' ? 0 : a.playbackRate; };
+    const out = [st()]; window.dispatchEvent(new KeyboardEvent('keydown', {key: 'a'})); out.push(st()); window.dispatchEvent(new KeyboardEvent('keyup', {key: 'a'})); out.push(st()); return out; });
+  expect(exp).toEqual([0, 1, -1]); expect(exErrors).toEqual([]);
+  expect(errors).toEqual([]);
+});
+
+test('RULE: a flipbook going with the song shows one frame per so many beats, in Play and in the export', async ({page}) => {
+  const errors = await boot(page);
+  const r = await page.evaluate(async () => {
+    const P = window.__pixiwyg; await P.newProject('flip', true, {type: 'web'}); const S = P.state();
+    const frame = c => { const k = document.createElement('canvas'); k.width = k.height = 8; const g = k.getContext('2d'); g.fillStyle = c; g.fillRect(0, 0, 8, 8); return k.toDataURL('image/png'); };
+    const apng = P.encodeAPNG(['#f00', '#0f0', '#00f'].map(frame), 8), m = P.newSong('Beat', {bpm: 120, beats: 4, res: 4, bars: 1, tracks: []});
+    const g = P.defaultAnimGraph(); Object.assign(g.nodes.find(n => n.type === 'trigger').f, {on: 'song', song: m.id, beats: 2}); g.nodes.find(n => n.type === 'stateB').f.scale = 100;
+    S.els.push({id: 'fb', tag: 'img', content: apng, attrs: {alt: 'Animation'}, x: 50, y: 50, w: 80, z: 9, fileId: null, selector: null, anim: g}); P.renderAll();
+    const spec = P.animSpec(g), html = await (async () => { P.expOpt.nojs = false; return P.buildExport(); })();
+    const fr = (await P.decodeAPNG(apng)).frames;
+    let t = 0, f = null; const img = P.hostOf('fb')._target, frames = new Map([['fb', fr]]);
+    const run = P.pxRuntime({nodes: [], wires: []}, [{ref: 'fb', spec}], {el: () => ({host: P.hostOf('fb'), target: img}), animate() {}, clock: () => ({song: m.id, t}), notes: () => [], frames: r => frames.get(r), raf: g => { f = g; return 1; }, caf() {}});
+    const at = x => { t = x; const g2 = f; f = null; g2(); return fr.indexOf(img.src); };
+    const seen = [at(0), at(.9), at(1.1), at(2.2), at(3.1)]; run.stop();
+    return {frameMs: spec.frameMs, seen, restored: img.src === apng, embedded: html.includes('window.__pxFrames') && html.includes(fr[1])};
+  });
+  expect(r).toEqual({frameMs: 1000, seen: [0, 0, 1, 2, 0], restored: true, embedded: true});
+  expect(errors).toEqual([]);
+});

@@ -16,7 +16,7 @@ test('FORMAT: src/app/themes/template.css is the in-app theme template at the li
 test('interface themes: a loaded .css recolours the app, joins the Theme button, survives a reload, never reaches the network, and can be forgotten', async ({page}) => {
   const {readFileSync} = await import('node:fs');
   const errors = await freshPage(page);
-  const css = readFileSync(new URL('themes/terminal.css', import.meta.url), 'utf8') + '\n@import url(https://example.com/x.css);\n:root[data-apptheme] .logo{background:url(https://example.com/track.png)}\n';
+  const css = readFileSync(new URL('themes/terminal.css', import.meta.url), 'utf8') + '\n@import url(https://example.com/x.css);\n:root[data-apptheme] .logo{background:url(https://example.com/track.png)}\n:root[data-apptheme] .tb{background:url("https://example.com/q.png"),url("data:image/svg+xml,%3Csvg%3E%3Crect filter=\'url(%23f)\' transform=\'rotate(4)\'/%3E%3C/svg%3E")}\n';
   const net = [];
   page.on('request', r => { if (r.url().includes('example.com')) net.push(r.url()); });
   await page.setInputFiles('#appThemeFile', {name: 'mine.css', mimeType: 'text/css', buffer: Buffer.from(css)});
@@ -24,6 +24,7 @@ test('interface themes: a loaded .css recolours the app, joins the Theme button,
   const tok = () => T(page, () => { const cs = getComputedStyle(document.documentElement); return {desk: cs.getPropertyValue('--desk').trim(), pix: document.documentElement.dataset.pix, on: document.documentElement.hasAttribute('data-apptheme'), btn: window.__pixiwyg.theme(), scheme: cs.colorScheme}; });
   expect(await tok()).toEqual({desk: '#0a120c', pix: 'dark', on: true, btn: 'custom', scheme: 'dark'});
   expect(await T(page, () => document.getElementById('appTheme').textContent)).not.toMatch(/example\.com/);
+  expect(await T(page, () => document.getElementById('appTheme').textContent)).toContain(`url("data:image/svg+xml,%3Csvg%3E%3Crect filter='url(%23f)' transform='rotate(4)'/%3E%3C/svg%3E")`);
   expect(await T(page, () => !document.getElementById('appThemeForget').hidden)).toBe(true);
   // RULE: every theme, the loaded file too, is one search away in the command window.
   await page.keyboard.press('Escape');

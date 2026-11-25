@@ -2,7 +2,7 @@
 // INVARIANT: self-contained; exports build theirs from this source.
 // FORMAT: o = {win, Webamp(): Promise<ctor>, song(): Promise<{key,blob,duration,title,artist}|null>, skin(): url|null, skins: [{url,name}]}
 function pxPlayer(o){
-  let wa=null,open=false,key='',busy=null;
+  let wa=null,open=false,key='',busy=null,cur='';
   async function ready(anchor){
     const W=await o.Webamp();if(!W||(W.browserIsSupported&&!W.browserIsSupported()))return null;
     if(!wa){
@@ -24,12 +24,15 @@ function pxPlayer(o){
     want='play';clearInterval(hold);
     const w=await ready(anchor);if(!w||want!=='play')return;
     const s=await o.song(which);if(!s||want!=='play')return;
-    if(s.key!==key){key=s.key;w.setTracksToPlay([{blob:s.blob,duration:s.duration,metaData:{artist:s.artist,title:s.title}}])}
+    cur=which??'';if(s.key!==key){key=s.key;w.setTracksToPlay([{blob:s.blob,duration:s.duration,metaData:{artist:s.artist,title:s.title}}])}
     w.play();
   }
   return{
     control(what,anchor,which){busy=(busy||Promise.resolve()).then(()=>go(what,anchor,which)).catch(e=>console.error(e));return busy},
     playing(){return!!(wa&&open&&wa.getMediaStatus()==='PLAYING')},
+    // HACK: Webamp's API has no playback position; its media object (this vendored build) reads the audio element's
+    //   own currentTime, which is the clock the song's notes and song animations follow.
+    clock(){return wa&&open&&wa.media&&wa.getMediaStatus()==='PLAYING'?{song:cur,t:wa.media.timeElapsed()}:null},
     shown(){return!!(wa&&open)},
     skin(url){if(wa)wa.setSkinFromUrl(url)},
     close(){if(wa){halt();if(open)wa.close()}},
@@ -63,6 +66,7 @@ const PLAYER={
   of(win){if(win===window)return this.main||(this.main=playerFor(window));if(!win.__pxPlayer)win.__pxPlayer=playerFor(win);return win.__pxPlayer},
   control(what,anchor,win=window,song){return this.of(win).control(what,anchor,song)},
   playing(){return!!(this.main&&this.main.playing())},
+  clock(){return this.main?this.main.clock():null},
   stop(){if(this.main)this.main.close()},
   skinChanged(){const u=skinUrl();if(this.main)this.main.skin(u)},
 };

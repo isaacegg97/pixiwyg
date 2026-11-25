@@ -7,7 +7,6 @@ const LIBRARY=[
   {file:'newsprint.css',name:'newsprint.css',era:'Broadsheet: mastheads, drop caps, columns',kb:6,group:0,lic:'MIT · PIXIWYG'},
   {file:'fanzine.css',name:'fanzine.css',era:'1998 fan page: WordArt, counters, webrings',kb:6,group:0,lic:'MIT · PIXIWYG'},
   {file:'bookish.css',name:'bookish.css',era:'Chapbook: small caps, epigraphs, footnotes',kb:4,group:0,lic:'MIT · PIXIWYG'},
-  {file:'dredful.css',name:'dredful.css',era:'Techno-gothic punk: stone circuitry pulsing red, torn tape, Hawaiian patches',kb:40,group:0,lic:'MIT · PIXIWYG'},
   {file:'sugarplum.css',name:'sugarplum.css',era:'Lilac and pastel: unicorns, rainbows, hearts, bows, sparkles',kb:15,group:0,lic:'MIT · PIXIWYG'},
   {file:'undead-darlings.css',name:'undead-darlings.css',era:'Cute and a bit rotten: zombies, tombstones, toe tags, slime',kb:14,group:0,lic:'MIT · PIXIWYG'},
   {file:'velvet-requiem.css',name:'velvet-requiem.css',era:'90s goth: crushed velvet, damask, black lace, blood and silver',kb:15,group:0,lic:'MIT · PIXIWYG'},

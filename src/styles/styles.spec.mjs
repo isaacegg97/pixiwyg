@@ -161,14 +161,14 @@ test('a library rule written with var() shorthands opens as nodes and still look
   const props = ['background-color', 'background-image', 'color', 'text-shadow', 'font-family', 'font-size', 'transform', 'clip-path', 'padding-left', 'display', 'animation-name'];
   const r = await T(page, async props => {
     const P = window.__pixiwyg; await P.newProject('Rule', false, {type: 'web'}, 'page');
-    const f = await P.addLib('dredful.css'); P.afterFilesChanged();
-    const s = P.state(); s.els.push({id: 'eh', tag: 'h1', fileId: f.id, selector: 'h1.eldritch', x: 60, y: 60, w: 520, z: 9, content: 'THE DREAD'}); P.renderAll(); P.select('eh');
+    const f = await P.addLib('velvet-requiem.css'); P.afterFilesChanged();
+    const s = P.state(); s.els.push({id: 'eh', tag: 'h1', fileId: f.id, selector: 'h1.crypt', x: 60, y: 60, w: 520, z: 9, content: 'REST IN VELVET'}); P.renderAll(); P.select('eh');
     const read = () => { const cs = getComputedStyle(P.hostOf('eh').shadowRoot.querySelector('.__body > *')); return Object.fromEntries(props.map(p => [p, cs.getPropertyValue(p)])); };
     const before = read(); const g = P.openRuleAsNodes(); const after = read();
     return {before, after, types: g.g.nodes.map(n => n.type), bgSplit: g.g.nodes.some(n => n.type === 'sFill' && n.f.on === 'background') && !g.g.nodes.some(n => n.type === 'sCss' && /(^|;)background:/.test(n.f.css))};
   }, props);
   expect(r.after).toEqual(r.before);
-  expect(r.types.filter(t => t === 'sTShadow').length).toBe(3);
+  expect(r.types.filter(t => t === 'sTShadow').length).toBe(1);
   expect(r.bgSplit).toBe(true);
   expect(errors).toEqual([]);
 });

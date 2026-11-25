@@ -94,11 +94,14 @@ function drawNodes(){
       else inp=mkEl('input',{type:kind==='number'?'number':'text'});
       if(kind!=='check')inp.value=n.f[k]??def;
       inp.setAttribute('aria-label',label||k);
-      inp.addEventListener(kind==='check'||kind==='select'||kind==='element'?'change':'input',()=>{n.f[k]=kind==='check'?inp.checked:kind==='number'?(inp.value===''?'':+inp.value):inp.value;if(kind==='element')highlightEl(n.f[k]);nedChanged()});
+      inp.addEventListener(kind==='check'||kind==='select'||kind==='element'?'change':'input',()=>{n.f[k]=kind==='check'?inp.checked:kind==='number'?(inp.value===''?'':+inp.value):inp.value;if(kind==='element')highlightEl(n.f[k]);nedChanged();
+        // RULE: a field another field's visibility hangs on redraws the nodes, so the right fields show at once.
+        if((d.f||[]).some(x=>x[5]&&x[5].split('=')[0]===k)){drawNodes();drawWires()}});
       if(kind==='element')inp.addEventListener('focus',()=>highlightEl(n.f[k]));
       return inp;
     };
-    for(const [k,label,kind,def,opts] of d.f||[]){const r=mkEl('label',{className:'nrow nf'});if(label)r.append(mkEl('span',{textContent:label}));r.append(field(kind,k,def,opts||'',label));box.append(r)}
+    const shown=sh=>{if(!sh)return true;const [a,b]=sh.split('=');return b.split(' ').includes(String(n.f[a]))};
+    for(const [k,label,kind,def,opts,sh] of d.f||[]){if(!shown(sh))continue;const r=mkEl('label',{className:'nrow nf'});if(label)r.append(mkEl('span',{textContent:label}));r.append(field(kind,k,def,opts||'',label));box.append(r)}
     const rows=Math.max((d.ins||[]).length,(d.outs||[]).length);
     for(let i=0;i<rows;i++){
       const r=mkEl('div',{className:'nrow'}),ip=(d.ins||[])[i],op=(d.outs||[])[i],L=mkEl('span',{className:'nin'}),R=mkEl('span',{className:'nout'});

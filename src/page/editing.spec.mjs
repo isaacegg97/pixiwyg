@@ -193,7 +193,7 @@ test('FIX: hovering traces the box a click would select (the ink, not the layout
   await page.mouse.move(5, 300);
   await expect(page.locator('#hoverbox')).toBeHidden();
   // FIX: a theme with a taller title bar pushed the command list out of its window.
-  await T(page, () => window.__pixiwyg.setTheme('t:dredful'));
+  await T(page, () => window.__pixiwyg.loadAppTheme('tall', ':root[data-apptheme] .tb{min-height:72px}'));
   await page.keyboard.press('/');
   await expect(page.locator('#cmdModal')).toBeVisible();
   const fit = await T(page, () => { const w = document.querySelector('.cmdwin').getBoundingClientRect(), l = document.getElementById('cmdList').getBoundingClientRect(); return l.bottom <= w.bottom + 0.5 && l.height > 100; });

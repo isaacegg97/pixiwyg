@@ -30,8 +30,9 @@ wasm, and one inline script allowed by its hash.
 
 ## Run it
 
-**In a browser:** `index.html` plus `lib/` (and `examples/` for the tutorials) is the whole app. Serve the repository
-root from any static web server, at any path. `npm run web` stages just those files in `tools/dist/web/`, and each
+**In a browser:** `index.html` plus `lib/` (and `examples/` for the tutorials) is the whole app. `index.html` is built,
+not committed: in a checkout, run `npm run build` in `tools/` first, then serve the repository root from any static web
+server, at any path. `npm run web` stages just those files in `tools/dist/web/`, and each
 release carries them as `PIXIWYG_<version>_web.zip`; publishing a release deploys that zip to GitHub Pages. Opened
 straight from disk as `file://`, it can't load `lib/`, and it says so.
 
@@ -54,7 +55,7 @@ npm start                       # the desktop app (needs Rust and, on Linux, the
 | Folder | What's in it |
 | --- | --- |
 | `src/` | The app's source, one folder per feature, each holding that feature's scripts, styles, markup and tests |
-| `index.html` | The built app, compiled from `src/` by `npm run build`. Committed, because it *is* the hostable app |
+| `index.html` | The built app, compiled from `src/` by `npm run build`. Not committed: every script that ships or tests it builds it first |
 | `lib/` | Vendored stylesheets, fonts, color schemes, Webamp and the GIF encoder, unmodified, with `NOTICES.txt` |
 | `examples/` | The example projects the welcome tours open |
 | `tauri/` | The desktop shell (Rust) |

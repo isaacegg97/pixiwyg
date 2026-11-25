@@ -1,6 +1,7 @@
 # PIXIWYG tools
 
 PIXIWYG is `index.html` plus `lib/`, at the repository root. That pair can be hosted on any static web server as is.
+`index.html` is built from `../src/` (`npm run build`) and not committed; `test`, `web`, `dist` and `set-version` build it.
 This folder (`tools/`) holds everything else: the tooling that builds and packages the desktop app (`../tauri/`, which wraps
 those two files, changing nothing in them), and the test suite. Run every command below from inside `tools/`.
 

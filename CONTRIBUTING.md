@@ -19,8 +19,8 @@ index.html            the app, with its Content-Security-Policy stamped to the n
 ```
 
 The usual loop: `cd tools`, run `npm run watch` in one terminal and `npm run serve` in another, edit a file in
-`src/`, then reload http://localhost:4173/. `npm test` rebuilds the page before it runs. `index.html` is committed
-because it is the hostable app, so commit the rebuilt page together with your source change.
+`src/`, then reload http://localhost:4173/. `npm test` rebuilds the page before it runs. `index.html` is a build artifact and
+is ignored by git: commit only `src/`.
 
 Some things about `build.json` that are easy to miss:
 
@@ -48,10 +48,10 @@ and tests.
 | `styles/` | Stylesheets themselves: selector parsing, compiling, baking imports, sample sheets, the page palette and color carry-through, style graphs, opening a rule as nodes, style sets, text effects |
 | `paint/` | Paint Studio: layers, the palettes that dock around the canvas, zoom, tools and brushes, filters (WebGL), selection, transforms, blending, frames, GIF export |
 | `music/` | Sequencer: songs, MIDI, the synth, SoundFonts, samples and effects, note input, playback, the Webamp player |
-| `logic/` | Page logic and animation: the runtime, Play mode, the node editor, checks and suggested interactions, the animation editor, the timeline, the example calculator |
+| `logic/` | Page logic and animation: the runtime (with the note bus and song clock that let a keyboard or a song drive animations), Play mode, the node editor, checks and suggested interactions, the animation editor, the timeline, the example calculator |
 | `writing/` | Manuscripts, Markdown import, the page view, the Text panel, the Write workspace |
 | `3d/` | 3D models: parsers, building from shapes (`3d/modeler.js`, with csg.js for cuts and earcut for 3D text; handles, groups, STL export), baking to atlases, the page element, the workspace panel, model primitives, drag to turn |
-| `project/` | A project as a file: saving and opening, browser storage, versions, undo, export, print, live preview, references, autopublish, magnet links, the project lock, the starter project |
+| `project/` | A project as a file: saving and opening, browser storage, versions, undo, export (with animated SVGs baked to APNG, `project/motion-bake.js`), print, live preview, references, autopublish, magnet links, the project lock, the starter project |
 
 Outside `src/`:
 

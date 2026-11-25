@@ -1,0 +1,4 @@
+# RULE: local/ holds the owner's private themes and sheets, loaded by hand and never shipped.
+/local/
+# RULE: index.html is compiled from src/ (tools/scripts/build.mjs); every script that tests or ships it builds it first.
+/index.html

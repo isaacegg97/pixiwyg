@@ -50,3 +50,24 @@ $('#seqRepGo').onclick=()=>{audio();const m=state.music;if(!m)return;
     t.notes=t.notes.filter(n=>n.t<hi);for(let o=hi;o<end;o+=len)for(const n of src){const at=n.t-lo+o;if(at<end)t.notes.push({...n,t:at,d:Math.min(n.d,end-at)})}seqTidy(t)}});
   seqDraw();status(`Bars ${a}–${b} repeated to the end of the song`);sfx('pop')};
 
+// SECTION: live notes for Play and exported pages
+// RULE: a MIDI keyboard and the computer keys (A–L, Z and X for octaves) both count as the keyboard; keys typed into
+//   a field stay text. MIDI access is asked for only by a page that listens to the keyboard.
+// INVARIANT: self-contained; exports carry its source. Returns a function that stops listening.
+function pxLiveNotes(win,cb){
+  const KEYS={a:0,w:1,s:2,e:3,d:4,f:5,t:6,g:7,y:8,h:9,u:10,j:11,k:12,o:13,l:14,p:15,';':16},down=new Map();let oct=60,midi=null,live=true;
+  const typing=e=>{const t=e.composedPath()[0];return!!t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName||''))};
+  const kd=e=>{if(typing(e)||e.ctrlKey||e.metaKey||e.altKey)return;const k=e.key.toLowerCase();
+    if(k==='z'||k==='x'){oct=Math.max(24,Math.min(96,oct+(k==='z'?-12:12)));return}
+    if(!(k in KEYS)||e.repeat||down.has(k))return;const p=oct+KEYS[k];down.set(k,p);cb({on:true,p,v:100,src:'keyboard'})};
+  const ku=e=>{const k=e.key.toLowerCase(),p=down.get(k);if(p==null)return;down.delete(k);cb({on:false,p,v:0,src:'keyboard'})};
+  win.addEventListener('keydown',kd);win.addEventListener('keyup',ku);
+  // SAFETY: Web MIDI without sysex.
+  const nav=win.navigator;
+  if(nav&&nav.requestMIDIAccess)nav.requestMIDIAccess({sysex:false}).then(m=>{if(!live)return;midi=m;
+    const hook=()=>{for(const i of m.inputs.values())i.onmidimessage=ev=>{const [st,p,v]=ev.data,c=st&0xf0;
+      if(c===0x90&&v>0)cb({on:true,p,v,src:'keyboard'});else if(c===0x80||(c===0x90&&v===0))cb({on:false,p,v:0,src:'keyboard'})}};
+    hook();m.onstatechange=hook}).catch(()=>{});
+  return()=>{live=false;win.removeEventListener('keydown',kd);win.removeEventListener('keyup',ku);for(const p of down.values())cb({on:false,p,v:0,src:'keyboard'});down.clear();
+    if(midi){for(const i of midi.inputs.values())i.onmidimessage=null;midi.onstatechange=null}};
+}

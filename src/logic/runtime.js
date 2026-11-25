@@ -8,6 +8,8 @@ const NT={
   start:{t:'On start',cat:'Events',outs:[['fire','then','exec']]},
   pageOpen:{t:'On page open',cat:'Events',outs:[['fire','then','exec']]},
   every:{t:'Every',cat:'Events',f:[['ms','Milliseconds','number',1000]],outs:[['fire','then','exec']]},
+  note:{t:'On a note',cat:'Events',f:[['from','From','select','any','any keyboard song'],['notes','Notes (empty: any)','text',''],['track','Song track (empty: any)','text','','','from=any song'],['sound','Sound the keys','check',true,'','from=any keyboard']],
+    outs:[['fire','pressed','exec'],['off','released','exec'],['pitch','note','data'],['vel','how hard','data']]},
   number:{t:'Number',cat:'Values',f:[['value','','number',0]],outs:[['out','number','data']]},
   text:{t:'Text',cat:'Values',f:[['value','','text','']],outs:[['out','text','data']]},
   elText:{t:'Text of',cat:'Values',f:[ELF],outs:[['out','text','data']]},
@@ -28,13 +30,17 @@ const NT={
   cls:{t:'Add or remove class',cat:'Actions',f:[ELF,['mode','','select','toggle','add remove toggle'],['name','Class','text','']],ins:[['in','','exec']],outs:[['next','then','exec']]},
   goPage:{t:'Go to page',cat:'Actions',f:[['to','','select','page','page next previous back first'],['page','Page','page','']],ins:[['in','','exec']],outs:[['next','then','exec']]},
   song:{t:'Play a song',cat:'Actions',f:[['what','','select','play','play stop toggle'],['song','Song','song',''],['el','Show the player at','element','']],ins:[['in','','exec']],outs:[['next','then','exec']]},
-  trigger:{t:'Trigger',cat:'Animation',anim:true,f:[['on','Starts on','select','hover','hover click load inview logic']],outs:[['fire','start','exec']]},
-  transition:{t:'Transition',cat:'Animation',anim:true,f:[['dur','Duration (ms)','number',400],['delay','Delay (ms)','number',0],['ease','Easing','select','ease','ease ease-in ease-out ease-in-out linear bounce custom'],['curve','Curve','curve','.25,.1,.25,1'],['repeat','Repeat','select','once','once twice forever'],['alt','Back and forth','check',false]],ins:[['in','','exec'],['from','from','state'],['to','to','state'],['via','via','key']]},
+  // FORMAT: a field's sixth entry, 'k=a b', shows it only while field k is a or b.
+  trigger:{t:'Trigger',cat:'Animation',anim:true,f:[['on','Starts on','select','hover','hover click load inview logic note song'],
+    ['from','Notes from','select','any','any keyboard song','on=note'],['notes','Notes (empty: any)','text','','','on=note'],['track','Song track (empty: any)','text','','','on=note'],
+    ['hold','While held, then back','check',true,'','on=note'],['sound','Sound the keys','check',true,'','on=note'],['song','Song','song','','','on=song'],
+    ['beats','Flipbook: beats a frame (0: its own pace)','number',0,'','on=song']],outs:[['fire','start','exec']]},
+  transition:{t:'Transition',cat:'Animation',anim:true,f:[['unit','Count in','select','ms','ms beats'],['tempo','Beats of','song','','','unit=beats'],['dur','Duration','number',400],['delay','Delay','number',0],['ease','Easing','select','ease','ease ease-in ease-out ease-in-out linear bounce custom'],['curve','Curve','curve','.25,.1,.25,1'],['repeat','Repeat','select','once','once twice forever'],['alt','Back and forth','check',false]],ins:[['in','','exec'],['from','from','state'],['to','to','state'],['via','via','key']]},
   key:{t:'Keyframe',cat:'Animation',anim:true,f:[['at','At (% of the way)','number',50],['x','Move right (px)','number',0],['y','Move down (px)','number',0],['rot','Turn (°)','number',0],['scale','Scale (%)','number',100],['op','Opacity (%)','number',100]],outs:[['out','keyframe','key']]},
   stateA:{t:'State A · as it is',cat:'Animation',anim:true,outs:[['out','state','state']]},
   stateB:{t:'State B',cat:'Animation',anim:true,f:[['x','Move right (px)','number',0],['y','Move down (px)','number',0],['rot','Turn (°)','number',0],['scale','Scale (%)','number',100],['op','Opacity (%)','number',100],['fg','Text color','color',''],['bg','Background','color','']],outs:[['out','state','state']]},
 };
-const TRIGGER_NAMES={hover:'on hover',click:'on click',load:'on load',inview:'when scrolled into view',logic:'from page logic'};
+const TRIGGER_NAMES={hover:'on hover',click:'on click',load:'on load',inview:'when scrolled into view',logic:'from page logic',note:'on a note',song:'with the song'};
 const emptyGraph=()=>({nodes:[],wires:[]});
 
 // SECTION: runtime
@@ -67,6 +73,7 @@ function pxRuntime(G,anims,env){
       case 'curPage':return env.pageName?env.pageName():'';
       case 'random':{const a=Math.ceil(Math.min(+f.min||0,+f.max||0)),b=Math.floor(Math.max(+f.min||0,+f.max||0));return a+Math.floor(Math.random()*(b-a+1))}
       case 'change':return n.last??textOf(f.el);
+      case 'note':{const e=n.lastNote;return!e?'':p==='vel'?e.v:noteName(e.p)}
       case 'calc':return calc(value(n,'expr'));
       case 'join':return String(value(n,'a'))+String(value(n,'b'));
       case 'math':{const a=+value(n,'a')||0,b=+value(n,'b')||0;return({'+':a+b,'−':a-b,'×':a*b,'÷':b?a/b:NaN,'%':b?a%b:NaN,min:Math.min(a,b),max:Math.max(a,b)})[f.op]}
@@ -135,6 +142,55 @@ function pxRuntime(G,anims,env){
     else if(spec.trigger==='load')play(ref,'forward');
     else if(spec.trigger==='inview'&&io){h.__pxRef=ref;io.observe(h)}
   }
+  // SECTION: notes and the song clock
+  // FORMAT: a note is {on, p (MIDI 0-127), v (1-127), src: 'keyboard'|'song', track (song track name)}.
+  // RULE: Notes are names (C4, F#3, Bb2), MIDI numbers, ranges (C3-C4) or drum words (kick, snare, hat…), any mix.
+  const DRUMW={kick:[35,36],snare:[38,40],clap:[39],hat:[42,44,46],crash:[49,57],ride:[51,59],tom:[41,43,45,47,48,50],cowbell:[56],tambourine:[54]};
+  const N12='C C# D D# E F F# G G# A A# B'.split(' ');
+  function noteName(p){return N12[p%12]+(Math.floor(p/12)-1)}
+  function noteNum(t){if(/^\d{1,3}$/.test(t))return+t;const m=/^([a-g])([#♯b♭]?)(-?\d)$/i.exec(t);if(!m)return null;
+    const p=[0,2,4,5,7,9,11]['cdefgab'.indexOf(m[1].toLowerCase())]+(/[#♯]/.test(m[2])?1:/[b♭]/.test(m[2])?-1:0)+(+m[3]+1)*12;return p>=0&&p<128?p:null}
+  function noteMatch(src){
+    const set=new Set();let any=true;
+    for(const t of String(src||'').toLowerCase().split(/[\s,]+/).filter(Boolean)){any=false;
+      if(DRUMW[t]){DRUMW[t].forEach(p=>set.add(p));continue}
+      const one=noteNum(t);if(one!=null){set.add(one);continue}
+      for(let i=1;i<t.length;i++)if(t[i]==='-'){const a=noteNum(t.slice(0,i)),b=noteNum(t.slice(i+1));if(a!=null&&b!=null){for(let q=Math.min(a,b);q<=Math.max(a,b);q++)set.add(q);break}}}
+    return any?()=>true:p=>set.has(p);
+  }
+  const noteH=[];
+  const listen=(o,on,off)=>noteH.push({from:o.from||'any',match:noteMatch(o.notes),track:String(o.track||'').trim().toLowerCase(),sound:o.sound!==false,on,off});
+  function noteEv(e){let sound=false;
+    for(const h of noteH)if((h.from==='any'||h.from===e.src)&&(e.src!=='song'||!h.track||h.track===String(e.track||'').toLowerCase())&&h.match(e.p)){if(h.sound)sound=true;(e.on?h.on:h.off)(e)}
+    return sound}
+  for(const n of G.nodes)if(n.type==='note')listen(n.f,e=>{n.lastNote=e;start(n)},e=>{n.lastNote=e;steps=0;fire(n,'off')});
+  const songAnims=[];
+  for(const {ref,spec} of anims){const a=played.get(ref);if(!a)continue;
+    if(spec.trigger==='song')songAnims.push({a,ref,song:spec.song,frameMs:spec.frameMs||0,last:-1,orig:null});
+    // RULE: while held, a note plays to B and its release back to A (as hover does); otherwise each note plays it whole.
+    else if(spec.trigger==='note'){const o=spec.note||{};let down=0;
+      listen(o,()=>{down++;if(o.hold!==false)play(ref,'forward');else for(const x of a.list){x.playbackRate=1;x.currentTime=0;x.play()}},()=>{down=Math.max(0,down-1);if(o.hold!==false&&!down)play(ref,'back')})}}
+  if(env.listen&&noteH.some(h=>h.from!=='song'))offs.push(env.listen(e=>{if(noteEv(e)&&e.on&&env.sound)env.sound(e)}));
+  // INVARIANT: song notes and song animations follow env.clock(), the playing song's own position, read every frame,
+  //   so nothing drifts from the music however long it plays; a jump back (a loop, a seek) releases what was held.
+  let raf=0;
+  if(env.clock&&env.notes&&(songAnims.length||noteH.some(h=>h.from!=='keyboard'))){
+    const rq=env.raf||(f=>requestAnimationFrame(f)),cq=env.caf||(id=>cancelAnimationFrame(id));let last=null,cur=null,act=[];
+    const release=()=>{for(const x of act)noteEv({on:false,p:x.p,v:0,src:'song',track:x.track});act=[]};
+    const tick=()=>{raf=rq(tick);const c=env.clock();
+      if(!c){release();last=null;return}
+      const N=env.notes(c.song);if(!N)return;
+      if(c.song!==cur||last==null||c.t<last-.05){release();last=c.t<.15?-1:c.t;cur=c.song}
+      let lo=0,hi=N.length;while(lo<hi){const m=(lo+hi)>>1;if(N[m].t<=last)lo=m+1;else hi=m}
+      for(let i=lo;i<N.length&&N[i].t<=c.t;i++){const x=N[i];act.push(x);noteEv({on:true,p:x.p,v:x.v,src:'song',track:x.track,end:x.t+x.d})}
+      act=act.filter(x=>{if(x.t+x.d>c.t)return true;noteEv({on:false,p:x.p,v:0,src:'song',track:x.track});return false});
+      last=c.t;
+      for(const s of songAnims)if(s.song===''||String(s.song)===String(c.song)){for(const x of s.a.list){x.pause();x.currentTime=c.t*1000}
+        // RULE: a flipbook going with the song shows one frame per so many beats, counted from the song's start.
+        const fr=s.frameMs&&env.frames&&env.frames(s.ref),e=fr&&fr.length&&env.el(s.ref);
+        if(e&&e.target){const i=Math.floor(c.t*1000/s.frameMs)%fr.length;if(i!==s.last){if(s.orig==null)s.orig=e.target.getAttribute('src')||'';s.last=i;e.target.src=fr[i]}}}};
+    raf=rq(tick);offs.push(()=>{cq(raf);for(const s of songAnims)if(s.orig!=null){const e=env.el(s.ref);if(e&&e.target)e.target.src=s.orig}});
+  }
   env.animate=(ref,dir)=>play(ref,dir);
   // RULE: On start runs once per visit of the site (a page seen before doesn't start again); On page open, each time.
   if(!env.noStart)for(const n of G.nodes)if(n.type==='start')start(n);
@@ -150,8 +206,20 @@ function animSpec(g){
   // INVARIANT: keys are sorted by at, clamped to (0,100); a reversed animation (from B) mirrors them to 100-at.
   const keys=g.wires.filter(w=>w.b===tr.id&&w.bp==='via').map(w=>g.nodes.find(n=>n.id===w.a)).filter(n=>n&&n.type==='key')
     .map(n=>({at:Math.min(99.9,Math.max(.1,+n.f.at||0)),x:+n.f.x||0,y:+n.f.y||0,rot:+n.f.rot||0,scale:n.f.scale===''?100:+n.f.scale,op:n.f.op===''?100:+n.f.op})).sort((a,b)=>a.at-b.at);
-  return{trigger:started?trig.f.on:'logic',dur:+tr.f.dur||0,delay:+tr.f.delay||0,ease:tr.f.ease,curve:tr.f.curve,keys,repeat:tr.f.repeat,alt:!!tr.f.alt,from:fromN&&fromN.type==='stateB'?'B':'A',
+  // RULE: counted in beats, an animation is measured against its song's tempo, so it stays on the beat when that changes.
+  const tm=tr.f.unit==='beats'&&(songById(tr.f.tempo)||state.songs[0]),k=tm?beatTicks(tm)*tickSec(tm)*1000:1,on=started?trig.f.on:'logic',T=trig&&trig.f||{};
+  const song=on==='song'?(songById(T.song)||state.songs[0]||{id:''}).id:'';
+  const sm=on==='song'&&+T.beats>0&&(songById(T.song)||state.songs[0]),frameMs=sm?+T.beats*beatTicks(sm)*tickSec(sm)*1000:0;
+  return{trigger:on,dur:Math.round((+tr.f.dur||0)*k),delay:Math.round((+tr.f.delay||0)*k),beatMs:tm?k:0,tempo:tm?tm.id:'',song,frameMs,
+    note:on==='note'?{from:T.from||'any',notes:T.notes||'',track:T.track||'',hold:T.hold!==false,sound:T.sound!==false}:null,ease:tr.f.ease,curve:tr.f.curve,keys,repeat:tr.f.repeat,alt:!!tr.f.alt,from:fromN&&fromN.type==='stateB'?'B':'A',
     b:{x:+b.f.x||0,y:+b.f.y||0,rot:+b.f.rot||0,scale:b.f.scale===''?100:+b.f.scale,op:b.f.op===''?100:+b.f.op,fg:b.f.fg||'',bg:b.f.bg||''}};
+}
+// FORMAT: a song's notes in seconds from its start, sorted, for the runtime's song clock: [{t, d, p, v, track}].
+// INVARIANT: self-contained; exports carry its source. Muted tracks are silent in the render, so they send no notes.
+function pxSongNotes(m){
+  if(!m||!m.tracks)return[];const sp=60/(m.bpm||120)/480,out=[];
+  for(const t of m.tracks)if(!t.mute)for(const n of t.notes||[])out.push({t:n.t*sp,d:Math.max(n.d*sp,.03),p:n.p,v:n.v||100,track:t.name||''});
+  return out.sort((a,b)=>a.t-b.t);
 }
 function defaultAnimGraph(){
   const g={nodes:[{id:'n1',type:'trigger',x:30,y:40},{id:'n2',type:'stateA',x:30,y:200},{id:'n3',type:'stateB',x:30,y:310},{id:'n4',type:'transition',x:330,y:120}],

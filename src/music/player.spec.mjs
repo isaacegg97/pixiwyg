@@ -81,3 +81,26 @@ test('the vendored player and skins are what NOTICES says they are', async () =>
   expect(notices).toContain('Webamp 2.3.1');
   expect(readFileSync(new URL('webamp.bundle.min.js', LIB), 'utf8')).toContain('Webamp');
 });
+
+test('INVARIANT: in Play, an animation set to go with the song follows the player\'s own position, and its notes fire', async ({page}) => {
+  const errors = await boot(page);
+  await page.evaluate(() => window.__pixiwyg.openExample('musician'));
+  await page.evaluate(() => {
+    const P = window.__pixiwyg, S = P.state(), g = P.defaultAnimGraph(), h = P.defaultAnimGraph();
+    g.nodes.find(n => n.type === 'trigger').f.on = 'song'; Object.assign(g.nodes.find(n => n.type === 'transition').f, {dur: 60000, ease: 'linear'});
+    Object.assign(h.nodes.find(n => n.type === 'trigger').f, {on: 'note', from: 'song', notes: '', hold: false});
+    S.els.push({id: 'sg', tag: 'p', content: 'with the song', x: 40, y: 600, w: 160, z: 50, fileId: null, selector: null, anim: g},
+      {id: 'nt', tag: 'p', content: 'on its notes', x: 240, y: 600, w: 160, z: 51, fileId: null, selector: null, anim: h});
+    P.renderAll();
+  });
+  await page.click('#playBtn');
+  await press(page, '▶ Play');
+  await expect(playing(page)).toBeAttached({timeout: 20_000});
+  await expect.poll(() => page.evaluate(() => window.__pixiwyg.hostOf('sg').getAnimations()[0].currentTime), {timeout: 10_000}).toBeGreaterThan(300);
+  const r = await page.evaluate(() => { const P = window.__pixiwyg, c = P.playerClock(), a = P.hostOf('sg').getAnimations()[0], n = P.hostOf('nt').getAnimations()[0];
+    return {lag: Math.abs(a.currentTime / 1000 - c.t), fired: n.playState !== 'paused' || n.currentTime > 0}; });
+  expect(r.lag).toBeLessThan(.1);
+  expect(r.fired).toBe(true);
+  await page.keyboard.press('Escape');
+  expect(errors).toEqual([]);
+});

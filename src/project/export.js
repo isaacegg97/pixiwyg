@@ -2,7 +2,7 @@
 const lsGet=(k,d)=>{try{return localStorage.getItem(k)??d}catch(e){return d}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
 // SAFETY: unpkg URL pinned to the vendored release with SRI; a test keeps the two in step.
 const WEBAMP_CDN='https://unpkg.com/webamp@2.3.1/built/webamp.bundle.min.js',WEBAMP_SRI='sha384-9waE2xOw4VkyDDXbmumm9jR3ovD2w9gGl0+ehyi66rJSOPx9lyNxs8+jSS2HruM6';
-const expOpt={site:lsGet('pixiwyg.exp.site','0')==='1',playerCdn:lsGet('pixiwyg.exp.playerCdn','1')==='1',marks:lsGet('pixiwyg.exp.marks','1')==='1',nojs:lsGet('pixiwyg.exp.nojs','1')==='1',fonts:lsGet('pixiwyg.exp.fonts','1')==='1',prune:lsGet('pixiwyg.exp.prune','1')==='1',imposed:lsGet('pixiwyg.exp.imposed','0')==='1',bleed:lsGet('pixiwyg.exp.bleed','0')==='1'};
+const expOpt={site:lsGet('pixiwyg.exp.site','0')==='1',playerCdn:lsGet('pixiwyg.exp.playerCdn','1')==='1',marks:lsGet('pixiwyg.exp.marks','1')==='1',nojs:lsGet('pixiwyg.exp.nojs','1')==='1',fonts:lsGet('pixiwyg.exp.fonts','1')==='1',prune:lsGet('pixiwyg.exp.prune','1')==='1',imposed:lsGet('pixiwyg.exp.imposed','0')==='1',bleed:lsGet('pixiwyg.exp.bleed','0')==='1',bake:lsGet('pixiwyg.exp.bake','1')==='1'};
 const GF_LINK='<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Rubik+Mono+One&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,800;1,9..144,400&family=VT323&family=Press+Start+2P&family=Neucha&family=Patrick+Hand+SC&display=swap">';
 // INVARIANT: pseudo-elements and state pseudo-classes can't match a static tree; stripped before matching.
 const PSEUDO=/::[\w-]+(?:\([^)]*\))?|:(?:before|after|first-line|first-letter|hover|focus|focus-visible|focus-within|active|visited|link|any-link|target|checked|disabled|enabled|indeterminate|placeholder-shown|default|valid|invalid|required|optional|read-only|read-write|in-range|out-of-range|user-invalid|autofill|-webkit-[\w-]+|-moz-[\w-]+|-ms-[\w-]+)(?![\w-])(?:\([^)]*\))?/g;
@@ -45,7 +45,9 @@ async function buildExport(opt={}){
   const trees=[...state.els].sort((a,b)=>(a.z||0)-(b.z||0)).map((el,i)=>({el,i,t:makeTree(el)}));
   // FORMAT: exported logic names elements by back-to-front index; data-px finds the box, data-pxt the element in it.
   const G=cleanGraph(state.logic,{ref:id=>{const x=trees.find(x=>x.el.id===id);return x?x.i:null},songRef:id=>{const i=state.songs.findIndex(s=>s.id===id);return i<0?null:i},pageRef:id=>{const p=SP&&SP.pages.find(x=>x.id===id);return p?p.slug:null}});
-  const anims=trees.filter(x=>x.el.anim).map(x=>({ref:x.i,spec:animSpec(x.el.anim)})).filter(a=>a.spec);
+  // FORMAT: exported songs are numbered as the music player numbers them; a song animation names its song by number.
+  const songNo=id=>{const i=state.songs.findIndex(s=>s.id===id);return i<0?0:i};
+  const anims=trees.filter(x=>x.el.anim).map(x=>({ref:x.i,spec:animSpec(x.el.anim)})).filter(a=>a.spec).map(a=>a.spec.song?{...a,spec:{...a.spec,song:songNo(a.spec.song)}}:a);
   const live=G.nodes.length>0||anims.length>0;buildExport.live={G,anims};
   if(live)for(const x of trees)x.t.target.setAttribute('data-pxt','');
   // RULE: a 3D element's model file is for re-baking in the editor; the page only needs its atlas.
@@ -56,7 +58,7 @@ async function buildExport(opt={}){
   const pos=(el,dx=0,dy=0)=>{const b=isScaled(el)&&layoutBox(el);return`left:${el.x-dx}px;top:${el.y-dy}px;${el.w?`width:${el.w}px;`:''}z-index:${el.z||0}${b?`;pointer-events:none;transform-origin:${Math.round(b.w/2)}px ${Math.round(b.h/2)}px`:''}`};
   // RULE: an element that links to a page is wrapped in a real link, so it works with scripts off too.
   const linked=(x,html)=>{const h=x.el.link&&hrefOf(x.el.link);return h?`<a class="pxlink" href="${escH(h)}">${html}</a>`:html};
-  const all=!expOpt.prune;let kept='',body,tail='',sheetTags='',musicTail='',dragTail='',hydrate='';
+  const all=!expOpt.prune;let kept='',body,tail='',sheetTags='',musicTail='',dragTail='',liveTail='',hydrate='';
   let one;
   if(expOpt.nojs){
     for(const x of trees){x.css=sheetsFor(x.el,x.t.file).map(sh=>cssFrom(pruneRules(sh.cssRules,nodesOf(x.t),all))).join('\n');kept+=x.css+'\n'}
@@ -110,12 +112,25 @@ list.push(reset);r.adoptedStyleSheets=list;r.append(tpl.content.cloneNode(true))
       tail+=expOpt.playerCdn?`\n<script src="${WEBAMP_CDN}" integrity="${WEBAMP_SRI}" crossorigin="anonymous"><\/script>`:`\n<script>${escTag(await fetchLib('webamp.bundle.min.js'))}<\/script>`;
       tail+=`
 <script>
-const pxSynth=(${pxSynth}),pxRender=(${pxRender}),pxFx=(${pxFx}),pxSample=(${pxSample}),pxWav=(${pxWav}),pxPlayer=(${pxPlayer});
+const pxSynth=(${pxSynth}),pxRender=(${pxRender}),pxFx=(${pxFx}),pxSample=(${pxSample}),pxWav=(${pxWav}),pxPlayer=(${pxPlayer}),pxSongNotes=(${pxSongNotes});
 window.__pxMusic=(()=>{const S=${J(state.songs.map(cleanSong))},MAP=${J(GMV)},done={};
 const p=pxPlayer({win:window,Webamp:()=>Promise.resolve(window.Webamp),skin:()=>${J(skin)},skins:[],song:async i=>{const k=S[+i]?+i:0,m=S[k];if(!m)return null;if(!done[k]){const b=await pxRender(m,MAP);done[k]={key:'song'+k,blob:pxWav(b),duration:b.duration,title:m.name,artist:${J(state.project?state.project.name:'')}}}return done[k]}});
+const N={};window.__pxSong={clock:()=>{const c=p.clock(),k=S[+c?.song]?+c.song:0;return c?{song:k,t:c.t}:null},notes:k=>N[k]||(N[k]=pxSongNotes(S[k]))};
 return(what,e,song)=>p.control(what,e&&e.host,song)})();
 <\/script>`;musicTail=tail.slice(tl0);
     }
+    // RULE: a page that listens to the keyboard brings live input and a piano to sound the keys; the AudioContext waits
+    //   for the first note, as browsers ask.
+    const keys=G.nodes.some(n=>n.type==='note'&&n.f.from!=='song')||anims.some(a=>a.spec.trigger==='note'&&a.spec.note.from!=='song');
+    if(keys){const t0=tail.length;tail+=`
+<script>
+window.__pxLive=(()=>{const live=(${pxLiveNotes}),synth=${music?'pxSynth':`(${pxSynth})`},MAP=${J(GMV)},T={drums:false,prog:0,vol:110};let ac=null,syn=null;
+return{listen:cb=>live(window,cb),sound:e=>{try{if(!ac){ac=new AudioContext();const g=ac.createGain();g.gain.value=.45;g.connect(ac.destination);syn=synth(ac,g,MAP)}
+if(ac.state==='suspended')ac.resume();syn.note(T,e.p,ac.currentTime+.005,1.2,e.v)}catch(x){}}}})();
+<\/script>`;liveTail=tail.slice(t0)}
+    // FORMAT: window.__pxFrames = {'<prefix><ref>': [PNG data URLs]}: the stills of each flipbook that goes with a song.
+    const F={};for(const a of anims)if(a.spec.frameMs){const x=trees.find(t=>t.i===a.ref),d=x&&x.el.tag==='img'&&await decodeAPNG(x.el.content);if(d)F[pre+a.ref]=d.frames}
+    if(Object.keys(F).length){const t0=tail.length;tail+=`\n<script>window.__pxFrames=Object.assign(window.__pxFrames||{},${J(F)});<\/script>`;liveTail+=tail.slice(t0)}
     // RULE: drag-to-turn models bring their own small runtime, logic or not.
     if(state.els.some(e=>/(^|\s)drag(\s|$)/.test(e.extra||'')&&e.attrs&&e.attrs['data-px3d']))dragTail=`
 <script>
@@ -124,7 +139,7 @@ return(what,e,song)=>p.control(what,e&&e.host,song)})();
     if(live){
       tail+=`
 <script>
-(${pxRuntime})(${J(G)},${J(anims)},{el:i=>{const h=document.querySelector('.el[data-px="'+i+'"]');return h?{host:h,target:h.shadowRoot&&h.shadowRoot.querySelector('[data-pxt]')}:null},animate(){},music:window.__pxMusic${SP?siteEnvJS(SP,J):''}});
+(${pxRuntime})(${J(G)},${J(anims)},{...window.__pxSong,...window.__pxLive,frames:r=>(window.__pxFrames||{})['${pre}'+r],el:i=>{const h=document.querySelector('.el[data-px="'+i+'"]');return h?{host:h,target:h.shadowRoot&&h.shadowRoot.querySelector('[data-pxt]')}:null},animate(){},music:window.__pxMusic${SP?siteEnvJS(SP,J):''}});
 <\/script>`}
   }
   // PERF: only font faces whose family the kept CSS names are embedded.
@@ -134,7 +149,7 @@ return(what,e,song)=>p.control(what,e&&e.host,song)})();
   let link='';
   if(expOpt.fonts){try{consider(parseFaces(await fetchLib('fonts.css')))}catch(e){link=GF_LINK}}else link=GF_LINK;
   const title=escH(SP&&SP.title?SP.title:state.project?state.project.name:'PIXIWYG page'),font=`font:16px/1.35 "Times New Roman",Times,serif;color:${pagePal()?palC(1):'#000'}`;
-  if(opt.part)return{html:trees.map(x=>linked(x,one(x,0,0))).join('\n'),bg:bgDecl(state.bgd),font,kept,faces,link,sheetTags,hydrate,musicTail,dragTail,rawTail:tail,G,anims,live,title};
+  if(opt.part)return{html:trees.map(x=>linked(x,one(x,0,0))).join('\n'),bg:bgDecl(state.bgd),font,kept,faces,link,sheetTags,hydrate,musicTail,dragTail,liveTail,rawTail:tail,G,anims,live,title};
   let css,html;
   if(!isFixed()){
     css=`body{margin:0;background:#ddd}.page{position:relative;width:${W}px;height:${H}px;margin:24px auto;${bgDecl(state.bgd)};${font}}.el{position:absolute}`;
@@ -165,20 +180,22 @@ return(what,e,song)=>p.control(what,e&&e.host,song)})();
       html=rs.map(r=>`<section class="page" aria-label="${pageLabel(r.i)}">\n${pg(r)}${marks}\n</section>`).join('\n');
     }
   }
-  return `<!doctype html>
+  return bakeOut(opt,`<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="generator" content="PIXIWYG ${APP_VERSION}">
 <title>${title}</title>${link?'\n'+link:''}
 <style>${css}
 ${faces.join('\n')}</style></head><body>
 ${html}${tail?'\n'+tail:''}
-</body></html>`;
+</body></html>`);
 }
+// INVARIANT: the live preview shows the page as the editor does, so it is never baked.
+const bakeOut=(opt,html)=>opt.live||!expOpt.bake?html:bakeMotion(html);
 function syncExpUI(){
   $('#optSite').checked=expOpt.site;$('#optSiteRow').hidden=!(multiPage()&&siteOn());$('#optNoJs').checked=expOpt.nojs;$('#optFonts').checked=expOpt.fonts;$('#optPrune').checked=expOpt.prune;$('#optImposed').checked=expOpt.imposed;$('#optBleed').checked=expOpt.bleed;
   const c=state.canvas||{type:'web'},fold=c.type==='booklet'||c.type==='minizine';
   $('#optImposedRow').hidden=!fold;$('#optBleedRow').hidden=!(c.type==='page'||c.type==='booklet'||c.type==='minizine')||(fold&&expOpt.imposed);$('#printBtn').hidden=!isFixed();
-  $('#optMarks').checked=expOpt.marks;$('#optPlayerCdn').checked=expOpt.playerCdn;$('#optPlayerRow').hidden=expOpt.nojs||!(state.logic&&state.logic.nodes.some(n=>n.type==='song'));const imp=fold&&expOpt.imposed;$('#optMarksRow').hidden=!(imp||(expOpt.bleed&&!$('#optBleedRow').hidden));
+  $('#optMarks').checked=expOpt.marks;$('#optBake').checked=expOpt.bake;$('#optPlayerCdn').checked=expOpt.playerCdn;$('#optPlayerRow').hidden=expOpt.nojs||!(state.logic&&state.logic.nodes.some(n=>n.type==='song'));const imp=fold&&expOpt.imposed;$('#optMarksRow').hidden=!(imp||(expOpt.bleed&&!$('#optBleedRow').hidden));
   $('#optMarksName').textContent=imp?'Fold and cut marks':'Crop marks';
   $('#optMarksNote').textContent=imp?(c.type==='minizine'?'Short ticks at the folds, and a dashed line where the middle slit is cut.':'Short ticks at the edge of each sheet where it folds.'):'Lines outside the bleed that show where to trim. Adds a strip of paper around each page.';
   $('#optImposedNote').textContent=c.type==='minizine'?'All eight pages on one sheet: fold it, cut the middle slit, fold again.':'Two pages to a sheet in staple order. Print double-sided, flipping on the short edge.';
@@ -193,8 +210,8 @@ async function refreshExport(){
   // RULE: warn only about outside references that survived into this export.
   const outside=[...new Set([...html.matchAll(/url\(\s*(['"]?)(?!data:|#)([^'")]+)\1\s*\)|@import\s+(?:url\()?\s*['"]?([^'")\s;]+)/gi)].map(m=>(m[2]||m[3]||'').trim()).filter(u=>u&&!u.startsWith('https://fonts.googleapis.com')))];
   $('#expWarn').textContent=outside.length?`Not fully self-contained. These still point outside the file: ${outside.slice(0,6).join(', ')}${outside.length>6?` and ${outside.length-6} more`:''}. Drop the missing files into the editor to bake them in.`:'';
-  const needsJs=expOpt.nojs&&((state.logic&&state.logic.nodes.length)||state.els.some(e=>{const a=e.anim&&animSpec(e.anim);return a&&(a.trigger==='click'||a.trigger==='logic')}));
-  if(needsJs)$('#expWarn').textContent=($('#expWarn').textContent+' Page logic and click animations only run in the export with the script; turn off “No JavaScript” to keep them.').trim();
+  const needsJs=expOpt.nojs&&((state.logic&&state.logic.nodes.length)||state.els.some(e=>{const a=e.anim&&animSpec(e.anim);return a&&['click','logic','note','song'].includes(a.trigger)}));
+  if(needsJs)$('#expWarn').textContent=($('#expWarn').textContent+' Page logic, and animations started by a click, a note or a song, only run in the export with the script; turn off “No JavaScript” to keep them.').trim();
   if(state.logic&&state.logic.nodes.some(n=>n.type==='song')){
     const w=expOpt.nojs?' The music player needs the script: turn off “No JavaScript” to keep it.':soundfont?' The exported player plays the song with the built-in synth; SoundFonts stay in PIXIWYG.':'';
     if(w)$('#expWarn').textContent=($('#expWarn').textContent+w).trim()}
@@ -202,7 +219,7 @@ async function refreshExport(){
   const kb=new Blob([html]).size/1024;$('#expSize').textContent=kb>1024?`${(kb/1024).toFixed(1)} MB`:`${kb.toFixed(0)} KB`;
 }
 function setExp(k,v){expOpt[k]=v;lsSet('pixiwyg.exp.'+k,v?'1':'0');syncExpUI();if(!$('#exportModal').hidden)refreshExport()}
-for(const [id,k] of [['optSite','site'],['optNoJs','nojs'],['optFonts','fonts'],['optPrune','prune'],['optImposed','imposed'],['optBleed','bleed'],['optMarks','marks'],['optPlayerCdn','playerCdn']])$('#'+id).onchange=e=>setExp(k,e.target.checked);
+for(const [id,k] of [['optSite','site'],['optNoJs','nojs'],['optFonts','fonts'],['optPrune','prune'],['optImposed','imposed'],['optBleed','bleed'],['optMarks','marks'],['optPlayerCdn','playerCdn'],['optBake','bake']])$('#'+id).onchange=e=>setExp(k,e.target.checked);
 // HACK: the desktop app has no page-facing API. A blob window opened with #pdf=<name> is denied by main.js, which
 //   loads the blob in a hidden window, runs printToPDF at the page's own @page size, and asks where to save it.
 const DESKTOP=location.protocol==='app:';
