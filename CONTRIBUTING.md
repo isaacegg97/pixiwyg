@@ -19,8 +19,8 @@ index.html            the app, with its Content-Security-Policy stamped to the n
 ```
 
 The usual loop: `cd tools`, run `npm run watch` in one terminal and `npm run serve` in another, edit a file in
-`src/`, then reload http://localhost:4173/. `npm test` rebuilds the page before it runs. `index.html` is committed
-because it is the hostable app, so commit the rebuilt page together with your source change.
+`src/`, then reload http://localhost:4173/. `npm test` rebuilds the page before it runs. `index.html` is a build artifact and
+is ignored by git: commit only `src/`.
 
 Some things about `build.json` that are easy to miss:
 
