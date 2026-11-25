@@ -37,7 +37,9 @@ function cleanThemeCSS(t){
   return String(t??'').slice(0,THEME_MAX)
     .replace(/<\/?style/gi,'')
     .replace(/@import[^;]*;?/gi,'')
-    .replace(/url\(\s*(['"]?)(?!data:)[^)]*\)/gi,'none')
+    // FIX: a quoted url() is read to its closing quote, so a data: SVG keeps the parentheses inside it (rotate(),
+    //   url(#f)). The old pattern could match its optional quote as empty, so every quoted data: url became none.
+    .replace(/url\(\s*(?:(["'])(.*?)\1|([^)'"]*))\s*\)/gi,(m,q,a,b)=>/^data:/i.test((a??b??'').trim())?m:'none')
     .replace(/expression\s*\(/gi,'(');
 }
 const cleanThemeName=v=>String(v??'').replace(/\.css$/i,'').replace(/[\u0000-\u001f]/g,'').trim().slice(0,40)||'Custom';

@@ -166,3 +166,26 @@ test('the export saves as an .html file named after the project', async ({page})
   const [dl2] = await Promise.all([page.waitForEvent('download'), page.keyboard.press('ControlOrMeta+s')]);
   expect(dl2.suggestedFilename()).toBe('my-zine.html');
 });
+
+test('RULE: an export bakes CSS-animated SVG images to APNG at 2x; the editor and live preview keep the SVG', async ({page}) => {
+  const errors = await freshPage(page);
+  const r = await page.evaluate(async () => {
+    const T = window.__pixiwyg, S = T.state();
+    const svg = body => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'>${body}</svg>`);
+    const moving = svg(`<style>.a{animation:k 1s linear infinite}.b{animation:k 1.5s linear infinite;animation-delay:-.4s}@keyframes k{to{opacity:0}}@media (prefers-reduced-motion:reduce){*{animation:none!important}}</style><rect class='a' width='20' height='40' fill='red'/><rect class='b' x='20' width='20' height='40' fill='blue'/>`);
+    const still = svg(`<rect width='40' height='40' fill='green'/>`), smil = svg(`<rect width='40' height='40'><animate attributeName='x' to='9' dur='1s' repeatCount='indefinite'/></rect>`);
+    const layer = src => ({id: T.APP_VERSION + src.length, type: 'image', src, w: 40, h: 40, fit: 'tile', pos: 'left top', scale: 100});
+    S.bgd.layers = [layer(moving), layer(still), layer(smil)];
+    const prev = T.expOpt.bake; T.expOpt.bake = true;
+    const html = await T.buildExport(), live = await T.buildExport({live: true});
+    T.expOpt.bake = false; const off = await T.buildExport(); T.expOpt.bake = prev;
+    const png = (html.match(/image-set\(url\("(data:image\/png;base64,[^"]+)"\) 2x\)/) || [])[1];
+    const anim = png && await T.decodeAPNG(png), img = new Image(); if (png) { img.src = png; await img.decode(); }
+    const has = (h, u) => h.includes(u.slice(0, 120).replace(/[\s"<>\\]/g, c => encodeURIComponent(c)));
+    return {baked: !!png, frames: anim ? anim.frames.length : 0, w: img.naturalWidth, movingGone: !has(html, moving),
+      stillKept: has(html, still), smilKept: has(html, smil), liveKept: has(live, moving), offKept: has(off, moving)};
+  });
+  // INVARIANT: loops of 1s and 1.5s meet at 3s: 72 frames at 24 fps.
+  expect(r).toEqual({baked: true, frames: 72, w: 80, movingGone: true, stillKept: true, smilKept: true, liveKept: true, offKept: true});
+  expect(errors).toEqual([]);
+});

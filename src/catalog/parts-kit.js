@@ -33,25 +33,6 @@ const KIT=[
     ['bookish.css','hr','hr.fleuron',null,'Fleuron rule',300],
     ['bookish.css','p','p.colophon','Printed in pink at the library. Fifty copies, numbered by hand.','Colophon',300],
   ]],
-  ['Dredful',[
-    ['dredful.css','h1','h1.eldritch','THE DREAD','Eldritch title',460],
-    ['dredful.css','h1','h1.spine','TECHBASE','Spine title',460],
-    ['dredful.css','h1','h1.aloha','ALOHA','Aloha title',420],
-    ['dredful.css','h2','h2.sigil','Litany','Sigil heading',360],
-    ['dredful.css','p','p.litany','The machine dreams in vertebrae. Its tubes hum a hymn in a key the living cannot hold.','Litany',340],
-    ['dredful.css','blockquote','blockquote.necronomicon','That is not dead which can eternal lie, and with strange aeons even the shirt may die.','Necronomicon quote',360],
-    ['dredful.css','div','.techbase','<b>SECTOR 7 · CRYO</b><br>Biomass nominal. Do not feed the walls.','Techbase panel',300],
-    ['dredful.css','div','.aloha','<b>Mahalo</b> for visiting the void.','Aloha panel',260],
-    ['dredful.css','div','.warning','Do not wake the archive','Warning stripe',300],
-    ['dredful.css','button','button.ritual','Begin the rite','Ritual button'],
-    ['dredful.css','button','button.aloha','Hang loose','Aloha button'],
-    ['dredful.css','hr','hr',null,'Vertebrae rule',320],
-    ['dredful.css','span','span.sigil','Sigil','Sigil tag'],
-    ['dredful.css','h1','h1.stencil','NO GODS','Stencil title',460],
-    ['dredful.css','p','p.scrawl','the walls are listening','Scrawl',280],
-    ['dredful.css','div','.flyer','<b>LIVE IN THE CATACOMBS</b><br>Fri · 9pm · bring a torch','Flyer',260],
-    ['dredful.css','span','span.tape','Do not resuscitate','Tape label'],
-  ]],
   ['Sugarplum',[
     ['sugarplum.css','h1','h1.rainbow','Sweet Dreams','Rainbow title',460],
     ['sugarplum.css','h1','h1.unicorn','Unicorn Club','Unicorn title',420],
@@ -171,10 +152,7 @@ async function seedKit(){
   const have=new Set(prims.cols),q={quiet:true};let n=0;
   for(const [col,list] of KIT){if(have.has(col))continue;for(const spec of [...list].reverse()){try{addPrim(await kitPrim(spec,col),q);n++}catch(e){}}}
   if(!have.has('Paper & surfaces'))for(const [name,base,layers] of [...KIT_BGS].reverse()){addPrim({kind:'background',name,collection:'Paper & surfaces',data:{bg:{base:cleanColor(base),layers:layers.map(cleanLayer).filter(Boolean)}}},q);n++}
-  // RULE: Dredful's page background is its pulsing techbase, read from the sheet itself so the texture has one home.
-  if(!have.has('Dredful'))try{const m=/--dr-techbase:url\("([^"]+)"\)/.exec(await fetchLib('dredful.css'));
-    if(m)addPrim({kind:'background',name:'Techbase, pulsing',collection:'Dredful',data:{bg:{base:cleanColor({c:'#040303'}),layers:[cleanLayer({type:'image',src:m[1],w:240,h:240,fit:'tile',pos:'left top',scale:100})].filter(Boolean)}}},q),n++}catch(e){}
-  // RULE: each house theme's page background is its wallpaper, read from its own sheet, like Dredful's techbase.
+  // RULE: each house theme's page background is its wallpaper, read from its own sheet, so the texture has one home.
   for(const [col,file,v,name,base,w,h] of [['Sugarplum','sugarplum.css','sp-tile','Unicorn wallpaper','#efe3ff',240,240],['Undead Darlings','undead-darlings.css','ud-tile','Graveyard at night','#0b0f0b',260,260],['Velvet Requiem','velvet-requiem.css','vr-damask','Black damask','#0b0509',140,180]]){
     if(have.has(col))continue;try{const m=new RegExp(`--${v}:url\\("([^"]+)"\\)`).exec(await fetchLib(file));
       if(m)addPrim({kind:'background',name,collection:col,data:{bg:{base:cleanColor({c:base}),layers:[cleanLayer({type:'image',src:m[1],w,h,fit:'tile',pos:'left top',scale:100})].filter(Boolean)}}},q),n++}catch(e){}}

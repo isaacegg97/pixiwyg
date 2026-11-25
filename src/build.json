@@ -182,6 +182,7 @@
     "page/site.js",
     "project/print.js",
     "project/export.js",
+    "project/motion-bake.js",
     "project/live-preview.js",
     "project/projects.js",
     "project/storage.js",

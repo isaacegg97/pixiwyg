@@ -147,11 +147,11 @@ test('first launch offers a theme: cards apply at once, arrows move between them
   const next = await page.evaluate(() => window.__pixiwyg.theme());
   expect(next).not.toBe('t:win98');
   await expect(page.locator(`#obThemes .thcard[data-theme="${next}"]`)).toBeFocused();
-  await page.locator('#obThemes .thcard', {hasText: 'Dredful'}).click();
+  await page.locator('#obThemes .thcard', {hasText: 'Synthwave'}).click();
   await page.click('#obSkip');
   await page.reload();
   await page.waitForFunction(() => window.__pixiwyg);
-  expect(await page.evaluate(() => window.__pixiwyg.theme())).toBe('t:dredful');
+  expect(await page.evaluate(() => window.__pixiwyg.theme())).toBe('t:synthwave');
   expect(errors).toEqual([]);
 });
 

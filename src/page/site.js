@@ -168,7 +168,7 @@ async function buildSite(opt={}){
   let tail='';
   if(expOpt.nojs)tail=parts.map(q=>q.x.rawTail).filter(Boolean).join('\n');
   else{
-    tail=parts.map(q=>q.x.sheetTags).join('\n')+(x0.hydrate||'')+(parts.map(q=>q.x.musicTail).find(Boolean)||'')+(parts.map(q=>q.x.dragTail).find(Boolean)||'');
+    tail=parts.map(q=>q.x.sheetTags).join('\n')+(x0.hydrate||'')+(parts.map(q=>q.x.musicTail).find(Boolean)||'')+(parts.map(q=>q.x.dragTail).find(Boolean)||'')+parts.map(q=>q.x.liveTail).join('');
     // RULE: the router: the page in the address shows (CSS does that alone); the script sets the tab title and runs
     //   that page's logic, stopping the last one's, with variables shared by every page.
     const RP=parts.map(q=>({slug:q.p.slug,name:q.p.name,title:q.P.title,G:q.x.G,anims:q.x.anims}));
@@ -178,18 +178,18 @@ async function buildSite(opt={}){
 const el=pre=>i=>{const h=document.querySelector('.el[data-px="'+pre+i+'"]');return h?{host:h,target:h.shadowRoot&&h.shadowRoot.querySelector('[data-pxt]')}:null};
 const now=()=>{const h=decodeURIComponent(location.hash.slice(1));return P.some(p=>p.slug===h)?h:P[0].slug};
 function go(t){if(t==='back'){history.back();return}const i=P.findIndex(p=>p.slug===cur),p=t==='next'?P[i+1]:t==='previous'?P[i-1]:t==='first'?P[0]:P.find(x=>x.slug===t);if(p)location.hash=p.slug}
-function show(){const s=now();if(s===cur)return;if(run)run.stop();cur=s;const p=P.find(x=>x.slug===s);document.title=p.title;run=(p.G.nodes.length||p.anims.length)?RT(p.G,p.anims,{el:el(s+'-'),animate(){},music:window.__pxMusic,vars:V,noStart:seen.has(s),pageName:()=>p.name,go}):null;seen.add(s)}
+function show(){const s=now();if(s===cur)return;if(run)run.stop();cur=s;const p=P.find(x=>x.slug===s);document.title=p.title;run=(p.G.nodes.length||p.anims.length)?RT(p.G,p.anims,{...window.__pxSong,...window.__pxLive,frames:r=>(window.__pxFrames||{})[s+'-'+r],el:el(s+'-'),animate(){},music:window.__pxMusic,vars:V,noStart:seen.has(s),pageName:()=>p.name,go}):null;seen.add(s)}
 addEventListener('hashchange',show);show()})();
 <\/script>`;
   }
-  return`<!doctype html>
+  return bakeOut(opt,`<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="generator" content="PIXIWYG ${APP_VERSION}">
 <title>${escH(pages[0].title)}</title>${x0.link?'\n'+x0.link:''}
 <style>${css}
 ${faces.join('\n')}</style></head><body>
 ${sections}${tail?'\n'+tail:''}
-</body></html>`;
+</body></html>`);
 }
 // FORMAT: the zip: index.html for the first page, slug.html for the rest, each a whole page of its own.
 async function exportSiteFiles(opt={}){

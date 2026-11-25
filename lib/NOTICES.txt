@@ -1,7 +1,7 @@
 PIXIWYG — THIRD-PARTY NOTICES
 
 PIXIWYG bundles the stylesheets, fonts, color schemes, the Webamp music player, the Winamp skins and the TimGM6mb SoundFont listed below. Each is redistributed under its own
-license, reproduced in full. The house zine styles (xerox.css, newsprint.css, fanzine.css, bookish.css, dredful.css,
+license, reproduced in full. The house zine styles (xerox.css, newsprint.css, fanzine.css, bookish.css,
 sugarplum.css, undead-darlings.css, velvet-requiem.css) are PIXIWYG's own.
 
 ==============================================================================

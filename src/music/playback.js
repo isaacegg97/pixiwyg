@@ -67,3 +67,19 @@ function seqFrame(){
   if(now!=null){const sc=$('#seqScroll'),X=SQ.KW+now/PPQ*SQ.BW-sc.scrollLeft;if(X>sc.clientWidth-16||X<SQ.KW)sc.scrollLeft=Math.max(0,now/PPQ*SQ.BW-24)}
   seqDraw();if(seqP.on)seqP.raf=requestAnimationFrame(seqFrame)}
 
+// SECTION: playing a song for something else to follow (the Animate timeline)
+// FORMAT: songRun(m, from) plays song m from `from` seconds, scheduled ahead on the audio clock like the sequencer;
+//   {t0, stop()}, where t0 is the AudioContext time of the song's start. songTime() is where the listener is.
+function songRun(m,from=0){
+  audio();if(!ac||!m)return null;if(seqP.on)seqStop();if(!seqOut())return null;
+  const sp=tickSec(m),end=songEnd(m),run={t0:ac.currentTime+.06-from,next:Math.max(0,Math.ceil(from/sp)),timer:0,
+    // HACK: notes already handed to the audio clock ring on; replacing the output bus is the only way to silence them.
+    stop(){clearInterval(run.timer);if(seqBus){const old=seqBus;old.gain.setTargetAtTime(0,ac.currentTime,.02);setTimeout(()=>old.disconnect(),200);seqBus=null}}};
+  synth.bpm=m.bpm;synth.t0=run.t0;
+  const go=()=>{const until=Math.min(end,Math.floor((ac.currentTime+.15-run.t0)/sp));if(until<=run.next)return;
+    for(const t of m.tracks)if(!t.mute)for(const n of t.notes)if(n.t>=run.next&&n.t<until)playNote(t,n.p,run.t0+n.t*sp,Math.min(n.d,end-n.t)*sp,n.v);
+    run.next=until;if(until>=end)clearInterval(run.timer)};
+  go();run.timer=setInterval(go,25);return run;
+}
+// INVARIANT: what is heard lags what is scheduled by the output latency; the eye follows the ear.
+const songTime=run=>ac.currentTime-run.t0-(ac.outputLatency||ac.baseLatency||0);

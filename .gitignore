@@ -1,0 +1,2 @@
+# RULE: local/ holds the owner's private themes and sheets, loaded by hand and never shipped.
+/local/
