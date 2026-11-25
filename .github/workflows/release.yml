@@ -116,7 +116,8 @@ jobs:
         with:
           workspaces: tauri
       # RULE: index.html is built, not committed, and tauri.conf.json bundles it, so it must exist before cargo compiles.
-      - run: node tools/scripts/build.mjs
+      #   Runs in tools/, the job's default working directory.
+      - run: node scripts/build.mjs
       - run: cargo test --locked
         working-directory: tauri
       - name: Launch the app (smoke)
